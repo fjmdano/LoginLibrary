@@ -17,18 +17,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.ubx.loginhelper.model.LoginParamModel
+import com.ubx.loginhelper.model.User
 import com.ubx.loginhelper.util.DisplayUtil
 import com.ubx.loginhelper.util.UIElementUtil
 import com.ubx.loginhelper.viewmodel.LoginParamViewModel
 import com.ubx.loginhelper.viewmodel.ThirdPartyConfigViewModel
+import com.ubx.loginhelper.viewmodel.UserViewModel
 
 class LoginHelper(val context: Context, var appName: String,
                   var width: Int, var height: Int) {
     private lateinit var linearLayout: LinearLayout
     private lateinit var googleSignInClient: GoogleSignInClient
     private var viewGroup: ViewGroup? = null
-    private var isFacebookSdkInitialized = false
-    private var isFirebaseSdkInitialized = false
+    private var isThirdPartyInitialized = false
     private var loginParamViewModel = LoginParamViewModel.instance
     private var thirdPartyConfigViewModel = ThirdPartyConfigViewModel.instance
 
@@ -82,8 +83,23 @@ class LoginHelper(val context: Context, var appName: String,
     }
 
     fun getIntent(): Intent {
-        thirdPartyConfigViewModel.initializeThirdParty(context)
+        if (!isThirdPartyInitialized) {
+            thirdPartyConfigViewModel.initializeThirdParty(context)
+            isThirdPartyInitialized = true
+        }
         return LoginActivity.getIntent(context)
+    }
+
+    fun getUser(): User? {
+        if (!isThirdPartyInitialized) {
+            thirdPartyConfigViewModel.initializeThirdParty(context)
+            isThirdPartyInitialized = true
+        }
+        return UserViewModel.instance.getSignedInUser()
+    }
+
+    fun signOutUser() {
+        UserViewModel.instance.signOutUser()
     }
 
     fun useFirebase(projectNumber: String, firebaseUrl: String,

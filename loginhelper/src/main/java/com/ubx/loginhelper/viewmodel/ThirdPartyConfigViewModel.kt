@@ -8,6 +8,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.ubx.loginhelper.model.thirdpartyconfig.FacebookConfig
 import com.ubx.loginhelper.model.thirdpartyconfig.FirebaseConfig
 
@@ -18,6 +23,7 @@ class ThirdPartyConfigViewModel {
     private lateinit var facebookConfig: FacebookConfig
     private lateinit var firebaseConfig: FirebaseConfig
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var firebaseAuth: FirebaseAuth
 
     fun setFacebookConfig(appID: String, protocolScheme: String) {
         facebookConfig = FacebookConfig(appID, protocolScheme)
@@ -39,8 +45,18 @@ class ThirdPartyConfigViewModel {
         }
     }
 
-    fun getGoogleSigninClient(): GoogleSignInClient? {
-        return if (this::googleSignInClient.isInitialized) googleSignInClient else null
+    fun getFirebaseAuth(): FirebaseAuth {
+        return firebaseAuth
+    }
+
+    fun getGoogleSigninClient(context: Context): GoogleSignInClient? {
+        if (this::googleSignInClient.isInitialized) {
+            return googleSignInClient
+        }
+
+        if (this::firebaseConfig.isInitialized) {
+        }
+        return null
     }
 
     private fun integrateFacebook(context: Context, facebookConfig: FacebookConfig) {
@@ -51,27 +67,32 @@ class ThirdPartyConfigViewModel {
 
     private fun integrateFirebase(context: Context, firebaseConfig: FirebaseConfig) {
 
-        println("[START] initializeGoogleSdk")
-        println("App ID: " + firebaseConfig.appId)
-        val options = FirebaseOptions.Builder()
-            .setApplicationId(firebaseConfig.appId)
-            .setApiKey(firebaseConfig.apiKey)
-            .setDatabaseUrl(firebaseConfig.firebaseUrl)
-            .setGcmSenderId(firebaseConfig.projectNumber)
-            .setStorageBucket(firebaseConfig.storageBucket)
-            .build()
-        FirebaseApp.initializeApp(context, options)
-        println("[END] initializeGoogleSdk: initializeApp")
+        if (FirebaseApp.getApps(context).isEmpty()) {
+            val options = FirebaseOptions.Builder()
+                .setApplicationId(firebaseConfig.appId)
+                .setApiKey(firebaseConfig.apiKey)
+                .setDatabaseUrl(firebaseConfig.firebaseUrl)
+                .setGcmSenderId(firebaseConfig.projectNumber)
+                .setStorageBucket(firebaseConfig.storageBucket)
+                .build()
+            FirebaseApp.initializeApp(context, options)
 
-        val firebaseApp = FirebaseApp.initializeApp(context, options, firebaseConfig.projectId)
-        Toast.makeText(context, "Firebase initialized!", Toast.LENGTH_SHORT).show()
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(firebaseConfig.clientId)
-            .requestEmail()
-            .build()
+            val firebaseApp = Firebase.initialize(context, options, firebaseConfig.projectId)
 
-        //isFirebaseSdkInitialized = true
-        googleSignInClient = GoogleSignIn.getClient(context, gso)
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(firebaseConfig.clientId)
+                .requestEmail()
+                .build()
+
+            //isFirebaseSdkInitialized = true
+            googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+            Toast.makeText(context, "Firebase initialized!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Firebase previously initialized", Toast.LENGTH_SHORT).show()
+        }
+
+        firebaseAuth = Firebase.auth
     }
 
     companion object {

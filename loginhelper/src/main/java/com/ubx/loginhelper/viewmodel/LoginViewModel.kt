@@ -6,7 +6,10 @@ import android.os.Build
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.view.ContextThemeWrapper
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.ubx.loginhelper.model.LoginParamModel
+import com.ubx.loginhelper.model.User
 import com.ubx.loginhelper.util.DisplayUtil
 import com.ubx.loginhelper.util.UIElementUtil
 
@@ -15,7 +18,9 @@ class LoginViewModel(private val context: Context) {
     private var isFirebaseSdkInitialized = false
     private lateinit var linearLayout: LinearLayout
     private val loginParameters = LoginParamViewModel.instance.getLoginParam()!!
-    private val googleSignInClient = ThirdPartyConfigViewModel.instance.getGoogleSigninClient()
+    private val thirdPartyConfigViewModel = ThirdPartyConfigViewModel.instance
+    private val userViewModel = UserViewModel.instance
+    private val googleSignInClient = thirdPartyConfigViewModel.getGoogleSigninClient(context)
 
     fun createLoginPage(activity: Activity): LinearLayout {
         val linearLayout = if (loginParameters.style != null) {
@@ -77,5 +82,17 @@ class LoginViewModel(private val context: Context) {
             linearLayout.id = View.generateViewId()
         }
         return linearLayout
+    }
+
+    fun getFirebaseAuth(): FirebaseAuth {
+        return thirdPartyConfigViewModel.getFirebaseAuth()
+    }
+
+    fun getUser(): User? {
+        return userViewModel.getSignedInUser()
+    }
+
+    fun setUser(account: Any) {
+        return userViewModel.setSignedInUser(account)
     }
 }

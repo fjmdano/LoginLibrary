@@ -3,6 +3,7 @@ package com.ubx.sample
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
+import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_main)
 
         //Create Login Parameters
         val loginHelper = createLoginHelper()
@@ -25,10 +26,26 @@ class MainActivity : AppCompatActivity() {
             "https://trialapp-18e6e.firebaseio.com",
             "trialapp-18e6e",
             "trialapp-18e6e.appspot.com",
-            "1:915758123947:android:11c261e24bfdc7e88520ee",
+            "1:915758123947:android:c5761b86a82280408520ee",
             "AIzaSyAF9yimwJdEqdNcxsxEGnqTRo0w5KTbcqM",
             "915758123947-4vhnf7vbjk7p6c0njqp5lben0ede1o9v.apps.googleusercontent.com")
 
+        setSignOutHandler(loginHelper)
+        var user = loginHelper.getUser()
+        if (user == null) {
+            showLogin(loginHelper)
+        }
+    }
+
+    private fun setSignOutHandler(loginHelper: LoginHelper) {
+        val btnSignOut = findViewById<Button>(R.id.btn_logout)
+        btnSignOut.setOnClickListener {
+            loginHelper.signOutUser()
+            showLogin(loginHelper)
+        }
+    }
+
+    private fun showLogin(loginHelper: LoginHelper) {
         val intent = loginHelper.getIntent()
         startActivity(intent)
     }
@@ -40,10 +57,10 @@ class MainActivity : AppCompatActivity() {
             ConstraintLayout.LayoutParams.MATCH_PARENT)
 
         loginHelper.setPadding(10, 10, 10, 10)
-        loginHelper.setBackground(android.R.color.holo_green_light)
+        loginHelper.setBackground(android.R.color.white)
         loginHelper.setStyle(R.style.Background)
 
-        val iconImage = loginHelper.addImage(R.drawable.facebook_icon,
+        val iconImage = loginHelper.addImage(android.R.drawable.ic_lock_lock,
             loginHelper.sizeInDP(50),
             loginHelper.sizeInDP(50)
         )
