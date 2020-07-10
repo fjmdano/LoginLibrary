@@ -22,6 +22,13 @@ class LoginViewModel(private val context: Context) {
     private val userViewModel = UserViewModel.instance
     private val googleSignInClient = thirdPartyConfigViewModel.getGoogleSigninClient(context)
 
+    /**
+     * Create Login Page
+     * Add the elements specified in loginParameters to the login view
+     *
+     * @param activity Parent Activity
+     * @return LinearLayout containing the login items
+     */
     fun createLoginPage(activity: Activity): LinearLayout {
         val linearLayout = if (loginParameters.style != null) {
             LinearLayout(ContextThemeWrapper(context, loginParameters.style!!), null, 0)
@@ -32,9 +39,7 @@ class LoginViewModel(private val context: Context) {
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.customizeConstraintElement(context, linearLayout, loginParameters)
 
-        println("size of elements: " + loginParameters.elements.size)
         loginParameters.elements.forEach {
-            println("type: " + it.type)
             when(it.type) {
                 LoginParamModel.ElementType.TEXT -> {
                     linearLayout.addView(
@@ -84,15 +89,31 @@ class LoginViewModel(private val context: Context) {
         return linearLayout
     }
 
+    /**
+     * Retrieve instance of FirebaseAuth
+     *
+     * @return FirebaseAuth instance
+     */
     fun getFirebaseAuth(): FirebaseAuth {
         return thirdPartyConfigViewModel.getFirebaseAuth()
     }
 
+    /**
+     * Check if there is currently logged in user
+     *
+     * @return currently signed in user (null if none)
+     */
     fun getUser(): User? {
         return userViewModel.getSignedInUser()
     }
 
+    /**
+     * Set signed in user details
+     *
+     * @param account Can be FirebaseUser, FacebookUser, or json return from provided BE API
+     */
     fun setUser(account: Any) {
         return userViewModel.setSignedInUser(account)
     }
+
 }

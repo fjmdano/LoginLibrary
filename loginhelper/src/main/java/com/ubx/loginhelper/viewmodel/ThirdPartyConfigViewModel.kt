@@ -53,10 +53,15 @@ class ThirdPartyConfigViewModel {
         if (this::googleSignInClient.isInitialized) {
             return googleSignInClient
         }
-
-        if (this::firebaseConfig.isInitialized) {
-        }
         return null
+    }
+
+    fun isFacebookIntegrated(): Boolean {
+        return (this::facebookConfig.isInitialized)
+    }
+
+    fun isFirebaseIntegrated(): Boolean {
+        return (this::firebaseConfig.isInitialized)
     }
 
     private fun integrateFacebook(context: Context, facebookConfig: FacebookConfig) {
