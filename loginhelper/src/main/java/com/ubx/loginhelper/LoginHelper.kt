@@ -8,9 +8,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ubx.loginhelper.model.LoginParamModel
 import com.ubx.loginhelper.model.User
 import com.ubx.loginhelper.util.DisplayUtil
-import com.ubx.loginhelper.util.LoginParamUtils
-import com.ubx.loginhelper.util.ThirdPartyConfigUtils
-import com.ubx.loginhelper.util.UserUtils
+import com.ubx.loginhelper.helper.LoginParamHelper
+import com.ubx.loginhelper.helper.ThirdPartyConfigHelper
+import com.ubx.loginhelper.helper.UserHelper
 
 class LoginHelper(val context: Context, var appName: String,
                   var width: Int, var height: Int) {
@@ -20,7 +20,7 @@ class LoginHelper(val context: Context, var appName: String,
     private var isThirdPartyInitialized = false
 
     init {
-        LoginParamUtils.setLoginParam(appName, width, height)
+        LoginParamHelper.setLoginParam(appName, width, height)
     }
 
     /**
@@ -32,7 +32,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @param bottom bottom padding
      */
     fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        LoginParamUtils.setPadding(left, top, right, bottom)
+        LoginParamHelper.setPadding(left, top, right, bottom)
     }
 
     /**
@@ -44,7 +44,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @param bottom bottom margins
      */
     fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
-        LoginParamUtils.setMargins(left, top, right, bottom)
+        LoginParamHelper.setMargins(left, top, right, bottom)
     }
 
     /**
@@ -53,7 +53,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @param background background (i.e. R.drawable.*)
      */
     fun setBackground(background: Int) {
-        LoginParamUtils.setBackground(background)
+        LoginParamHelper.setBackground(background)
     }
 
     /**
@@ -62,7 +62,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @param style style (i.e. R.style.*)
      */
     fun setStyle(style: Int) {
-        LoginParamUtils.setStyle(style)
+        LoginParamHelper.setStyle(style)
     }
 
     /**
@@ -74,7 +74,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @return ImageElement that can be customized with style, background, padding and margins
      */
     fun addImage(image: Int, width: Int, height: Int): LoginParamModel.ImageElement {
-        return LoginParamUtils.addImage(image, width, height)
+        return LoginParamHelper.addImage(image, width, height)
     }
 
     /**
@@ -86,7 +86,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addText(label: String, width: Int, height: Int): LoginParamModel.TextElement {
-        return LoginParamUtils.addText(label, width, height)
+        return LoginParamHelper.addText(label, width, height)
     }
 
     /**
@@ -101,7 +101,7 @@ class LoginHelper(val context: Context, var appName: String,
      */
     fun addInput(hint: String, isPassword: Boolean, inputType: Int,
                 width: Int, height: Int): LoginParamModel.InputElement {
-        return LoginParamUtils.addInput(hint, isPassword, inputType, width, height)
+        return LoginParamHelper.addInput(hint, isPassword, inputType, width, height)
     }
 
     /**
@@ -113,7 +113,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
     fun addButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
-        return LoginParamUtils.addButton(label, width, height)
+        return LoginParamHelper.addButton(label, width, height)
     }
 
     /**
@@ -124,7 +124,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @return Google Sign In Button that can be customized with style, background, padding and margins
      */
     fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle {
-        return LoginParamUtils.addGoogleSignIn(width, height)
+        return LoginParamHelper.addGoogleSignIn(width, height)
     }
 
     /**
@@ -135,7 +135,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @return Facebook Sign In Button that can be customized with style, background, padding and margins
      */
     fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook {
-        return LoginParamUtils.addFacebookSignIn(width, height)
+        return LoginParamHelper.addFacebookSignIn(width, height)
     }
 
     /**
@@ -165,7 +165,7 @@ class LoginHelper(val context: Context, var appName: String,
      */
     fun getUser(): User? {
         initializeThirdParty()
-        return UserUtils.getSignedInUser()
+        return UserHelper.getSignedInUser()
     }
 
     /**
@@ -174,7 +174,7 @@ class LoginHelper(val context: Context, var appName: String,
      * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
      */
     fun signOutUser() {
-        UserUtils.signOutUser()
+        UserHelper.signOutUser()
     }
 
     /**
@@ -191,10 +191,9 @@ class LoginHelper(val context: Context, var appName: String,
     fun useFirebase(projectNumber: String, firebaseUrl: String,
                     projectId: String, storageBucket: String,
                     appId: String, apiKey: String, clientId: String) {
-        ThirdPartyConfigUtils.setFirebaseConfig(projectNumber, firebaseUrl,
+        ThirdPartyConfigHelper.setFirebaseConfig(projectNumber, firebaseUrl,
             projectId, storageBucket, appId, apiKey, clientId)
     }
-
 
     /**
      * Use Facebook SDK for logging in
@@ -203,16 +202,15 @@ class LoginHelper(val context: Context, var appName: String,
      * @param protocolScheme Protocol Scheme (or fb_login_protocol_scheme) generated from https://developers.facebook.com/
      */
     fun useFacebook(appID: String, protocolScheme: String) {
-        ThirdPartyConfigUtils.setFacebookConfig(appID, protocolScheme)
+        ThirdPartyConfigHelper.setFacebookConfig(appID, protocolScheme)
     }
-
 
     /**
      * Initialize Third Party SDKS if not yet previously done
      */
     private fun initializeThirdParty() {
         if (!isThirdPartyInitialized) {
-            ThirdPartyConfigUtils.initializeThirdParty(context)
+            ThirdPartyConfigHelper.initializeThirdParty(context)
             isThirdPartyInitialized = true
         }
     }

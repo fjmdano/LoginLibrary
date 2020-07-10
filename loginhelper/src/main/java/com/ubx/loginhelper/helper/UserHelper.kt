@@ -1,4 +1,4 @@
-package com.ubx.loginhelper.util
+package com.ubx.loginhelper.helper
 
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
@@ -6,14 +6,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.ubx.loginhelper.datarepository.UserDataRepository
+import com.ubx.loginhelper.helper.ThirdPartyConfigHelper
 import com.ubx.loginhelper.model.User
 
-class UserUtils {
+class UserHelper {
     companion object {
         fun getSignedInUser(): User? {
             var user = UserDataRepository.instance.user
             if (user == null) {
-                if (ThirdPartyConfigUtils.isFirebaseIntegrated()) {
+                if (ThirdPartyConfigHelper.isFirebaseIntegrated()) {
                     val firebaseUser = Firebase.auth.currentUser
                     if (firebaseUser != null) {
                         user = User(User.AuthMethod.FIREBASE, firebaseUser)
@@ -21,7 +22,7 @@ class UserUtils {
                         return user
                     }
                 }
-                if (ThirdPartyConfigUtils.isFacebookIntegrated()) {
+                if (ThirdPartyConfigHelper.isFacebookIntegrated()) {
                     val facebookUser = AccessToken.getCurrentAccessToken()
                     if (facebookUser != null && !facebookUser.isExpired) {
                         user = User(User.AuthMethod.FACEBOOK, facebookUser)

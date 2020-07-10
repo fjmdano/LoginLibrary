@@ -7,6 +7,9 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.firebase.auth.FirebaseAuth
+import com.ubx.loginhelper.helper.LoginParamHelper
+import com.ubx.loginhelper.helper.ThirdPartyConfigHelper
+import com.ubx.loginhelper.helper.UserHelper
 import com.ubx.loginhelper.model.LoginParamModel
 import com.ubx.loginhelper.model.User
 import com.ubx.loginhelper.util.*
@@ -15,8 +18,8 @@ class LoginViewModel(private val context: Context) {
     private var isFacebookSdkInitialized = false
     private var isFirebaseSdkInitialized = false
     private lateinit var linearLayout: LinearLayout
-    private val loginParameters = LoginParamUtils.getLoginParam()!!
-    private val googleSignInClient = ThirdPartyConfigUtils.getGoogleSigninClient(context)
+    private val loginParameters = LoginParamHelper.getLoginParam()!!
+    private val googleSignInClient = ThirdPartyConfigHelper.getGoogleSigninClient(context)
 
     /**
      * Create Login Page
@@ -91,7 +94,7 @@ class LoginViewModel(private val context: Context) {
      * @return FirebaseAuth instance
      */
     fun getFirebaseAuth(): FirebaseAuth {
-        return ThirdPartyConfigUtils.getFirebaseAuth()
+        return ThirdPartyConfigHelper.getFirebaseAuth()
     }
 
     /**
@@ -100,7 +103,7 @@ class LoginViewModel(private val context: Context) {
      * @return currently signed in user (null if none)
      */
     fun getUser(): User? {
-        return UserUtils.getSignedInUser()
+        return UserHelper.getSignedInUser()
     }
 
     /**
@@ -109,21 +112,21 @@ class LoginViewModel(private val context: Context) {
      * @param account Can be FirebaseUser, FacebookUser, or json return from provided BE API
      */
     fun setUser(account: Any) {
-        return UserUtils.setSignedInUser(account)
+        return UserHelper.setSignedInUser(account)
     }
 
     /**
      * Check if app uses Facebook sdk
      */
     fun isFacebookIntegrated(): Boolean {
-        return ThirdPartyConfigUtils.isFacebookIntegrated()
+        return ThirdPartyConfigHelper.isFacebookIntegrated()
     }
 
     /**
      * Check if app uses Firebase sdk
      */
     fun isFirebaseIntegrated(): Boolean {
-        return ThirdPartyConfigUtils.isFirebaseIntegrated()
+        return ThirdPartyConfigHelper.isFirebaseIntegrated()
     }
 
 }

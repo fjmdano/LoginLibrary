@@ -1,10 +1,10 @@
-package com.ubx.loginhelper.util
+package com.ubx.loginhelper.helper
 
 import com.ubx.loginhelper.datarepository.LoginParamDataRepository
 import com.ubx.loginhelper.model.LoginParamModel
 import com.ubx.loginhelper.model.UIElement
 
-class LoginParamUtils {
+class LoginParamHelper {
 
     companion object {
         /**

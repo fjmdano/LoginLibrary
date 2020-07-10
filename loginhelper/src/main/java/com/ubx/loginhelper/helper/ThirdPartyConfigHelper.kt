@@ -1,4 +1,4 @@
-package com.ubx.loginhelper.util
+package com.ubx.loginhelper.helper
 
 import android.content.Context
 import android.widget.Toast
@@ -16,7 +16,7 @@ import com.ubx.loginhelper.datarepository.ThirdPartyConfigDataRepository
 import com.ubx.loginhelper.model.thirdpartyconfig.FacebookConfig
 import com.ubx.loginhelper.model.thirdpartyconfig.FirebaseConfig
 
-class ThirdPartyConfigUtils {
+class ThirdPartyConfigHelper {
 
     companion object {
         fun setFacebookConfig(appID: String, protocolScheme: String) {
@@ -31,12 +31,19 @@ class ThirdPartyConfigUtils {
         }
 
         fun initializeThirdParty(context: Context) {
-            val dataRepository = getDataRepo()
+            val dataRepository =
+                getDataRepo()
             if (!dataRepository.isFacebookInitialized && dataRepository.facebookConfig!= null) {
-                integrateFacebook(context, dataRepository.facebookConfig!!)
+                integrateFacebook(
+                    context,
+                    dataRepository.facebookConfig!!
+                )
             }
             if (!dataRepository.isFirebaseInitialized && dataRepository.firebaseConfig!= null) {
-                integrateFirebase(context, dataRepository.firebaseConfig!!)
+                integrateFirebase(
+                    context,
+                    dataRepository.firebaseConfig!!
+                )
             }
         }
 
