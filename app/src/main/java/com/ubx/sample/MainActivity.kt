@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         //Create Login Parameters
         val loginHelper = createLoginHelper()
-        loginHelper.useFacebook("738407303585042",
-            "fb738407303585042")
+        //loginHelper.useFacebook("738407303585042",
+        //    "fb738407303585042")
         loginHelper.useFirebase("915758123947",
             "https://trialapp-18e6e.firebaseio.com",
             "trialapp-18e6e",
@@ -112,6 +112,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         return loginHelper
+    }
+
+    private fun createRegisterHelper() {
     }
 
 }
