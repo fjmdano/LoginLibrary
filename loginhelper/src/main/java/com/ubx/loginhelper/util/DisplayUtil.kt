@@ -11,10 +11,24 @@ import com.ubx.loginhelper.model.UIElement
 
 class DisplayUtil {
     companion object {
+        /**
+         * Get size in DP
+         *
+         * @param size Int
+         * @return size in DP
+         */
         fun sizeInDP(context: Context, size: Int): Int {
             return (size * context.resources.displayMetrics.density).toInt()
         }
 
+        /**
+         * Set width, height, background, padding, margins of the element that is inside a
+         * Constraint Layout
+         *
+         * @param context application/activity context
+         * @param view view that will be customized
+         * @param element UIElement instance that contains the background, padding, margins
+         */
         fun customizeConstraintElement(context: Context, view: View, element: UIElement) {
             val layoutParams = ConstraintLayout.LayoutParams(element.width, element.height)
             view.layoutParams = layoutParams
@@ -25,6 +39,14 @@ class DisplayUtil {
             )
         }
 
+        /**
+         * Set width, height, background, padding, margins of the element that is inside a
+         * Linear Layout
+         *
+         * @param context application/activity context
+         * @param view view that will be customized
+         * @param element UIElement instance that contains the background, padding, margins
+         */
         fun customizeLinearElement(context: Context, view: View, element: UIElement) {
             val layoutParams = LinearLayout.LayoutParams(element.width, element.height)
             if (element.layoutGravity != null) {
@@ -38,6 +60,15 @@ class DisplayUtil {
             )
         }
 
+        /**
+         * Set background, padding, margins of the element.
+         * This function is called by either customizeConstraintElement() or
+         * customizeLinearElement()
+         *
+         * @param context application/activity context
+         * @param view view that will be customized
+         * @param element UIElement instance that contains the background, padding, margins
+         */
         private fun customizeElement(context: Context, view: View, element: UIElement) {
             if (element.background != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -63,6 +94,14 @@ class DisplayUtil {
             }
         }
 
+        /**
+         * Set padding of the element.
+         * This function is called by customizeElement()
+         *
+         * @param context application/activity context
+         * @param view view that will be customized
+         * @param padding UIElement.Padding that contains the top, left, right, bottom padding
+         */
         private fun setPadding(context: Context, view: View, padding: UIElement.Padding) {
             val conversion = context.resources.displayMetrics.density
             view.setPadding((padding.left * conversion).toInt(),
@@ -70,6 +109,15 @@ class DisplayUtil {
                 (padding.right * conversion).toInt(),
                 (padding.bottom * conversion).toInt())
         }
+
+        /**
+         * Set margins of the element.
+         * This function is called by customizeElement()
+         *
+         * @param context application/activity context
+         * @param view view that will be customized
+         * @param margins UIElement.Margins that contains the top, left, right, bottom margins
+         */
         private fun setMargins(context: Context, view: View, margins: UIElement.Margins) {
             val conversion = context.resources.displayMetrics.density
             if (view.layoutParams is ViewGroup.MarginLayoutParams) {

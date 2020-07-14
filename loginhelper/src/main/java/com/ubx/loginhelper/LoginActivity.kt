@@ -57,6 +57,9 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
+    /**
+     * Setup Callback for Facebook LoginManager
+     */
     private fun setupFacebook() {
         if (!loginViewModel.isFacebookIntegrated()) {
             return
@@ -82,6 +85,9 @@ class LoginActivity: AppCompatActivity() {
             })
     }
 
+    /**
+     * Verify if signing in (with the help of Firebase) is successful or not
+     */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         loginViewModel.getFirebaseAuth().signInWithCredential(credential)
@@ -98,6 +104,13 @@ class LoginActivity: AppCompatActivity() {
             }
     }
 
+    /**
+     * Store user credentials and return control to main application
+     * @param account user credentials
+     * (type is FirebaseUser if using Firebase,
+     *          AccessToken if using Facebook,
+     *          Any if using own authentication)
+     */
     private fun setUserAndReturn(account: Any?) {
         if (account != null) {
             loginViewModel.setUser(account)
@@ -105,10 +118,16 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
+    /**
+     * Show Toast message
+     */
     private fun showToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Add created linear layout to display
+     */
     private fun addLoginPage() {
         val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
 
@@ -123,6 +142,9 @@ class LoginActivity: AppCompatActivity() {
         constraintSet.applyTo(constraintLayout)
     }
 
+    /**
+     * Handle Google Sign-in result
+     */
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account= completedTask.getResult(ApiException::class.java)

@@ -157,6 +157,11 @@ class LoginParamHelper {
             return button
         }
 
+        /**
+         * Get singleton instance of LoginParamHelper
+         *
+         * @return instance of LoginParamHelper
+         */
         fun getLoginParam(): LoginParamModel? {
             return LoginParamDataRepository.instance.loginParamModel
         }

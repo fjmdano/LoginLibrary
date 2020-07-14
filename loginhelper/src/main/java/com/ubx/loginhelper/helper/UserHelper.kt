@@ -11,6 +11,12 @@ import com.ubx.loginhelper.model.User
 
 class UserHelper {
     companion object {
+
+        /**
+         * Get currently signed-in user details
+         *
+         * @return User
+         */
         fun getSignedInUser(): User? {
             var user = UserDataRepository.instance.user
             if (user == null) {
@@ -34,16 +40,31 @@ class UserHelper {
             return user
         }
 
+        /**
+         * Set user details
+         *
+         * @param account account details
+         * (type is FirebaseUser if using Firebase,
+         *          AccessToken if using Facebook,
+         *          Any if using own authentication)
+         */
         fun setSignedInUser(account: Any) {
-            UserDataRepository.instance.user = if (account is FirebaseUser) {
-                User(User.AuthMethod.FIREBASE, account)
-            } else if (account is AccessToken) {
-                User(User.AuthMethod.FACEBOOK, account)
-            } else{
-                User(User.AuthMethod.OWN, account)
+            UserDataRepository.instance.user = when (account) {
+                is FirebaseUser -> {
+                    User(User.AuthMethod.FIREBASE, account)
+                }
+                is AccessToken -> {
+                    User(User.AuthMethod.FACEBOOK, account)
+                }
+                else -> {
+                    User(User.AuthMethod.OWN, account)
+                }
             }
         }
 
+        /**
+         * Sign out user and remove stored user details
+         */
         fun signOutUser() {
             when (UserDataRepository.instance.user?.method) {
                 User.AuthMethod.FIREBASE -> Firebase.auth.signOut()

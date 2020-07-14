@@ -23,9 +23,9 @@ import com.ubx.loginhelper.model.LoginParamModel
 
 class UIElementUtil {
     companion object {
-        /*
+        /**
         * Create ImageView
-        * */
+        */
         fun createImageElement(context: Context, element: LoginParamModel.ImageElement): ImageView {
             val imageView = if (element.style != null) {
                 ImageView(ContextThemeWrapper(context, element.style!!), null, 0)
@@ -44,9 +44,9 @@ class UIElementUtil {
             return imageView
         }
 
-        /*
+        /**
         * Create TextView
-        * */
+        */
         fun createTextElement(context: Context, element: LoginParamModel.TextElement): TextView {
             val textView = if (element.style != null) {
                 TextView(ContextThemeWrapper(context, element.style!!), null, 0)
@@ -68,9 +68,9 @@ class UIElementUtil {
             return textView
         }
 
-        /*
+        /**
         * Create TextInputLayout with TextInputEditText (for show/hide password functionality
-        * */
+        */
         fun createInputElement(context: Context, element: LoginParamModel.InputElement): TextInputLayout {
             val textInputLayout = TextInputLayout(context)
             DisplayUtil.customizeLinearElement(
@@ -100,9 +100,9 @@ class UIElementUtil {
             return textInputLayout
         }
 
-        /*
+        /**
         * Create Button
-        * */
+        */
         fun createButtonElement(context: Context, element: LoginParamModel.ButtonElement) : Button {
             val button = if (element.style != null) {
                 Button(ContextThemeWrapper(context, element.style!!), null, 0)
@@ -125,9 +125,9 @@ class UIElementUtil {
             return button
         }
 
-        /*
-        * Create Facebook Login Button
-        * */
+        /**
+        * Create Facebook Log-in Button
+        */
         fun createFacebookButton(context: Context, element: LoginParamModel.ThirdPartyFacebook) : LoginButton {
             val facebookButton = if (element.style != null) {
                 LoginButton(ContextThemeWrapper(context, element.style!!), null, 0)
@@ -149,9 +149,9 @@ class UIElementUtil {
             return facebookButton
         }
 
-        /*
-        * Create Google Login Button
-        * */
+        /**
+        * Create Google Log-in Button
+        */
         fun createGoogleButton(context: Context, element: LoginParamModel.ThirdPartyGoogle,
                                signInClient: GoogleSignInClient, activity: Activity) : SignInButton {
             val googleButton = if (element.style != null) {

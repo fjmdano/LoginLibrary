@@ -1,4 +1,7 @@
 package com.ubx.kyclibrary
 
-class KYCHelper {
+import android.content.Context
+
+class KYCHelper(val context: Context, appName: String) {
+
 }
