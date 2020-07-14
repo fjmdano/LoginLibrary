@@ -12,8 +12,8 @@ import com.ubx.loginhelper.helper.LoginParamHelper
 import com.ubx.loginhelper.helper.ThirdPartyConfigHelper
 import com.ubx.loginhelper.helper.UserHelper
 
-class LoginHelper(val context: Context, var appName: String,
-                  var width: Int, var height: Int) {
+class LoginHelper(val context: Context, appName: String,
+                  width: Int, height: Int) {
     private lateinit var linearLayout: LinearLayout
     private lateinit var googleSignInClient: GoogleSignInClient
     private var viewGroup: ViewGroup? = null

@@ -1,4 +1,4 @@
 package com.ubx.kyclibrary
 
-class RegisterActivity {
+class KYCActivity {
 }

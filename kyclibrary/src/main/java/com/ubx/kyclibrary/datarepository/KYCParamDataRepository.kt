@@ -2,7 +2,7 @@ package com.ubx.kyclibrary.datarepository
 
 import com.ubx.kyclibrary.model.RegisterParamModel
 
-class RegisterParamDataRepository {
+class KYCParamDataRepository {
     var pages: MutableList<RegisterParamModel.Page> = mutableListOf()
     var registerValues: MutableList<RegisterParamModel.Values> = mutableListOf()
     var imageElements: MutableList<RegisterParamModel.ImageElement> = mutableListOf()
@@ -45,11 +45,11 @@ class RegisterParamDataRepository {
 
 
     private object HOLDER {
-        val INSTANCE = RegisterParamDataRepository()
+        val INSTANCE = KYCParamDataRepository()
     }
 
     companion object {
         private const val TAG = "RegisterLibrary"
-        val instance: RegisterParamDataRepository by lazy { RegisterParamDataRepository.HOLDER.INSTANCE }
+        val instance: KYCParamDataRepository by lazy { KYCParamDataRepository.HOLDER.INSTANCE }
     }
 }
