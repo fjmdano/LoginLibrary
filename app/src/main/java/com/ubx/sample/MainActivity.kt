@@ -7,10 +7,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.ubx.loginhelper.LoginActivity
-import com.ubx.loginhelper.LoginHelper
-import com.ubx.loginhelper.model.thirdpartyconfig.FacebookConfig
-import com.ubx.loginhelper.model.thirdpartyconfig.FirebaseConfig
+import com.ubx.loginlibrary.LoginHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,8 +17,8 @@ class MainActivity : AppCompatActivity() {
 
         //Create Login Parameters
         val loginHelper = createLoginHelper()
-        //loginHelper.useFacebook("738407303585042",
-        //    "fb738407303585042")
+        loginHelper.useFacebook("738407303585042",
+            "fb738407303585042")
         loginHelper.useFirebase("915758123947",
             "https://trialapp-18e6e.firebaseio.com",
             "trialapp-18e6e",
@@ -115,6 +112,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createRegisterHelper() {
+        //val registerHelper = Regi
     }
 
 }
