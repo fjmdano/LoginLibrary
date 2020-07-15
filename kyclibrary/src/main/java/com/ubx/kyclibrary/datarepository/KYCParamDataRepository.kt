@@ -1,17 +1,19 @@
 package com.ubx.kyclibrary.datarepository
 
-import com.ubx.kyclibrary.model.RegisterParamModel
+import android.widget.LinearLayout
+import com.ubx.kyclibrary.model.KYCParamModel
 
 class KYCParamDataRepository {
-    var pages: MutableList<RegisterParamModel.Page> = mutableListOf()
-    var registerValues: MutableList<RegisterParamModel.Values> = mutableListOf()
-    var imageElements: MutableList<RegisterParamModel.ImageElement> = mutableListOf()
-    var textElements: MutableList<RegisterParamModel.TextElement> = mutableListOf()
-    var inputElements: MutableList<RegisterParamModel.InputElement> = mutableListOf()
-    var dropdownElements: MutableList<RegisterParamModel.DropdownElement> = mutableListOf()
-    var listElements: MutableList<RegisterParamModel.ListElement> = mutableListOf()
-    var mediaElements: MutableList<RegisterParamModel.MediaElement> = mutableListOf()
-    var buttonElements: MutableList<RegisterParamModel.ButtonElement> = mutableListOf()
+    var layoutPages: MutableList<LinearLayout> = mutableListOf()
+    var pages: MutableList<KYCParamModel.Page> = mutableListOf()
+    var registerValues: MutableList<KYCParamModel.Values> = mutableListOf()
+    var imageElements: MutableList<KYCParamModel.ImageElement> = mutableListOf()
+    var textElements: MutableList<KYCParamModel.TextElement> = mutableListOf()
+    var inputElements: MutableList<KYCParamModel.InputElement> = mutableListOf()
+    var dropdownElements: MutableList<KYCParamModel.DropdownElement> = mutableListOf()
+    var listElements: MutableList<KYCParamModel.ListElement> = mutableListOf()
+    var mediaElements: MutableList<KYCParamModel.MediaElement> = mutableListOf()
+    var buttonElements: MutableList<KYCParamModel.ButtonElement> = mutableListOf()
 
     fun setImageStyle(style: Int) {
         imageElements.forEach {
@@ -49,7 +51,7 @@ class KYCParamDataRepository {
     }
 
     companion object {
-        private const val TAG = "RegisterLibrary"
+        private const val TAG = "KYCLibrary"
         val instance: KYCParamDataRepository by lazy { KYCParamDataRepository.HOLDER.INSTANCE }
     }
 }

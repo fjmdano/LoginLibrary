@@ -1,8 +1,11 @@
 package com.ubx.kyclibrary.model
 
-data class RegisterParamModel(var appName: String) {
+class KYCParamModel {
 
-    data class Page(var rows: PageRow)
+    data class Page(var pageTitle: String,
+                    var leftContent: Any?,
+                    var rightContent: Any?,
+                    var rows: MutableList<PageRow>)
 
     data class PageRow(var elements: MutableList<UIElement>)
 
@@ -13,41 +16,41 @@ data class RegisterParamModel(var appName: String) {
     data class TextElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
 
     data class InputElement(
-        val key: String,
         val hint: String,
         val isPassword: Boolean,
         val inputType: Int,
-        val isRequired: Boolean,
         override var width: Int,
-        override var height: Int
+        override var height: Int,
+        val key: String,
+        val isRequired: Boolean
     ): UIElement(width, height)
 
     data class DropdownElement(
-        val key: String,
         val hint: String,
         val choices: List<String>,
-        val isRequired: Boolean,
         override var width: Int,
-        override var height: Int
+        override var height: Int,
+        val key: String,
+        val isRequired: Boolean
     ): UIElement(width, height)
 
     data class ListElement(
-        val key: String,
         val hint: String,
         val choices: List<String>,
-        val isRequired: Boolean,
         override var width: Int,
-        override var height: Int
+        override var height: Int,
+        val key: String,
+        val isRequired: Boolean
     ): UIElement(width, height)
 
     data class MediaElement(
-        val key: String,
         val hint: String,
         val fromCamera: Boolean,
         val fromStorage: Boolean,
-        val isRequired: Boolean,
         override var width: Int,
-        override var height: Int
+        override var height: Int,
+        val key: String,
+        val isRequired: Boolean
     ): UIElement(width, height)
 
     data class ButtonElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)

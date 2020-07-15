@@ -78,7 +78,7 @@ class LoginHelper(val context: Context, appName: String,
     }
 
     /**
-     * Add an text in the login view
+     * Add a text in the login view
      *
      * @param label text label
      * @param width width of text

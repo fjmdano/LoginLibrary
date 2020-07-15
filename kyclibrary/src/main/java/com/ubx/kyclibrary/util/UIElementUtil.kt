@@ -1,4 +1,4 @@
-package com.ubx.loginhelper.util
+package com.ubx.kyclibrary.util
 
 import android.app.Activity
 import android.content.Context
@@ -8,21 +8,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.facebook.login.widget.LoginButton
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.SignInButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.ubx.loginhelper.LoginActivity
-import com.ubx.loginhelper.model.LoginParamModel
+import com.ubx.kyclibrary.model.KYCParamModel
 
 class UIElementUtil {
     companion object {
         /**
-        * Create ImageView
-        */
-        fun createImageElement(context: Context, element: LoginParamModel.ImageElement): ImageView {
+         * Create ImageView
+         */
+        fun createImageElement(context: Context, element: KYCParamModel.ImageElement): ImageView {
             val imageView = if (element.style != null) {
                 ImageView(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -41,9 +36,9 @@ class UIElementUtil {
         }
 
         /**
-        * Create TextView
-        */
-        fun createTextElement(context: Context, element: LoginParamModel.TextElement): TextView {
+         * Create TextView
+         */
+        fun createTextElement(context: Context, element: KYCParamModel.TextElement): TextView {
             val textView = if (element.style != null) {
                 TextView(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -65,9 +60,9 @@ class UIElementUtil {
         }
 
         /**
-        * Create TextInputLayout with TextInputEditText (for show/hide password functionality
-        */
-        fun createInputElement(context: Context, element: LoginParamModel.InputElement): TextInputLayout {
+         * Create TextInputLayout with TextInputEditText (for show/hide password functionality
+         */
+        fun createInputElement(context: Context, element: KYCParamModel.InputElement): TextInputLayout {
             val textInputLayout = TextInputLayout(context)
             DisplayUtil.customizeLinearElement(
                 context,
@@ -97,9 +92,9 @@ class UIElementUtil {
         }
 
         /**
-        * Create Button
-        */
-        fun createButtonElement(context: Context, element: LoginParamModel.ButtonElement) : Button {
+         * Create Button
+         */
+        fun createButtonElement(context: Context, element: KYCParamModel.ButtonElement) : Button {
             val button = if (element.style != null) {
                 Button(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -119,59 +114,6 @@ class UIElementUtil {
                 button.id = View.generateViewId()
             }
             return button
-        }
-
-        /**
-        * Create Facebook Log-in Button
-        */
-        fun createFacebookButton(context: Context, element: LoginParamModel.ThirdPartyFacebook) : LoginButton {
-            val facebookButton = if (element.style != null) {
-                LoginButton(ContextThemeWrapper(context, element.style!!), null, 0)
-            } else {
-                LoginButton(context)
-            }
-            if (element.gravity != null) {
-                facebookButton.gravity = element.gravity!!
-            }
-            DisplayUtil.customizeLinearElement(
-                context,
-                facebookButton,
-                element
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                facebookButton.id = View.generateViewId()
-            }
-            return facebookButton
-        }
-
-        /**
-        * Create Google Log-in Button
-        */
-        fun createGoogleButton(context: Context, element: LoginParamModel.ThirdPartyGoogle,
-                               signInClient: GoogleSignInClient, activity: Activity) : SignInButton {
-            val googleButton = if (element.style != null) {
-                SignInButton(ContextThemeWrapper(context, element.style!!), null, 0)
-            } else {
-                SignInButton(context)
-            }
-            DisplayUtil.customizeLinearElement(
-                context,
-                googleButton,
-                element
-            )
-
-            googleButton.setOnClickListener {
-                val signInIntent = signInClient.signInIntent
-                val task = GoogleSignIn.getSignedInAccountFromIntent(signInIntent)
-                activity.startActivityForResult(signInIntent, LoginActivity.RC_SIGN_IN)
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                googleButton.id = View.generateViewId()
-            }
-
-            return googleButton
         }
 
     }

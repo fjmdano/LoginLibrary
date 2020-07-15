@@ -1,2 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ubx.kyclibrary" />
+    package="com.ubx.kyclibrary">
+    <application
+        android:allowBackup="false">
+        <activity android:name="com.ubx.kyclibrary.KYCActivity">
+        </activity>
+    </application>
+</manifest>
