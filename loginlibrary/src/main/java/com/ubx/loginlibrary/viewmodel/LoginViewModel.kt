@@ -56,9 +56,15 @@ class LoginViewModel(private val context: Context) {
                             context, it.value as LoginParamModel.InputElement))
                 }
                 LoginParamModel.ElementType.BUTTON -> {
-                    linearLayout.addView(
-                        UIElementUtil.createButtonElement(
-                            context, it.value as LoginParamModel.ButtonElement))
+                    if (it.value is LoginParamModel.ButtonElement) {
+                        linearLayout.addView(
+                            UIElementUtil.createButtonElement(
+                                context, it.value))
+                    } else if (it.value is LoginParamModel.IntentButtonElement) {
+                        linearLayout.addView(
+                            UIElementUtil.createIntentButtonElement(
+                                context, it.value))
+                    }
                 }
                 LoginParamModel.ElementType.THIRD_PARTY -> {
                     if (it.value is LoginParamModel.ThirdPartyFacebook) {

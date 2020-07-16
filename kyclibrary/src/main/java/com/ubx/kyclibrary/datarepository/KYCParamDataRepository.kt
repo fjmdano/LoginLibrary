@@ -1,5 +1,6 @@
 package com.ubx.kyclibrary.datarepository
 
+import android.content.Intent
 import android.widget.LinearLayout
 import com.ubx.kyclibrary.model.KYCParamModel
 
@@ -14,6 +15,7 @@ class KYCParamDataRepository {
     var listElements: MutableList<KYCParamModel.ListElement> = mutableListOf()
     var mediaElements: MutableList<KYCParamModel.MediaElement> = mutableListOf()
     var buttonElements: MutableList<KYCParamModel.ButtonElement> = mutableListOf()
+    var loginIntent: Intent? = null
 
     fun setImageStyle(style: Int) {
         imageElements.forEach {
@@ -44,7 +46,6 @@ class KYCParamDataRepository {
             it.style = style
         }
     }
-
 
     private object HOLDER {
         val INSTANCE = KYCParamDataRepository()

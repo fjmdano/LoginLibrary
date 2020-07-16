@@ -1,5 +1,6 @@
 package com.ubx.kyclibrary.helper
 
+import android.content.Intent
 import android.widget.LinearLayout
 import com.ubx.kyclibrary.datarepository.KYCParamDataRepository
 import com.ubx.kyclibrary.model.KYCParamModel
@@ -149,6 +150,14 @@ class KYCParamHelper {
          */
         fun getPages(): MutableList<KYCParamModel.Page> {
             return KYCParamDataRepository.instance.pages
+        }
+
+        fun setLoginIntent(intent: Intent) {
+            getDataRepo().loginIntent = intent
+        }
+
+        fun getLoginIntent(): Intent? {
+            return getDataRepo().loginIntent
         }
 
         private fun getDataRepo(): KYCParamDataRepository {

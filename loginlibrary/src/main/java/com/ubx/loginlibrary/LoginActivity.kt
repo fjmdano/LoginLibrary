@@ -194,7 +194,7 @@ class LoginActivity: AppCompatActivity() {
         private const val TAG = "LoginLibrary"
         const val RC_SIGN_IN = 9001
         fun getIntent(context: Context): Intent {
-            val intent = Intent(context, Class.forName("com.ubx.loginhelper.LoginActivity"))
+            val intent = Intent(context, Class.forName("com.ubx.loginlibrary.LoginActivity"))
             return intent
         }
     }

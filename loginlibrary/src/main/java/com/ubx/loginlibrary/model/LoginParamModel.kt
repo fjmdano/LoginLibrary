@@ -1,5 +1,7 @@
 package com.ubx.loginlibrary.model
 
+import android.content.Intent
+
 
 data class LoginParamModel(var appName: String,
                            override var width: Int,
@@ -14,6 +16,8 @@ data class LoginParamModel(var appName: String,
     data class TextElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
 
     data class ButtonElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
+
+    data class IntentButtonElement(val text: String, val intent: Intent, override var width: Int, override var height: Int): UIElement(width, height)
 
     data class InputElement(
         val hint: String,

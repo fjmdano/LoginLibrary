@@ -23,6 +23,8 @@ class LoginHelper(val context: Context, appName: String,
         LoginParamHelper.setLoginParam(appName, width, height)
     }
 
+    /*******************[START] CUSTOMIZE MAIN LOGIN LAYOUT ******************************/
+
     /**
      * Set Padding of login view
      *
@@ -64,6 +66,9 @@ class LoginHelper(val context: Context, appName: String,
     fun setStyle(style: Int) {
         LoginParamHelper.setStyle(style)
     }
+    /***********************[END] CUSTOMIZE MAIN LOGIN LAYOUT ****************************/
+
+    /*******************[START] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
 
     /**
      * Add an image in the login view
@@ -117,6 +122,18 @@ class LoginHelper(val context: Context, appName: String,
     }
 
     /**
+     * Add a button (with intent to next activity) in the login view
+     *
+     * @param label button label
+     * @param width width of text
+     * @param height height of text
+     * @return ButtonElement that can be customized with style, background, padding and margins
+     */
+    fun addIntentButton(label: String, intent: Intent, width: Int, height: Int): LoginParamModel.IntentButtonElement {
+        return LoginParamHelper.addIntentButton(label, intent, width, height)
+    }
+
+    /**
      * Add Sign in with Google
      *
      * @param width width of text
@@ -137,45 +154,10 @@ class LoginHelper(val context: Context, appName: String,
     fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook {
         return LoginParamHelper.addFacebookSignIn(width, height)
     }
+    /*********************[END] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
 
-    /**
-     * Get size in DP
-     *
-     * @param size Int
-     * @return size in DP
-     */
-    fun sizeInDP(size: Int): Int {
-        return DisplayUtil.sizeInDP(context, size)
-    }
 
-    /**
-     * Get intent for login view
-     *
-     * @return intent
-     */
-    fun getIntent(): Intent {
-        initializeThirdParty()
-        return LoginActivity.getIntent(context)
-    }
-
-    /**
-     * Get currently logged in user
-     *
-     * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
-     */
-    fun getUser(): User? {
-        initializeThirdParty()
-        return UserHelper.getSignedInUser()
-    }
-
-    /**
-     * Sign out current user
-     *
-     * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
-     */
-    fun signOutUser() {
-        UserHelper.signOutUser()
-    }
+    /*********************[START] THIRD PARTY RELATED************************************/
 
     /**
      * Use Firebase SDK for logging in
@@ -214,5 +196,55 @@ class LoginHelper(val context: Context, appName: String,
             isThirdPartyInitialized = true
         }
     }
+    /***********************[END] THIRD PARTY RELATED************************************/
 
+    /***********************[START] USER RELATED*****************************************/
+    /**
+     * Get currently logged in user
+     *
+     * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
+     */
+    fun getUser(): User? {
+        initializeThirdParty()
+        return UserHelper.getSignedInUser()
+    }
+
+    /**
+     * Sign out current user
+     *
+     * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
+     */
+    fun signOutUser() {
+        UserHelper.signOutUser()
+    }
+    /*************************[END] USER RELATED*****************************************/
+
+    /***********************[START] INTENT RELATED***************************************/
+    /**
+     * Get intent for login view
+     *
+     * @return intent
+     */
+    fun getIntent(): Intent {
+        initializeThirdParty()
+        return LoginActivity.getIntent(context)
+    }
+
+    /**
+     * Set KYC intent
+     */
+    fun setKYCIntent(intent: Intent) {
+        UserHelper.setKYCIntent(intent)
+    }
+    /*************************[END] INTENT RELATED***************************************/
+
+    /**
+     * Get size in DP
+     *
+     * @param size Int
+     * @return size in DP
+     */
+    fun sizeInDP(size: Int): Int {
+        return DisplayUtil.sizeInDP(context, size)
+    }
 }

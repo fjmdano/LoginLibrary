@@ -5,7 +5,7 @@ import com.ubx.loginlibrary.model.User
 
 class UserDataRepository {
     var user: User? = null
-    var registerIntent: Intent? = null
+    var kycIntent: Intent? = null
 
     private object HOLDER {
         val INSTANCE = UserDataRepository()

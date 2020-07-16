@@ -1,5 +1,6 @@
 package com.ubx.sample
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
@@ -7,16 +8,58 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
 
 class MainActivity : AppCompatActivity() {
+    lateinit var loginHelper: LoginHelper
+    lateinit var kycHelper: KYCHelper
+
+    lateinit var loginIntent: Intent
+    lateinit var kycIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //Create Login Parameters
-        val loginHelper = createLoginHelper()
+        createHelpers()
+        useThirdParties()
+        createIntents()
+
+        createLoginContent()
+        createKYCContent()
+
+        setSignOutHandler()
+        var user = loginHelper.getUser()
+        if (user == null) {
+            showLogin()
+        }
+    }
+
+    private fun setSignOutHandler() {
+        val btnSignOut = findViewById<Button>(R.id.btn_logout)
+        btnSignOut.setOnClickListener {
+            loginHelper.signOutUser()
+            showLogin()
+        }
+    }
+
+    /**
+     * Initialize LoginHelper and KYCHelper
+     */
+    private fun createHelpers() {
+        loginHelper = LoginHelper(applicationContext, "name",
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            ConstraintLayout.LayoutParams.MATCH_PARENT)
+
+        kycHelper = KYCHelper(applicationContext, "LoginHelper")
+    }
+
+    /**
+     * Set config for Facebook and Firebase SDK
+     */
+    private fun useThirdParties() {
         loginHelper.useFacebook("738407303585042",
             "fb738407303585042")
         loginHelper.useFirebase("915758123947",
@@ -26,33 +69,27 @@ class MainActivity : AppCompatActivity() {
             "1:915758123947:android:c5761b86a82280408520ee",
             "AIzaSyAF9yimwJdEqdNcxsxEGnqTRo0w5KTbcqM",
             "915758123947-4vhnf7vbjk7p6c0njqp5lben0ede1o9v.apps.googleusercontent.com")
+    }
 
-        setSignOutHandler(loginHelper)
-        var user = loginHelper.getUser()
-        if (user == null) {
-            showLogin(loginHelper)
+    /**
+     * Create log-in and kyc intent
+     */
+    private fun createIntents() {
+        if (!this::loginIntent.isInitialized) {
+            loginIntent = loginHelper.getIntent()
+            kycHelper.setLoginIntent(loginIntent)
+        }
+        if (!this::kycIntent.isInitialized) {
+            kycIntent = kycHelper.getIntent()
+            loginHelper.setKYCIntent(kycIntent)
         }
     }
 
-    private fun setSignOutHandler(loginHelper: LoginHelper) {
-        val btnSignOut = findViewById<Button>(R.id.btn_logout)
-        btnSignOut.setOnClickListener {
-            loginHelper.signOutUser()
-            showLogin(loginHelper)
-        }
+    private fun showLogin() {
+        startActivity(loginIntent)
     }
 
-    private fun showLogin(loginHelper: LoginHelper) {
-        val intent = loginHelper.getIntent()
-        startActivity(intent)
-    }
-
-
-    private fun createLoginHelper(): LoginHelper {
-        val loginHelper = LoginHelper(this, "name",
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.MATCH_PARENT)
-
+    private fun createLoginContent() {
         loginHelper.setPadding(10, 10, 10, 10)
         loginHelper.setBackground(android.R.color.white)
         loginHelper.setStyle(R.style.Background)
@@ -108,11 +145,23 @@ class MainActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        return loginHelper
+        val buttonRegister = loginHelper.addIntentButton("No account yet? Register now!",
+            kycIntent,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
     }
 
-    private fun createRegisterHelper() {
-        //val registerHelper = Regi
+    private fun createKYCContent(){
+        kycHelper.addPage("Terms and Agreement", null, null)
+        kycHelper.addText(applicationContext.getString(R.string.terms_and_agreement),
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        kycHelper.addButton("I agree to the Terms and Agreement",
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
 }

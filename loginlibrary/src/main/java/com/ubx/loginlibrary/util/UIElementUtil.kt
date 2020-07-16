@@ -121,6 +121,35 @@ class UIElementUtil {
             return button
         }
 
+
+        /**
+         * Create Button with onClickHandler based from activity intent
+         */
+        fun createIntentButtonElement(context: Context, element: LoginParamModel.IntentButtonElement) : Button {
+            val button = if (element.style != null) {
+                Button(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                Button(context)
+            }
+            if (element.gravity != null) {
+                button.gravity = element.gravity!!
+            }
+            DisplayUtil.customizeLinearElement(
+                context,
+                button,
+                element
+            )
+            button.text = element.text
+            button.setOnClickListener {
+                context.startActivity(element.intent)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                button.id = View.generateViewId()
+            }
+            return button
+        }
+
         /**
         * Create Facebook Log-in Button
         */

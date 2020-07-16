@@ -1,5 +1,6 @@
 package com.ubx.loginlibrary.helper
 
+import android.content.Intent
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseUser
@@ -75,6 +76,20 @@ class UserHelper {
                 }
             }
             UserDataRepository.instance.user = null
+        }
+
+        /**
+         * Set KYC intent
+         */
+        fun setKYCIntent(intent: Intent) {
+            UserDataRepository.instance.kycIntent = intent
+        }
+
+        /**
+         * Get KYC intent
+         */
+        fun getKYCIntent(): Intent? {
+            return UserDataRepository.instance.kycIntent
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.ubx.kyclibrary
 
 import android.content.Context
+import android.content.Intent
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.model.UIElement
@@ -9,7 +10,6 @@ class KYCHelper(val context: Context, appName: String) {
 
     fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
         KYCParamHelper.addPage(pageTitle, leftContent, rightContent)
-
     }
 
     fun addPageRow(uiElements: MutableList<UIElement>) {
@@ -100,5 +100,21 @@ class KYCHelper(val context: Context, appName: String) {
      */
     fun addButtonInRow(label: String, width: Int, height: Int): KYCParamModel.ButtonElement {
         return KYCParamHelper.addButton(label, width, height, false)
+    }
+
+    /**
+     * Get intent for login view
+     *
+     * @return intent
+     */
+    fun getIntent(): Intent {
+        return KYCActivity.getIntent(context)
+    }
+
+    /**
+     * Set Login intent
+     */
+    fun setLoginIntent(intent: Intent) {
+        KYCParamHelper.setLoginIntent(intent)
     }
 }

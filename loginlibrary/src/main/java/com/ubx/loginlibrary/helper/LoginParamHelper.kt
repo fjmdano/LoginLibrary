@@ -1,5 +1,6 @@
 package com.ubx.loginlibrary.helper
 
+import android.content.Intent
 import com.ubx.loginlibrary.datarepository.LoginParamDataRepository
 import com.ubx.loginlibrary.model.LoginParamModel
 import com.ubx.loginlibrary.model.UIElement
@@ -121,6 +122,23 @@ class LoginParamHelper {
          */
         fun addButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
             val button = LoginParamModel.ButtonElement(label, width, height)
+            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
+                LoginParamModel.ElementType.BUTTON, button
+            ))
+            return button
+        }
+
+        /**
+         * Add a button (with intent to next activity) in the login view
+         *
+         * @param label button label
+         * @param intent intent to start next activity
+         * @param width width of text
+         * @param height height of text
+         * @return ButtonElement that can be customized with style, background, padding and margins
+         */
+        fun addIntentButton(label: String, intent: Intent, width: Int, height: Int): LoginParamModel.IntentButtonElement {
+            val button = LoginParamModel.IntentButtonElement(label, intent, width, height)
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.BUTTON, button
             ))

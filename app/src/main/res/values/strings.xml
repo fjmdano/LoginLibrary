@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LoginSampler</string>
+    <string name="terms_and_agreement">The customer agreeing to these terms ("Customer"), and Google LLC (formerly known as Google Inc.), Google Ireland Limited, Google Asia Pacific Pte. Ltd., or any other entity that directly or indirectly controls, is controlled by, or is under common control with Google LLC (as applicable, "Google"), have entered into an agreement under which Google has agreed to provide Firebase Services (as described at https://firebase.google.com/terms) which specifically reference the Firebase Data Processing and Security Terms (as amended from time to time, the "Agreement").\n\nThese Firebase Data Processing and Security Terms, including their appendices, (the "Terms") will be effective and replace any previously applicable data processing and security terms as from the Terms Effective Date (as defined below). These Terms supplement the Agreement.</string>
 </resources>
