@@ -2,7 +2,6 @@
     package="com.ubx.kyclibrary">
     <application
         android:allowBackup="false">
-        <activity android:name="com.ubx.kyclibrary.KYCActivity">
-        </activity>
+        <activity android:name="com.ubx.kyclibrary.KYCActivity"/>
     </application>
 </manifest>

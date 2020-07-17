@@ -8,6 +8,10 @@
         android:id="@+id/cl_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="3dp"
+        android:paddingStart="3dp"
+        android:paddingRight="3dp"
+        android:paddingEnd="3dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/hl_separator">
@@ -17,6 +21,17 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_media_rew"
             android:tint="@android:color/darker_gray"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Left image for back press" />
+
+        <TextView
+            android:id="@+id/tv_left"
+            android:text="Back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -27,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:layout_constraintStart_toEndOf="@+id/cl_left"
+        app:layout_constraintEnd_toStartOf="@+id/cl_right"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/hl_separator"
         />
@@ -35,6 +51,10 @@
         android:id="@+id/cl_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="3dp"
+        android:paddingStart="3dp"
+        android:paddingRight="3dp"
+        android:paddingEnd="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/hl_separator">
@@ -44,11 +64,21 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_media_ff"
             android:tint="@android:color/darker_gray"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <TextView
+            android:id="@+id/tv_right"
+            android:text="Next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View

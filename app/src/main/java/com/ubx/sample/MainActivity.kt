@@ -1,9 +1,12 @@
 package com.ubx.sample
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
     lateinit var loginHelper: LoginHelper
     lateinit var kycHelper: KYCHelper
 
@@ -20,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_main)
 
         //Create Login Parameters
@@ -162,6 +167,29 @@ class MainActivity : AppCompatActivity() {
         kycHelper.addButton("I agree to the Terms and Agreement",
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        kycHelper.addPage("Registration", null, "Next")
+        kycHelper.addInput("E-mail", false,
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "email",
+            true
+        )
+        kycHelper.addInput("Username", false,
+            InputType.TYPE_CLASS_TEXT,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "username",
+            true
+        )
+        kycHelper.addInput("Password", true,
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "password",
+            true
+        )
     }
 
 }
