@@ -102,7 +102,7 @@ class DisplayUtil {
          * @param view view that will be customized
          * @param padding UIElement.Padding that contains the top, left, right, bottom padding
          */
-        private fun setPadding(context: Context, view: View, padding: UIElement.Padding) {
+        fun setPadding(context: Context, view: View, padding: UIElement.Padding) {
             val conversion = context.resources.displayMetrics.density
             view.setPadding((padding.left * conversion).toInt(),
                 (padding.top * conversion).toInt(),
@@ -118,7 +118,7 @@ class DisplayUtil {
          * @param view view that will be customized
          * @param margins UIElement.Margins that contains the top, left, right, bottom margins
          */
-        private fun setMargins(context: Context, view: View, margins: UIElement.Margins) {
+        fun setMargins(context: Context, view: View, margins: UIElement.Margins) {
             val conversion = context.resources.displayMetrics.density
             if (view.layoutParams is ViewGroup.MarginLayoutParams) {
                 val params = view.layoutParams as ViewGroup.MarginLayoutParams

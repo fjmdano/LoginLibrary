@@ -105,6 +105,7 @@ class UIElementUtil {
             } else {
                 Button(context)
             }
+            button.isAllCaps = false
             if (element.gravity != null) {
                 button.gravity = element.gravity!!
             }
@@ -131,6 +132,7 @@ class UIElementUtil {
             } else {
                 Button(context)
             }
+            button.isAllCaps = false
             if (element.gravity != null) {
                 button.gravity = element.gravity!!
             }

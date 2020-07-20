@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
+import com.ubx.loginlibrary.model.UIElement
 
 class MainActivity : Activity() {
     lateinit var loginHelper: LoginHelper
@@ -96,21 +97,24 @@ class MainActivity : Activity() {
 
     private fun createLoginContent() {
         loginHelper.setPadding(10, 10, 10, 10)
-        loginHelper.setBackground(android.R.color.white)
+        loginHelper.setBackground(R.color.white)
         loginHelper.setStyle(R.style.Background)
 
-        val iconImage = loginHelper.addImage(android.R.drawable.ic_lock_lock,
-            loginHelper.sizeInDP(50),
-            loginHelper.sizeInDP(50)
+        val iconImage = loginHelper.addImage(R.drawable.wallet_icon ,
+            loginHelper.sizeInDP(150),
+            loginHelper.sizeInDP(150)
         )
         iconImage.layoutGravity = Gravity.CENTER_HORIZONTAL
+        iconImage.margins = UIElement.Margins(0, loginHelper.sizeInDP(20), 0, 0)
 
-        val textLogin = loginHelper.addText("Log-in",
+        val textLogin = loginHelper.addText("Log in",
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        textLogin.style = R.style.LabelText
+        textLogin.style = R.style.TitleText
         textLogin.layoutGravity = Gravity.CENTER_HORIZONTAL
+        textLogin.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
+            0, loginHelper.sizeInDP(5))
 
         val inputUsername = loginHelper.addInput("Username",
             false,
@@ -132,11 +136,14 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        buttonLogin.margins = UIElement.Margins(0, loginHelper.sizeInDP(5), 0, 0)
 
-        val textOthers = loginHelper.addText("Or log-in using",
+        val textOthers = loginHelper.addText("------- or -------",
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        textOthers.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
+            0, loginHelper.sizeInDP(5))
         textOthers.style = R.style.LabelText
         textOthers.layoutGravity = Gravity.CENTER_HORIZONTAL
 
@@ -155,10 +162,13 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        buttonRegister.style = R.style.Button_DefaultAlpha
+        buttonRegister.margins = UIElement.Margins(0, loginHelper.sizeInDP(10), 0, 0)
 
     }
 
     private fun createKYCContent(){
+        kycHelper.setPadding(kycHelper.sizeInDP(5), kycHelper.sizeInDP(5), kycHelper.sizeInDP(5), 0)
         kycHelper.addPage("Terms and Agreement", null, null)
         kycHelper.addText(applicationContext.getString(R.string.terms_and_agreement),
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -176,20 +186,41 @@ class MainActivity : Activity() {
             "email",
             true
         )
-        kycHelper.addInput("Username", false,
+        val usernameInput = kycHelper.addInput("Username", false,
             InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             "username",
             true
         )
-        kycHelper.addInput("Password", true,
+        usernameInput.minimumLength = 8
+        usernameInput.maximumLength = 15
+        val passwordInput = kycHelper.addInput("Password", true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             "password",
             true
         )
+        passwordInput.minimumLength = 8
+        passwordInput.maximumLength = 15
+        passwordInput.regexPositiveValidation.add(".*[a-zA-Z]+.*")
+        passwordInput.regexPositiveValidation.add(".*\\d.*")
+        passwordInput.regexNegativeValidation.add("[a-zA-Z0-9]*")
+        kycHelper.addText("Password should contain 8-20 characters, with at least 1 letter, 1 number and 1 special character",
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        kycHelper.addPage("Personal Details", null, "Submit")
+        kycHelper.addInput("Address", false,
+            InputType.TYPE_CLASS_TEXT,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "address",
+            true
+        )
+
     }
 
 }

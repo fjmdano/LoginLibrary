@@ -1,5 +1,8 @@
 package com.ubx.kyclibrary.model
 
+import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
+
 class KYCParamModel {
 
     data class Page(var pageTitle: String,
@@ -23,7 +26,14 @@ class KYCParamModel {
         override var height: Int,
         val key: String,
         val isRequired: Boolean
-    ): UIElement(width, height)
+    ): UIElement(width, height) {
+        var inputLayout: TextInputLayout? = null
+        var editText: EditText? = null
+        var minimumLength: Int = 0
+        var maximumLength: Int = 0
+        var regexPositiveValidation: MutableList<String> = mutableListOf()
+        var regexNegativeValidation: MutableList<String> = mutableListOf()
+    }
 
     data class DropdownElement(
         val hint: String,

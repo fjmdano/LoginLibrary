@@ -163,6 +163,56 @@ class KYCParamHelper {
         private fun getDataRepo(): KYCParamDataRepository {
             return KYCParamDataRepository.instance
         }
+
+
+
+        /**
+         * Get Padding of KYC view
+         *
+         * @param left left padding
+         * @param top top padding
+         * @param right right padding
+         * @param bottom bottom padding
+         */
+        fun getPadding(): UIElement.Padding {
+            return getDataRepo().layoutPadding
+        }
+
+        /**
+         * Get Margins of KYC view
+         *
+         * @param left left margins
+         * @param top top margins
+         * @param right right margins
+         * @param bottom bottom margins
+         */
+        fun getMargins(): UIElement.Margins {
+            return getDataRepo().layoutMargins
+        }
+
+        /**
+         * Set Padding of KYC view
+         *
+         * @param left left padding
+         * @param top top padding
+         * @param right right padding
+         * @param bottom bottom padding
+         */
+        fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+            getDataRepo().layoutPadding = UIElement.Padding(left, top, right, bottom)
+        }
+
+        /**
+         * Set Margins of KYC view
+         *
+         * @param left left margins
+         * @param top top margins
+         * @param right right margins
+         * @param bottom bottom margins
+         */
+        fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
+            getDataRepo().layoutMargins = UIElement.Margins(left, top, right, bottom)
+        }
     }
 
 }

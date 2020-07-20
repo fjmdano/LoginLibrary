@@ -3,8 +3,12 @@ package com.ubx.kyclibrary.datarepository
 import android.content.Intent
 import android.widget.LinearLayout
 import com.ubx.kyclibrary.model.KYCParamModel
+import com.ubx.kyclibrary.model.UIElement
+import com.ubx.kyclibrary.util.DisplayUtil
 
 class KYCParamDataRepository {
+    var layoutPadding: UIElement.Padding = UIElement.Padding(0, 0,0,0)
+    var layoutMargins: UIElement.Margins = UIElement.Margins(0, 0,0,0)
     var layoutPages: MutableList<LinearLayout> = mutableListOf()
     var pages: MutableList<KYCParamModel.Page> = mutableListOf()
     var registerValues: MutableList<KYCParamModel.Values> = mutableListOf()

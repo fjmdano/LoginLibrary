@@ -5,6 +5,7 @@ import android.content.Intent
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.model.UIElement
+import com.ubx.kyclibrary.util.DisplayUtil
 
 class KYCHelper(val context: Context, appName: String) {
 
@@ -14,6 +15,30 @@ class KYCHelper(val context: Context, appName: String) {
 
     fun addPageRow(uiElements: MutableList<UIElement>) {
         KYCParamHelper.addRow(uiElements)
+    }
+
+    /**
+     * Set Padding of login view
+     *
+     * @param left left padding
+     * @param top top padding
+     * @param right right padding
+     * @param bottom bottom padding
+     */
+    fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        KYCParamHelper.setPadding(left, top, right, bottom)
+    }
+
+    /**
+     * Set Margins of login view
+     *
+     * @param left left margins
+     * @param top top margins
+     * @param right right margins
+     * @param bottom bottom margins
+     */
+    fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
+        KYCParamHelper.setMargins(left, top, right, bottom)
     }
 
     /**
@@ -116,5 +141,15 @@ class KYCHelper(val context: Context, appName: String) {
      */
     fun setLoginIntent(intent: Intent) {
         KYCParamHelper.setLoginIntent(intent)
+    }
+
+    /**
+     * Get size in DP
+     *
+     * @param size Int
+     * @return size in DP
+     */
+    fun sizeInDP(size: Int): Int {
+        return DisplayUtil.sizeInDP(context, size)
     }
 }

@@ -1,5 +1,7 @@
 package com.ubx.kyclibrary.model
 
+import android.view.View
+
 open class UIElement(
     open var width: Int,
     open var height: Int

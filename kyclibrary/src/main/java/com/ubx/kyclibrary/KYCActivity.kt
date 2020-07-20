@@ -11,6 +11,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.appbar.AppBarLayout
@@ -164,8 +165,14 @@ class KYCActivity: Activity() {
 
     fun displayNextView() {
         if (currentLinearLayout != null) {
+            if (kycViewModel.verifyInputs()) {
+                Toast.makeText(this, "Please verify inputs before proceeding", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             parentLayout.removeView(currentLinearLayout)
             currentLinearLayout = null
+
         }
         currentLinearLayout = kycViewModel.getNextLayoutPage()
         kycViewModel.setToolbar()
