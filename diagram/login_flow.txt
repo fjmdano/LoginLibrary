@@ -22,6 +22,7 @@ skinparam sequence {
 	BoxborderColor Black
 }
 
+activate Main
 Main -> LoginHelper ** : (context, name, width, height)
 Main -> LoginHelper: Set configuration/s used by third parties
 Main -> LoginHelper: Get Intent
@@ -60,9 +61,23 @@ loop UI elements to be added in login view
 		setBackground(), setStyle()
 	end note
 end loop
+Main -> LoginHelper: Get currently logged in user
+	activate LoginHelper
+	LoginHelper -> LoginModel: Get user
+	note right #white
+		Null if none, else either
+		* FirebaseUser
+		* Facebook token
+		* Custom json
+	end note
+	LoginHelper <-- LoginModel: user
+	deactivate LoginHelper
+opt null user
 Main -> LoginActivity: Start Activity
+deactivate Main
 	note left #white
-		if no user is set
+		if null user or 
+		user logs out
 	end note
 	activate LoginActivity
 	LoginActivity -> LoginViewModel**: <<create>>
