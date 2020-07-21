@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.ubx.kyclibrary.KYCActivity
 import com.ubx.kyclibrary.helper.KYCParamHelper
+import com.ubx.kyclibrary.helper.KYCValueHelper
 import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.model.UIElement
 import com.ubx.kyclibrary.util.DisplayUtil
@@ -122,6 +123,12 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                         }
                         layoutToUse.addView(button)
                     }
+                    is KYCParamModel.DateElement -> {
+                        layoutToUse.addView(UIElementUtil.createDateElement(context, element))
+                    }
+                    is KYCParamModel.DropdownElement -> {
+                        layoutToUse.addView(UIElementUtil.createDropdownElement(context, element))
+                    }
                     else -> {
                         Toast.makeText(context, "Not yet supported (for now)", Toast.LENGTH_SHORT).show()
                     }
@@ -140,21 +147,24 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
      * @return true if errors are encountered
      */
     fun verifyInputs(): Boolean {
-        var page = KYCParamHelper.getPage(currentPage)!!
+        val page = KYCParamHelper.getPage(currentPage)!!
         var hasError = false
         page.rows.forEach {
             it.elements.forEach{element ->
                 if (element is KYCParamModel.InputElement) {
                     val text = element.editText!!.text
-                    println("[TEXT] [" + element.hint + "] " + text)
+                    KYCValueHelper.setValue(element.key, text.toString())
                     if (text.length < element.minimumLength) {
                         element.inputLayout?.error = element.hint + " should be have at least " + element.minimumLength + " characters."
                         hasError = true
-                    }
-                    if (!hasError && !UIElementUtil.isValidInput(text.toString(), element.regexPositiveValidation, element.regexNegativeValidation)) {
+                    } else if (!UIElementUtil.isValidInput(text.toString(), element.regexPositiveValidation, element.regexNegativeValidation)) {
                         element.inputLayout?.error = element.hint + " is not valid."
                         hasError = true
+                    } else {
+                        element.inputLayout?.error = null
                     }
+                } else if (element is KYCParamModel.DateElement) {
+                    KYCValueHelper.setValue(element.key, element.editText!!.text.toString())
                 }
             }
         }

@@ -212,7 +212,7 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        kycHelper.addPage("Personal Details", null, "Submit")
+        kycHelper.addPage("Personal Details", "Back", "Submit")
         kycHelper.addInput("Address", false,
             InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -220,7 +220,18 @@ class MainActivity : Activity() {
             "address",
             true
         )
-
+        kycHelper.addDate("Birthday",
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "birthday",
+            true
+        )
+        kycHelper.addDropdown("Gender",
+            listOf("Female", "Male", "Non-binary"),
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "gender",
+            true)
     }
 
 }

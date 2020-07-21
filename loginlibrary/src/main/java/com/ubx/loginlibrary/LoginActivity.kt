@@ -189,9 +189,8 @@ class LoginActivity: Activity() {
             }
 
         } catch (e: ApiException) {
-            println("========================================================================")
             Toast.makeText(this, "Error: " + e.message, Toast.LENGTH_SHORT).show()
-            println(e.localizedMessage)
+            Log.w(TAG, e.localizedMessage)
         }
     }
 

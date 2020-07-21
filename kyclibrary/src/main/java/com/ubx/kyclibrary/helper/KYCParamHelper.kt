@@ -55,7 +55,7 @@ class KYCParamHelper {
         }
 
         /**
-         * Add an image in the login view
+         * Add an image in the kyc view
          *
          * @param image image (i.e. R.drawable.*)
          * @param width width of image
@@ -74,7 +74,7 @@ class KYCParamHelper {
         }
 
         /**
-         * Add an text in the login view
+         * Add an text in the kyc view
          *
          * @param label text label
          * @param width width of text
@@ -93,7 +93,7 @@ class KYCParamHelper {
         }
 
         /**
-         * Add an input text in the login view
+         * Add an input text in the kyc view
          *
          * @param hint input hint
          * @param isPassword true if input text is password, else false
@@ -116,7 +116,7 @@ class KYCParamHelper {
         }
 
         /**
-         * Add a button in the login view
+         * Add a button in the kyc view
          *
          * @param label button label
          * @param width width of text
@@ -132,6 +132,46 @@ class KYCParamHelper {
                 getLastPage().rows.add(pageRow)
             }
             return button
+        }
+
+        /**
+         * Add an edit text with date picker in the kyc view
+         *
+         * @param label button label
+         * @param width width of text
+         * @param height height of text
+         * @return DateElement that can be customized with style, background, padding and margins
+         */
+        fun addDate(label: String, width: Int, height: Int, key: String,
+                    isRequired: Boolean, addNow: Boolean = false): KYCParamModel.DateElement {
+            val dateElement = KYCParamModel.DateElement(label, width, height, key, isRequired)
+            getDataRepo().dateElements.add(dateElement)
+            if (addNow) {
+                val pageRow = KYCParamModel.PageRow(mutableListOf())
+                pageRow.elements.add(dateElement)
+                getLastPage().rows.add(pageRow)
+            }
+            return dateElement
+        }
+
+        /**
+         * Add a dropdown in the kyc view
+         *
+         * @param label button label
+         * @param width width of text
+         * @param height height of text
+         * @return DropdownElement that can be customized with style, background, padding and margins
+         */
+        fun addDropdown(label: String, choices: List<String>, width: Int, height: Int, key: String,
+                    isRequired: Boolean, addNow: Boolean = false): KYCParamModel.DropdownElement {
+            val dropdownElement = KYCParamModel.DropdownElement(label, choices, width, height, key, isRequired)
+            getDataRepo().dropdownElements.add(dropdownElement)
+            if (addNow) {
+                val pageRow = KYCParamModel.PageRow(mutableListOf())
+                pageRow.elements.add(dropdownElement)
+                getLastPage().rows.add(pageRow)
+            }
+            return dropdownElement
         }
 
         /**

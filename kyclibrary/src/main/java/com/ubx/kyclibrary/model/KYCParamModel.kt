@@ -35,6 +35,16 @@ class KYCParamModel {
         var regexNegativeValidation: MutableList<String> = mutableListOf()
     }
 
+    data class DateElement(
+        val hint: String,
+        override var width: Int,
+        override var height: Int,
+        val key: String,
+        val isRequired: Boolean
+    ): UIElement(width, height) {
+        var editText: EditText? = null
+    }
+
     data class DropdownElement(
         val hint: String,
         val choices: List<String>,

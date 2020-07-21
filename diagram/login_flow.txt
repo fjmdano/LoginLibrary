@@ -1,0 +1,102 @@
+@startuml
+hide footbox
+
+participant "Main Activity" as Main #HoneyDew
+box "Login Library" #GhostWhite
+participant "Login Helper" as LoginHelper #Lavender
+participant "Login Activity" as LoginActivity #Lavender
+participant "Login View Model" as LoginViewModel #Lavender
+participant "Login Model" as LoginModel #Lavender
+end box
+
+skinparam noteBorderColor black
+skinparam sequence {
+	ArrowColor DimGray
+	ActorBorderColor DeepSkyBlue
+	LifeLineBorderColor MidnightBlue
+	LifeLineBackgroundColor #LemonChiffon
+
+	ParticipantBorderColor Black
+	ParticipantFontSize 17
+	ParticipantFontColor Black
+	BoxborderColor Black
+}
+
+Main -> LoginHelper ** : (context, name, width, height)
+Main -> LoginHelper: Set configuration/s used by third parties
+Main -> LoginHelper: Get Intent
+	activate LoginHelper
+	LoginHelper -> LoginHelper: Initialize third parties if any
+	LoginHelper -> LoginActivity: Get Intent
+		activate LoginActivity
+		LoginHelper <-- LoginActivity: Intent
+		deactivate LoginActivity
+	Main <-- LoginHelper: Intent
+	deactivate LoginHelper
+
+Main -> LoginHelper: Customize login layout
+note right #white
+	setPadding(), setMargins(), 
+	setBackground(), setStyle()
+end note
+
+loop UI elements to be added in login view
+	Main -> LoginHelper: Add UI Element
+		activate LoginHelper
+		LoginHelper -> element**: <<create>>
+		note right #white
+			* can be either Image, Text, 
+			  Button, Third Party Login
+			* constructor depends on needed items
+		end note
+		LoginHelper <-- element
+		LoginHelper -> LoginModel: Add element to element list
+		Main <-- LoginHelper: element
+		deactivate LoginHelper
+
+	Main -> element: Customize element
+	note right #white
+		setPadding(), setMargins(), 
+		setBackground(), setStyle()
+	end note
+end loop
+Main -> LoginActivity: Start Activity
+	note left #white
+		if no user is set
+	end note
+	activate LoginActivity
+	LoginActivity -> LoginViewModel**: <<create>>
+	LoginActivity -> LoginActivity: Setup third party callbacks
+	LoginActivity -> LoginViewModel: Add Login Linear Layout
+		activate LoginViewModel
+		LoginViewModel -> LoginViewModel: Create Linear Layout with customizations
+		note left #white
+			customizations:
+			  * paddings
+			  * margin
+			  * background
+			  * style
+		end note
+		LoginViewModel -> LoginModel: Get UI elements
+			activate LoginModel
+			LoginViewModel <-- LoginModel: UI elements
+			deactivate LoginModel
+		loop element in UI element
+			LoginViewModel -> LoginViewModel: Create view
+			LoginViewModel -> LoginViewModel: Add to linear layout
+		end loop
+		LoginActivity <-- LoginViewModel: Linear Layout
+		deactivate LoginViewModel
+	LoginActivity -> LoginActivity: Display linear layout
+
+	opt login
+		LoginActivity -> LoginActivity: Use login callback
+		LoginActivity -> LoginViewModel: Set logged in user
+		activate LoginViewModel
+			LoginViewModel -> LoginModel: Set logged in user
+		deactivate LoginViewModel
+		Main <-- LoginActivity: Return control
+		deactivate LoginActivity
+	end opt
+
+@enduml

@@ -15,6 +15,7 @@ class KYCParamDataRepository {
     var imageElements: MutableList<KYCParamModel.ImageElement> = mutableListOf()
     var textElements: MutableList<KYCParamModel.TextElement> = mutableListOf()
     var inputElements: MutableList<KYCParamModel.InputElement> = mutableListOf()
+    var dateElements: MutableList<KYCParamModel.DateElement> = mutableListOf()
     var dropdownElements: MutableList<KYCParamModel.DropdownElement> = mutableListOf()
     var listElements: MutableList<KYCParamModel.ListElement> = mutableListOf()
     var mediaElements: MutableList<KYCParamModel.MediaElement> = mutableListOf()

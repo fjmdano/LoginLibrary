@@ -1,23 +1,30 @@
 package com.ubx.kyclibrary.util
 
+import android.R
+import android.app.DatePickerDialog
+import android.bluetooth.BluetoothClass.Device
 import android.content.Context
 import android.os.Build
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.ContextThemeWrapper
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.kyclibrary.model.KYCParamModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class UIElementUtil {
     companion object {
+        private const val TAG = "KYCLibrary"
+        private const val DATE_FORMAT = "MM/dd/yyyy"
+
         /**
          * Create ImageView
          */
@@ -130,6 +137,99 @@ class UIElementUtil {
         }
 
         /**
+         * Create EditText with Date Picker
+         */
+        fun createDateElement(context: Context, element: KYCParamModel.DateElement) : LinearLayout {
+            val dateLinearLayout = LinearLayout(context)
+            dateLinearLayout.orientation = LinearLayout.HORIZONTAL
+
+            val textView = if (element.style != null) {
+                TextView(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                TextView(context)
+            }
+            textView.text = element.hint
+            dateLinearLayout.addView(textView)
+
+            val editText = if (element.style != null) {
+                EditText(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                EditText(context)
+            }
+            editText.hint = DATE_FORMAT
+            editText.setOnClickListener {
+                showDatePicker(context, editText)
+            }
+            element.editText = editText
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.id = View.generateViewId()
+                editText.id = View.generateViewId()
+                dateLinearLayout.id = View.generateViewId()
+            }
+            dateLinearLayout.addView(editText)
+
+            return dateLinearLayout
+        }
+
+        private fun showDatePicker(context: Context, editText: EditText) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                Toast.makeText(context,
+                    "Sorry, but this is not available in your current android version.",
+                    Toast.LENGTH_SHORT).show()
+                return
+            }
+            val now = Calendar.getInstance()
+            val formatter = SimpleDateFormat(DATE_FORMAT)
+            val dpd: DatePickerDialog = DatePickerDialog(context)
+            dpd.updateDate(now[Calendar.YEAR], now[Calendar.MONTH], now[Calendar.DAY_OF_MONTH])
+            dpd.setOnDateSetListener { view, year, month, dayOfMonth ->
+                val cal = Calendar.getInstance()
+                cal[Calendar.YEAR] = year
+                cal[Calendar.MONTH] = month
+                cal[Calendar.DAY_OF_MONTH] = dayOfMonth
+                val dateRepresentation = cal.time
+                editText.setText(formatter.format(cal.time))
+            }
+            dpd.show()
+        }
+
+
+        /**
+         * Create Dropdown
+         */
+        fun createDropdownElement(context: Context, element: KYCParamModel.DropdownElement) : LinearLayout {
+            val dropdownLinearLayout = LinearLayout(context)
+            dropdownLinearLayout.orientation = LinearLayout.HORIZONTAL
+
+            val textView = if (element.style != null) {
+                TextView(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                TextView(context)
+            }
+            textView.text = element.hint
+            dropdownLinearLayout.addView(textView)
+
+            val spinner = Spinner(context)
+            ArrayAdapter(context, R.layout.simple_list_item_1, element.choices)
+                .also { adapter ->
+                    // Specify the layout to use when the list of choices appears
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    // Apply the adapter to the spinner
+                    spinner.adapter = adapter
+                }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.id = View.generateViewId()
+                spinner.id = View.generateViewId()
+                dropdownLinearLayout.id = View.generateViewId()
+            }
+            dropdownLinearLayout.addView(spinner)
+
+            return dropdownLinearLayout
+        }
+
+        /**
          * E-mail validator
          */
         fun isValidEmail(target: CharSequence?): Boolean {
@@ -143,13 +243,13 @@ class UIElementUtil {
         fun isValidInput(input: String, regexPositiveStrings: MutableList<String>, regexNegativeStrings: MutableList<String>): Boolean {
             regexPositiveStrings.forEach {
                 if (!input.matches(it.toRegex())) {
-                    println("[TEXT] [ERROR] Error for this regex: " + it.toRegex())
+                    Log.w(TAG, "[INVALID INPUT] Error for this regex: " + it.toRegex())
                     return false
                 }
             }
             regexNegativeStrings.forEach {
                 if (input.matches(it.toRegex())) {
-                    println("[TEXT] [ERROR] Error for this regex: " + it.toRegex())
+                    Log.w(TAG, "[INVALID INPUT] Error for this regex: " + it.toRegex())
                     return false
                 }
             }
