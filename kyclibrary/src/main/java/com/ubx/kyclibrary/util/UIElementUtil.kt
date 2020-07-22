@@ -143,11 +143,17 @@ class UIElementUtil {
             val dateLinearLayout = LinearLayout(context)
             dateLinearLayout.orientation = LinearLayout.HORIZONTAL
 
+            dateLinearLayout.layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1F)
+
             val textView = if (element.style != null) {
                 TextView(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
                 TextView(context)
             }
+
             textView.text = element.hint
             dateLinearLayout.addView(textView)
 
@@ -201,6 +207,12 @@ class UIElementUtil {
         fun createDropdownElement(context: Context, element: KYCParamModel.DropdownElement) : LinearLayout {
             val dropdownLinearLayout = LinearLayout(context)
             dropdownLinearLayout.orientation = LinearLayout.HORIZONTAL
+
+            val layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1F)
+            dropdownLinearLayout.layoutParams = layoutParams
 
             val textView = if (element.style != null) {
                 TextView(ContextThemeWrapper(context, element.style!!), null, 0)

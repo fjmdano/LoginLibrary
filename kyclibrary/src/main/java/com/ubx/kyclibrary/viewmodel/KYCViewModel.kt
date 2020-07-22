@@ -1,14 +1,17 @@
 package com.ubx.kyclibrary.viewmodel
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCActivity
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
+import com.ubx.kyclibrary.helper.RegisterHelper
 import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.model.UIElement
 import com.ubx.kyclibrary.util.DisplayUtil
@@ -64,11 +67,14 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
     /**
      * Get Next Linear Layout
      */
-    fun getNextLayoutPage(): LinearLayout {
+    fun getNextLayoutPage(activity: Activity): LinearLayout {
         if (currentPage < KYCParamHelper.getPageSize() - 1) {
             currentPage += 1
         } else {
-            Toast.makeText(context, "Last page, sorry.", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Last page, sorry.", Toast.LENGTH_SHORT).show()
+            val email = KYCValueHelper.getValue("email")
+            val password = KYCValueHelper.getValue("password")
+            RegisterHelper.createUserWithEmail(activity, email, password)
         }
         return getLayoutPage(currentPage)
     }
@@ -101,6 +107,11 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                 //Add another linear layout
                 val innerLinearLayout = LinearLayout(context)
                 innerLinearLayout.orientation = LinearLayout.HORIZONTAL
+
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT)
+                innerLinearLayout.layoutParams = layoutParams
                 innerLinearLayout
             } else {
                 linearLayout

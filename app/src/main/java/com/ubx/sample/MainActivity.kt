@@ -132,7 +132,7 @@ class MainActivity : Activity() {
         )
         inputPassword.style = R.style.EditText_DefaultAlpha
 
-        val buttonLogin = loginHelper.addButton("Log-in",
+        val buttonLogin = loginHelper.addEmailLoginButton("Log-in",
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -220,18 +220,21 @@ class MainActivity : Activity() {
             "address",
             true
         )
-        kycHelper.addDate("Birthday",
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "birthday",
-            true
-        )
-        kycHelper.addDropdown("Gender",
-            listOf("Female", "Male", "Non-binary"),
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "gender",
-            true)
+        kycHelper.addPageRow(mutableListOf(
+            kycHelper.addDateInRow("Birthday",
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                "birthday",
+                true
+            ),
+            kycHelper.addDropdownInRow("Gender",
+                listOf("Female", "Male", "Non-binary"),
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                "gender",
+                true)
+        ))
+
     }
 
 }

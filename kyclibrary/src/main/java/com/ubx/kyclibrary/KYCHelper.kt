@@ -57,6 +57,7 @@ class KYCHelper(val context: Context, appName: String) {
     /**
      * Add an text in the view
      * Text may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
      *
      * @param label text label
      * @param width width of text
@@ -87,6 +88,7 @@ class KYCHelper(val context: Context, appName: String) {
     /**
      * Add an input text in the view
      * Input Text may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
      *
      * @param hint input hint
      * @param isPassword true if input text is password, else false
@@ -117,6 +119,7 @@ class KYCHelper(val context: Context, appName: String) {
     /**
      * Add a button in the view
      * Button may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
      *
      * @param label text label
      * @param width width of text
@@ -141,6 +144,20 @@ class KYCHelper(val context: Context, appName: String) {
     }
 
     /**
+     * Add an edittext with date picker in the view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label text label
+     * @param width width of text
+     * @param height height of text
+     * @return TextElement that can be customized with style, background, padding and margins
+     */
+    fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement {
+        return KYCParamHelper.addDate(label, width, height, key, isRequired, false)
+    }
+
+    /**
      * Add a dropdown with date picker in the view
      * This will consume one row in view
      *
@@ -152,6 +169,21 @@ class KYCHelper(val context: Context, appName: String) {
     fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
                     key: String, isRequired: Boolean): KYCParamModel.DropdownElement {
         return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, true)
+    }
+
+    /**
+     * Add a dropdown with date picker in the view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label text label
+     * @param width width of text
+     * @param height height of text
+     * @return TextElement that can be customized with style, background, padding and margins
+     */
+    fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
+                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement {
+        return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, false)
     }
 
     /**

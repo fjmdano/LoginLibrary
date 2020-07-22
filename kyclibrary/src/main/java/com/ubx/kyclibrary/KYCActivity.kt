@@ -174,7 +174,7 @@ class KYCActivity: Activity() {
             currentLinearLayout = null
 
         }
-        currentLinearLayout = kycViewModel.getNextLayoutPage()
+        currentLinearLayout = kycViewModel.getNextLayoutPage(this)
         kycViewModel.setToolbar()
         parentLayout.addView(currentLinearLayout)
     }

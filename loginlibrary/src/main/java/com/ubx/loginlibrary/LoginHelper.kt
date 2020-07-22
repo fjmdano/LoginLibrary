@@ -117,7 +117,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    fun addButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
+    fun addEmailLoginButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
         return LoginParamHelper.addButton(label, width, height)
     }
 
