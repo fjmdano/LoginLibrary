@@ -37,8 +37,11 @@ class MainActivity : Activity() {
         createKYCContent()
 
         setSignOutHandler()
-        var user = loginHelper.getUser()
-        if (user == null) {
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (loginHelper.getUser() == null) {
             showLogin()
         }
     }
@@ -82,11 +85,11 @@ class MainActivity : Activity() {
      */
     private fun createIntents() {
         if (!this::loginIntent.isInitialized) {
-            loginIntent = loginHelper.getIntent()
+            loginIntent = loginHelper.getIntent(this)
             kycHelper.setLoginIntent(loginIntent)
         }
         if (!this::kycIntent.isInitialized) {
-            kycIntent = kycHelper.getIntent()
+            kycIntent = kycHelper.getIntent(this)
             loginHelper.setKYCIntent(kycIntent)
         }
     }
@@ -147,12 +150,12 @@ class MainActivity : Activity() {
         textOthers.style = R.style.LabelText
         textOthers.layoutGravity = Gravity.CENTER_HORIZONTAL
 
-        val partyFacebook = loginHelper.addFacebookSignIn(
+        loginHelper.addFacebookSignIn(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        val partyGoogle = loginHelper.addGoogleSignIn(
+        loginHelper.addGoogleSignIn(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -164,7 +167,6 @@ class MainActivity : Activity() {
         )
         buttonRegister.style = R.style.Button_DefaultAlpha
         buttonRegister.margins = UIElement.Margins(0, loginHelper.sizeInDP(10), 0, 0)
-
     }
 
     private fun createKYCContent(){
@@ -213,6 +215,14 @@ class MainActivity : Activity() {
         )
 
         kycHelper.addPage("Personal Details", "Back", "Submit")
+
+        kycHelper.addList("Country",
+            listOf("Afghanistan", "Afghanistan US Military Base", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antigua And Barbuda", "Argentina", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bahrain US Military Base", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belgium US Military Base", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bonaire", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic of", "Congo-Brazzaville", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Cuba US Military Base", "Curacao", "Cyprus", "Cyprus (Northern)", "Czech Republic", "Denmark", "Djibouti", "Djibouti US Military Base", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "England", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "Gabon", "Gambia", "Georgia", "Germany", "Germany US Military Base", "Ghana", "Gibraltar", "Greece", "Greece US Military Base", "Grenada", "Guadeloupe", "Guam", "Guam US Military Base", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Honduras US Military Base", "Hong Kong", "Hungary", "Iceland", "Iceland US Military Base", "India", "Indonesia", "International Test Country", "Iraq", "Iraq US Military Base", "Ireland", "Israel", "Italy", "Italy US Military Base", "Ivory Coast", "Jamaica", "Japan", "Japan US Military Base", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea", "Korea US Military Base", "Kosovo", "Kosovo US Military Base", "Kuwait", "Kuwait US Military Base", "Kyrghyz Republic", "Kyrghyz Republic US Military Base", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands US Military Base", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "North Ireland", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Palestinian Authority", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Portugal US Military Base", "Puerto Rico", "Qatar", "Qatar US Military Base", "Reunion Island", "Romania", "Rota, CNMI", "Russia", "Rwanda", "Saint Barthelemy", "Saint Kitts And Nevis", "Saint Lucia", "Saint Vincent And The Grenadines", "Saipan, CNMI", "Samoa", "Sao Tome And Principe", "Saudi Arabia", "Scotland", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "Somaliland", "South Africa", "South Sudan", "Spain", "Spain US Military Base", "Sri Lanka", "St. Maarten", "St. Martin", "St. Thomas", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tinian, CNMI", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkey US Military Base", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "UAE US Military Base", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United Kingdom US Military Base", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands (US)", "Wales", "Yemen", "Zambia", "Zimbabwe"),
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "country",
+            true
+        )
         kycHelper.addInput("Address", false,
             InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,

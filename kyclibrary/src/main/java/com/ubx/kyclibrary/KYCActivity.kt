@@ -14,13 +14,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
+import com.ubx.kyclibrary.adapter.ListAdapter
+import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.viewmodel.KYCViewModel
 
-class KYCActivity: Activity() {
+class KYCActivity: Activity(), ListAdapter.Listener {
     private lateinit var kycViewModel: KYCViewModel
     private lateinit var parentLayout: NestedScrollView
     private var currentLinearLayout: LinearLayout? = null
+    private var currentRecyclerView: RecyclerView? = null
     private lateinit var toolbarTitle: TextView
     private lateinit var toolbarLeftImage: ImageView
     private lateinit var toolbarLeftText: TextView
@@ -177,6 +182,24 @@ class KYCActivity: Activity() {
         currentLinearLayout = kycViewModel.getNextLayoutPage(this)
         kycViewModel.setToolbar()
         parentLayout.addView(currentLinearLayout)
+    }
+
+    fun displayList(element: KYCParamModel.ListElement) {
+        parentLayout.removeView(currentLinearLayout)
+        currentRecyclerView = RecyclerView(applicationContext)
+        currentRecyclerView!!.layoutManager = LinearLayoutManager(this)
+        currentRecyclerView!!.adapter = ListAdapter(element, applicationContext, this)
+        parentLayout.addView(currentRecyclerView)
+    }
+
+    override fun onClickRecyclerViewListElement(element: KYCParamModel.ListElement) {
+        parentLayout.removeView(currentRecyclerView)
+        currentRecyclerView = null
+        parentLayout.addView(currentLinearLayout)
+    }
+
+    override fun finish() {
+        super.finish()
     }
 
     companion object {

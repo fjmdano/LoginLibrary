@@ -2,6 +2,7 @@ package com.ubx.loginlibrary.viewmodel
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.view.View
 import android.widget.LinearLayout
@@ -133,6 +134,14 @@ class LoginViewModel(private val context: Context) {
      */
     fun isFirebaseIntegrated(): Boolean {
         return ThirdPartyConfigHelper.isFirebaseIntegrated()
+    }
+
+    /**
+     * Get MainActivity intent
+     * Called when returning control to app
+     */
+    fun getMainActivityIntent(): Intent {
+        return UserHelper.getMainActivity()!!.intent
     }
 
 }

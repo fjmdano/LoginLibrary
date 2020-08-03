@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.facebook.AccessToken
@@ -20,14 +19,19 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.OAuthProvider
 import com.ubx.loginlibrary.viewmodel.LoginViewModel
 
 class LoginActivity: Activity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var callbackManager: CallbackManager
+
+    var isSignedIn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +101,31 @@ class LoginActivity: Activity() {
     }
 
     /**
+     * Setup Callback for GitHub Login
+     */
+    private fun setupGitHub() {
+        val provider: OAuthProvider.Builder = OAuthProvider.newBuilder("github.com")
+        val pendingResultTask = loginViewModel.getFirebaseAuth().getPendingAuthResult()
+        if (pendingResultTask != null) {
+            // There's something already here! Finish the sign-in for your user.
+            pendingResultTask
+                .addOnSuccessListener(
+                    OnSuccessListener<AuthResult?> {
+                        // User is signed in.
+                        // IdP data available in
+                        // authResult.getAdditionalUserInfo().getProfile().
+                        // The OAuth access token can also be retrieved:
+                        // authResult.getCredential().getAccessToken().
+                    })
+                .addOnFailureListener { TODO("Not yet implemented") }
+        } else {
+            // There's no pending result so you need to start the sign-in flow.
+            // See below.
+        }
+
+    }
+
+    /**
      * Verify if signing in with Google (with the help of Firebase) is successful or not
      */
     private fun firebaseAuthWithGoogle(idToken: String) {
@@ -147,7 +176,22 @@ class LoginActivity: Activity() {
     private fun setUserAndReturn(account: Any?) {
         if (account != null) {
             loginViewModel.setUser(account)
+            startActivity(loginViewModel.getMainActivityIntent())
+            isSignedIn = true
             onBackPressed()
+        }
+    }
+
+    /**
+     * Currently called when login is successful
+     * In case triggered by user, app should close
+     */
+    override fun onBackPressed() {
+        if (isSignedIn) {
+            super.onBackPressed()
+        } else {
+            moveTaskToBack(true);
+            finish()
         }
     }
 
@@ -198,8 +242,7 @@ class LoginActivity: Activity() {
         private const val TAG = "LoginLibrary"
         const val RC_SIGN_IN = 9001
         fun getIntent(context: Context): Intent {
-            val intent = Intent(context, Class.forName("com.ubx.loginlibrary.LoginActivity"))
-            return intent
+            return Intent(context, Class.forName("com.ubx.loginlibrary.LoginActivity"))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.ubx.loginlibrary.helper
 
+import android.app.Activity
 import android.content.Intent
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
@@ -90,6 +91,21 @@ class UserHelper {
          */
         fun getKYCIntent(): Intent? {
             return UserDataRepository.instance.kycIntent
+        }
+
+        /**
+         * Set Main Activity: where it will return once done
+         */
+        fun setMainActivity(activity: Activity) {
+            UserDataRepository.instance.mainActivity = activity
+        }
+
+        /**
+         * Get Main Activity
+         * Called once user is logged in
+         */
+        fun getMainActivity(): Activity? {
+            return UserDataRepository.instance.mainActivity
         }
     }
 }

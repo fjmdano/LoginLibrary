@@ -113,14 +113,14 @@ class LoginParamHelper {
         }
 
         /**
-         * Add a button in the login view
+         * Add a login button in the login view
          *
          * @param label button label
          * @param width width of text
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
+        fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
             val button = LoginParamModel.ButtonElement(label, width, height)
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.BUTTON, button

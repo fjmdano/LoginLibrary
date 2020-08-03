@@ -2,18 +2,15 @@ package com.ubx.kyclibrary.viewmodel
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.pdf.PdfDocument
-import android.util.Log
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.ubx.kyclibrary.KYCActivity
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
 import com.ubx.kyclibrary.helper.RegisterHelper
 import com.ubx.kyclibrary.model.KYCParamModel
-import com.ubx.kyclibrary.model.UIElement
 import com.ubx.kyclibrary.util.DisplayUtil
 import com.ubx.kyclibrary.util.UIElementUtil
 
@@ -72,11 +69,19 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
             currentPage += 1
         } else {
             //Toast.makeText(context, "Last page, sorry.", Toast.LENGTH_SHORT).show()
-            val email = KYCValueHelper.getValue("email")
-            val password = KYCValueHelper.getValue("password")
-            RegisterHelper.createUserWithEmail(activity, email, password)
+            submit(activity)
         }
         return getLayoutPage(currentPage)
+    }
+
+    fun submit(activity: Activity) {
+        val email = KYCValueHelper.getValue("email")
+        val password = KYCValueHelper.getValue("password")
+        if (Firebase.auth.currentUser != null) {
+            KYCValueHelper.storeInDB(activity)
+        } else {
+            RegisterHelper.createUserWithEmail(activity, email, password)
+        }
     }
 
     /**
@@ -139,6 +144,13 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                     }
                     is KYCParamModel.DropdownElement -> {
                         layoutToUse.addView(UIElementUtil.createDropdownElement(context, element))
+                    }
+                    is KYCParamModel.ListElement -> {
+                        val listElement = UIElementUtil.createListElement(context, element)
+                        element.editText!!.setOnClickListener {
+                            activity.displayList(element)
+                        }
+                        layoutToUse.addView(listElement)
                     }
                     else -> {
                         Toast.makeText(context, "Not yet supported (for now)", Toast.LENGTH_SHORT).show()

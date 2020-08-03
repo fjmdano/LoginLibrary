@@ -2,6 +2,18 @@
 <resources>
     <style name="textTitleToolbar">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_14</item>
+    </style>
+
+    <style name="EditText.Default" parent="android:Widget.EditText">
+        <item name="android:textSize">@dimen/text_12</item>
+        <item name="android:background">@drawable/edittext_default</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="DefaultRecycleViewText">
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:padding">@dimen/normal_100</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 </resources>

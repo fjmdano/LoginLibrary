@@ -1,5 +1,6 @@
 package com.ubx.loginlibrary
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.ViewGroup
@@ -118,7 +119,7 @@ class LoginHelper(val context: Context, appName: String,
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
     fun addEmailLoginButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
-        return LoginParamHelper.addButton(label, width, height)
+        return LoginParamHelper.addLoginButton(label, width, height)
     }
 
     /**
@@ -225,8 +226,9 @@ class LoginHelper(val context: Context, appName: String,
      *
      * @return intent
      */
-    fun getIntent(): Intent {
+    fun getIntent(activity: Activity): Intent {
         initializeThirdParty()
+        UserHelper.setMainActivity(activity)
         return LoginActivity.getIntent(context)
     }
 

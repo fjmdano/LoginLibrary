@@ -61,7 +61,9 @@ class KYCParamModel {
         override var height: Int,
         val key: String,
         val isRequired: Boolean
-    ): UIElement(width, height)
+    ): UIElement(width, height) {
+        var editText: EditText? = null
+    }
 
     data class MediaElement(
         val hint: String,

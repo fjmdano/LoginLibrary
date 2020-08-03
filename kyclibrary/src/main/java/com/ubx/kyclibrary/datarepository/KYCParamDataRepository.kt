@@ -1,5 +1,6 @@
 package com.ubx.kyclibrary.datarepository
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.LinearLayout
 import com.ubx.kyclibrary.model.KYCParamModel
@@ -20,7 +21,18 @@ class KYCParamDataRepository {
     var listElements: MutableList<KYCParamModel.ListElement> = mutableListOf()
     var mediaElements: MutableList<KYCParamModel.MediaElement> = mutableListOf()
     var buttonElements: MutableList<KYCParamModel.ButtonElement> = mutableListOf()
+
+    var imageStyle: Int? = null
+    var textStyle: Int? = null
+    var inputStyle: Int? = null
+    var dateStyle: Int? = null
+    var dropdownStyle: Int? = null
+    var listStyle: Int? = null
+    var mediaStyle: Int? = null
+    var buttonStyle: Int? = null
+    
     var loginIntent: Intent? = null
+    var mainActivity: Activity? = null
 
     fun setImageStyle(style: Int) {
         imageElements.forEach {

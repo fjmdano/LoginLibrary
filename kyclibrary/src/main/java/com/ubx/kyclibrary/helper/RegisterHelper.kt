@@ -22,7 +22,6 @@ class RegisterHelper {
         fun createUserWithEmail(activity: Activity, email: String, password: String) {
             try {
                 val firebaseAuth = Firebase.auth
-
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(activity) { task ->
                         if (task.isSuccessful) {
@@ -31,6 +30,7 @@ class RegisterHelper {
                             val user = firebaseAuth.currentUser
                             Toast.makeText(activity, "Successful registration.",
                                 Toast.LENGTH_SHORT).show()
+                            KYCValueHelper.storeInDB(activity)
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.exception)

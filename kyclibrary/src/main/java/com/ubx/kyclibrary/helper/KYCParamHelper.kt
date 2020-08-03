@@ -1,5 +1,6 @@
 package com.ubx.kyclibrary.helper
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.LinearLayout
 import com.ubx.kyclibrary.datarepository.KYCParamDataRepository
@@ -158,8 +159,11 @@ class KYCParamHelper {
          * Add a dropdown in the kyc view
          *
          * @param label button label
+         * @param choices dropdown choices
          * @param width width of text
          * @param height height of text
+         * @param key key in getting the item value
+         * @param addNow true if item is added immediately to row, else false
          * @return DropdownElement that can be customized with style, background, padding and margins
          */
         fun addDropdown(label: String, choices: List<String>, width: Int, height: Int, key: String,
@@ -172,6 +176,29 @@ class KYCParamHelper {
                 getLastPage().rows.add(pageRow)
             }
             return dropdownElement
+        }
+
+        /**
+         * Add an edittext with choices in the kyc view
+         *
+         * @param label button label
+         * @param choices list choices
+         * @param width width of text
+         * @param height height of text
+         * @param key key in getting the item value
+         * @param addNow true if item is added immediately to row, else false
+         * @return DropdownElement that can be customized with style, background, padding and margins
+         */
+        fun addList(label: String, choices: List<String>, width: Int, height: Int, key: String,
+                        isRequired: Boolean, addNow: Boolean = false): KYCParamModel.ListElement {
+            val listElement = KYCParamModel.ListElement(label, choices, width, height, key, isRequired)
+            getDataRepo().listElements.add(listElement)
+            if (addNow) {
+                val pageRow = KYCParamModel.PageRow(mutableListOf())
+                pageRow.elements.add(listElement)
+                getLastPage().rows.add(pageRow)
+            }
+            return listElement
         }
 
         /**
@@ -198,6 +225,14 @@ class KYCParamHelper {
 
         fun getLoginIntent(): Intent? {
             return getDataRepo().loginIntent
+        }
+
+        fun setMainActivity(activity: Activity) {
+            getDataRepo().mainActivity = activity
+        }
+
+        fun getMainActivity(): Activity? {
+            return getDataRepo().mainActivity
         }
 
         private fun getDataRepo(): KYCParamDataRepository {
@@ -253,6 +288,35 @@ class KYCParamHelper {
         fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
             getDataRepo().layoutMargins = UIElement.Margins(left, top, right, bottom)
         }
+
+        /**
+         * Set Style of TextView
+         *
+         * @param style style for all textviews in KYC
+         */
+        fun setTextStyle(style: Int) {
+            getDataRepo().textStyle = style
+        }
+
+        /**
+         * Set Style of Texts in List
+         *
+         * @param style style for all list items in KYC
+         */
+        fun setListStyle(style: Int) {
+            getDataRepo().listStyle = style
+        }
+
+        /**
+         * Get Style of Texts in List
+         *
+         * @param style style for all list items in KYC
+         */
+        fun getListStyle(): Int? {
+            return getDataRepo().listStyle
+        }
+
+
     }
 
 }

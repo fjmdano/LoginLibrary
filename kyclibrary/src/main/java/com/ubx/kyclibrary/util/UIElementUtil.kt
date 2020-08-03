@@ -1,6 +1,5 @@
 package com.ubx.kyclibrary.util
 
-import android.R
 import android.app.DatePickerDialog
 import android.bluetooth.BluetoothClass.Device
 import android.content.Context
@@ -15,6 +14,7 @@ import android.view.View
 import android.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.ubx.kyclibrary.R
 import com.ubx.kyclibrary.model.KYCParamModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -200,7 +200,6 @@ class UIElementUtil {
             dpd.show()
         }
 
-
         /**
          * Create Dropdown
          */
@@ -223,7 +222,7 @@ class UIElementUtil {
             dropdownLinearLayout.addView(textView)
 
             val spinner = Spinner(context)
-            ArrayAdapter(context, R.layout.simple_list_item_1, element.choices)
+            ArrayAdapter(context, android.R.layout.simple_list_item_1, element.choices)
                 .also { adapter ->
                     // Specify the layout to use when the list of choices appears
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -239,6 +238,50 @@ class UIElementUtil {
             dropdownLinearLayout.addView(spinner)
 
             return dropdownLinearLayout
+        }
+
+        /**
+         * Create EditText that shows list choices when clicked
+         */
+        fun createListElement(context: Context, element: KYCParamModel.ListElement) : LinearLayout {
+            val listLinearLayout = LinearLayout(context)
+            listLinearLayout.orientation = LinearLayout.HORIZONTAL
+
+            listLinearLayout.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT)
+
+            val textView = if (element.style != null) {
+                TextView(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                TextView(context)
+            }
+
+            textView.text = element.hint
+            listLinearLayout.addView(textView)
+
+            val editText = if (element.style != null) {
+                EditText(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                EditText(context)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                editText.focusable = View.NOT_FOCUSABLE
+            }
+            editText.hint = "Choose one"
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                R.drawable.ic_arrow_down_2, 0);
+            element.editText = editText
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.id = View.generateViewId()
+                editText.id = View.generateViewId()
+                listLinearLayout.id = View.generateViewId()
+            }
+            listLinearLayout.addView(editText)
+
+            return listLinearLayout
         }
 
         /**

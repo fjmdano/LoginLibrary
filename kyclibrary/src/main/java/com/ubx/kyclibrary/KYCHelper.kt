@@ -1,5 +1,6 @@
 package com.ubx.kyclibrary
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.ubx.kyclibrary.helper.KYCParamHelper
@@ -187,11 +188,41 @@ class KYCHelper(val context: Context, appName: String) {
     }
 
     /**
+     * Add an edittext with choices viewed in separate view
+     * This will consume one row in view
+     *
+     * @param label text label
+     * @param width width of text
+     * @param height height of text
+     * @return TextElement that can be customized with style, background, padding and margins
+     */
+    fun addList(label: String, choices: List<String>, width: Int, height: Int,
+                    key: String, isRequired: Boolean): KYCParamModel.ListElement {
+        return KYCParamHelper.addList(label, choices, width, height, key, isRequired, true)
+    }
+
+    /**
+     * Add an edittext with choices viewed in separate view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label text label
+     * @param width width of text
+     * @param height height of text
+     * @return TextElement that can be customized with style, background, padding and margins
+     */
+    fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
+                         key: String, isRequired: Boolean): KYCParamModel.ListElement {
+        return KYCParamHelper.addList(label, choices, width, height, key, isRequired, false)
+    }
+
+    /**
      * Get intent for login view
      *
      * @return intent
      */
-    fun getIntent(): Intent {
+    fun getIntent(activity: Activity): Intent {
+        KYCParamHelper.setMainActivity(activity)
         return KYCActivity.getIntent(context)
     }
 
