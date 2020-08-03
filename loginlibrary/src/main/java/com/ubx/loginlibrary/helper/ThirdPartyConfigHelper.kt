@@ -154,7 +154,6 @@ class ThirdPartyConfigHelper {
             getDataRepo().isFirebaseInitialized = true
         }
 
-
         /**
          * Get instance of ThirdPartyConfigDataRepository
          *

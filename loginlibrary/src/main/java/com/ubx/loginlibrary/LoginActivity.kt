@@ -167,6 +167,27 @@ class LoginActivity: Activity() {
     }
 
     /**
+     * Sign-in using email and password in Firebase
+     */
+    fun firebaseAuthWithEmail(email: String, password: String) {
+        Log.d(TAG, "firebaseAuthWithEmail:$email")
+        Log.d(TAG, "firebaseAuthWithEmail:Password:$password")
+        loginViewModel.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d(TAG, "signInWithEmail:success")
+                setUserAndReturn(loginViewModel.getFirebaseAuth().currentUser)
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                Toast.makeText(baseContext, "Authentication failed.",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /**
      * Store user credentials and return control to main application
      * @param account user credentials
      * (type is FirebaseUser if using Firebase,

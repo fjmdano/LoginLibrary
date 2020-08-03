@@ -9,6 +9,9 @@ import com.ubx.kyclibrary.model.UIElement
 
 class KYCParamHelper {
     companion object {
+        fun resetLayoutPages() {
+            getDataRepo().layoutPages.clear()
+        }
 
         fun getLayoutPage(pageNumber: Int): LinearLayout? {
             val layoutPages = getDataRepo().layoutPages

@@ -81,6 +81,7 @@ class UIElementUtil {
             } else {
                 TextInputEditText(context)
             }
+            element.editText = textInputEditText
             if (element.gravity != null) {
                 textInputEditText.gravity = element.gravity!!
             }
@@ -143,7 +144,7 @@ class UIElementUtil {
             )
             button.text = element.text
             button.setOnClickListener {
-                context.startActivity(element.intent)
+                element.listener.onClick()
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

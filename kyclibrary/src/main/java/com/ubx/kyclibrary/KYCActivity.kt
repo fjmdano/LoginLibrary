@@ -43,6 +43,11 @@ class KYCActivity: Activity(), ListAdapter.Listener {
         displayNextView()
     }
 
+    override fun onBackPressed() {
+        kycViewModel.dismiss()
+        finish()
+    }
+
     /**
      * Show Toolbar
      */

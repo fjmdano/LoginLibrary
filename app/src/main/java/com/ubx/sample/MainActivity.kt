@@ -9,7 +9,6 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
@@ -21,6 +20,7 @@ class MainActivity : Activity() {
 
     lateinit var loginIntent: Intent
     lateinit var kycIntent: Intent
+    val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +63,18 @@ class MainActivity : Activity() {
             ConstraintLayout.LayoutParams.MATCH_PARENT)
 
         kycHelper = KYCHelper(applicationContext, "LoginHelper")
+
+        val activity = this
+        loginHelper.setCustomHandler(object: LoginHelper.CustomHandler {
+            override fun getRegistrationIntent(): Intent {
+                return kycHelper.getIntent(activity)
+            }
+
+            override fun signIn(): Any? {
+                println("Custom signing in. Get details from loginhelper")
+                return null
+            }
+        })
     }
 
     /**
@@ -90,7 +102,6 @@ class MainActivity : Activity() {
         }
         if (!this::kycIntent.isInitialized) {
             kycIntent = kycHelper.getIntent(this)
-            loginHelper.setKYCIntent(kycIntent)
         }
     }
 
@@ -123,7 +134,8 @@ class MainActivity : Activity() {
             false,
             InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "email"
         )
         inputUsername.style = R.style.EditText_DefaultAlpha
 
@@ -131,7 +143,8 @@ class MainActivity : Activity() {
             true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "password"
         )
         inputPassword.style = R.style.EditText_DefaultAlpha
 
@@ -161,7 +174,11 @@ class MainActivity : Activity() {
         )
 
         val buttonRegister = loginHelper.addIntentButton("No account yet? Register now!",
-            kycIntent,
+            object: LoginHelper.CustomOnClickButtonListener {
+                override fun onClick() {
+                    startActivity(kycHelper.getIntent(activity))
+                }
+            },
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -230,9 +247,10 @@ class MainActivity : Activity() {
             "address",
             true
         )
+
         kycHelper.addPageRow(mutableListOf(
             kycHelper.addDateInRow("Birthday",
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 "birthday",
                 true

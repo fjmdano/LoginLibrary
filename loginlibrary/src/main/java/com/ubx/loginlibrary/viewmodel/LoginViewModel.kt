@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.firebase.auth.FirebaseAuth
+import com.ubx.loginlibrary.LoginActivity
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
 import com.ubx.loginlibrary.helper.UserHelper
@@ -29,7 +30,7 @@ class LoginViewModel(private val context: Context) {
      * @param activity Parent Activity
      * @return LinearLayout containing the login items
      */
-    fun createLoginPage(activity: Activity): LinearLayout {
+    fun createLoginPage(activity: LoginActivity): LinearLayout {
         val linearLayout = if (loginParameters.style != null) {
             LinearLayout(ContextThemeWrapper(context, loginParameters.style!!), null, 0)
         } else {
@@ -38,6 +39,9 @@ class LoginViewModel(private val context: Context) {
 
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.customizeConstraintElement(context, linearLayout, loginParameters)
+
+        lateinit var emailElement: LoginParamModel.InputElement
+        lateinit var passwordElement: LoginParamModel.InputElement
 
         loginParameters.elements.forEach {
             when(it.type) {
@@ -52,15 +56,27 @@ class LoginViewModel(private val context: Context) {
                             context, it.value as LoginParamModel.ImageElement))
                 }
                 LoginParamModel.ElementType.EDIT -> {
+                    val inputElement = it.value as LoginParamModel.InputElement
+                    if (inputElement.key == KEY_EMAIL) {
+                        emailElement = inputElement
+                    } else if (inputElement.key == KEY_PASSWORD) {
+                        passwordElement = inputElement
+                    }
                     linearLayout.addView(
                         UIElementUtil.createInputElement(
-                            context, it.value as LoginParamModel.InputElement))
+                            context, inputElement))
                 }
                 LoginParamModel.ElementType.BUTTON -> {
                     if (it.value is LoginParamModel.ButtonElement) {
-                        linearLayout.addView(
+                        val button =
                             UIElementUtil.createButtonElement(
-                                context, it.value))
+                                context, it.value)
+                        button.setOnClickListener {
+                            activity.firebaseAuthWithEmail(
+                                emailElement.editText!!.text.toString(),
+                                passwordElement.editText!!.text.toString())
+                        }
+                        linearLayout.addView(button)
                     } else if (it.value is LoginParamModel.IntentButtonElement) {
                         linearLayout.addView(
                             UIElementUtil.createIntentButtonElement(
@@ -142,6 +158,11 @@ class LoginViewModel(private val context: Context) {
      */
     fun getMainActivityIntent(): Intent {
         return UserHelper.getMainActivity()!!.intent
+    }
+
+    companion object {
+        const val KEY_EMAIL = "email"
+        const val KEY_PASSWORD = "password"
     }
 
 }

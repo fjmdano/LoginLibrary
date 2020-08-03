@@ -1,6 +1,7 @@
 package com.ubx.loginlibrary.helper
 
 import android.content.Intent
+import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.LoginParamDataRepository
 import com.ubx.loginlibrary.model.LoginParamModel
 import com.ubx.loginlibrary.model.UIElement
@@ -101,11 +102,12 @@ class LoginParamHelper {
          * @param inputType input type
          * @param width width of text
          * @param height height of text
+         * @param key input key - to be used for retrieving the input value
          * @return InputElement that can be customized with style, background, padding and margins
          */
         fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                     width: Int, height: Int): LoginParamModel.InputElement {
-            val input = LoginParamModel.InputElement(hint, isPassword, inputType, width, height)
+                     width: Int, height: Int, key: String): LoginParamModel.InputElement {
+            val input = LoginParamModel.InputElement(hint, isPassword, inputType, width, height, key)
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.EDIT, input
             ))
@@ -132,13 +134,13 @@ class LoginParamHelper {
          * Add a button (with intent to next activity) in the login view
          *
          * @param label button label
-         * @param intent intent to start next activity
+         * @param listener button onclick listener
          * @param width width of text
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addIntentButton(label: String, intent: Intent, width: Int, height: Int): LoginParamModel.IntentButtonElement {
-            val button = LoginParamModel.IntentButtonElement(label, intent, width, height)
+        fun addIntentButton(label: String, listener: LoginHelper.CustomOnClickButtonListener, width: Int, height: Int): LoginParamModel.IntentButtonElement {
+            val button = LoginParamModel.IntentButtonElement(label, listener, width, height)
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.BUTTON, button
             ))

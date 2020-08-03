@@ -103,11 +103,12 @@ class LoginHelper(val context: Context, appName: String,
      * @param inputType input type
      * @param width width of text
      * @param height height of text
+     * @param key input key - to be used for retrieving the input value
      * @return InputElement that can be customized with style, background, padding and margins
      */
     fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                width: Int, height: Int): LoginParamModel.InputElement {
-        return LoginParamHelper.addInput(hint, isPassword, inputType, width, height)
+                width: Int, height: Int, key: String): LoginParamModel.InputElement {
+        return LoginParamHelper.addInput(hint, isPassword, inputType, width, height, key)
     }
 
     /**
@@ -126,12 +127,13 @@ class LoginHelper(val context: Context, appName: String,
      * Add a button (with intent to next activity) in the login view
      *
      * @param label button label
+     * @param listener button onclick listener
      * @param width width of text
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    fun addIntentButton(label: String, intent: Intent, width: Int, height: Int): LoginParamModel.IntentButtonElement {
-        return LoginParamHelper.addIntentButton(label, intent, width, height)
+    fun addIntentButton(label: String, listener: CustomOnClickButtonListener, width: Int, height: Int): LoginParamModel.IntentButtonElement {
+        return LoginParamHelper.addIntentButton(label, listener, width, height)
     }
 
     /**
@@ -231,13 +233,6 @@ class LoginHelper(val context: Context, appName: String,
         UserHelper.setMainActivity(activity)
         return LoginActivity.getIntent(context)
     }
-
-    /**
-     * Set KYC intent
-     */
-    fun setKYCIntent(intent: Intent) {
-        UserHelper.setKYCIntent(intent)
-    }
     /*************************[END] INTENT RELATED***************************************/
 
     /**
@@ -248,5 +243,18 @@ class LoginHelper(val context: Context, appName: String,
      */
     fun sizeInDP(size: Int): Int {
         return DisplayUtil.sizeInDP(context, size)
+    }
+
+    fun setCustomHandler(handler: CustomHandler) {
+        UserHelper.setCustomHandler(handler)
+    }
+
+    interface CustomHandler {
+        fun getRegistrationIntent(): Intent
+        fun signIn(): Any?
+    }
+
+    interface CustomOnClickButtonListener {
+        fun onClick()
     }
 }

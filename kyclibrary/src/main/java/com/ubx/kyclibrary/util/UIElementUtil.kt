@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
+import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
@@ -91,9 +92,8 @@ class UIElementUtil {
             if (element.gravity != null) {
                 textInputEditText.gravity = element.gravity!!
             }
-
             textInputEditText.inputType = element.inputType
-            textInputEditText.hint = element.hint
+            textInputEditText.hint = element.hint + (if (element.isRequired) " *" else "")
 
             if (element.maximumLength > 0) {
                 textInputEditText.filters = arrayOf<InputFilter>(LengthFilter(element.maximumLength))
@@ -139,43 +139,48 @@ class UIElementUtil {
         /**
          * Create EditText with Date Picker
          */
-        fun createDateElement(context: Context, element: KYCParamModel.DateElement) : LinearLayout {
-            val dateLinearLayout = LinearLayout(context)
-            dateLinearLayout.orientation = LinearLayout.HORIZONTAL
+        fun createDateElement(context: Context,
+                              element: KYCParamModel.DateElement,
+                              isSharingRow: Boolean = false): TextInputLayout {
+            val textInputLayout = TextInputLayout(context)
+            DisplayUtil.customizeLinearElement(
+                context,
+                textInputLayout,
+                element
+            )
+            if (isSharingRow) {
+                textInputLayout.layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1F)
+            }
+            textInputLayout.isErrorEnabled = true
 
-            dateLinearLayout.layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1F)
-
-            val textView = if (element.style != null) {
-                TextView(ContextThemeWrapper(context, element.style!!), null, 0)
+            val textInputEditText = if (element.style != null) {
+                TextInputEditText(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
-                TextView(context)
+                TextInputEditText(context)
+            }
+            if (element.gravity != null) {
+                textInputEditText.gravity = element.gravity!!
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                textInputEditText.focusable = View.NOT_FOCUSABLE
+            }
+            textInputEditText.setOnClickListener {
+                showDatePicker(context, textInputEditText)
             }
 
-            textView.text = element.hint
-            dateLinearLayout.addView(textView)
+            textInputEditText.hint = element.hint + (if (element.isRequired) " *" else "")
 
-            val editText = if (element.style != null) {
-                EditText(ContextThemeWrapper(context, element.style!!), null, 0)
-            } else {
-                EditText(context)
-            }
-            editText.hint = DATE_FORMAT
-            editText.setOnClickListener {
-                showDatePicker(context, editText)
-            }
-            element.editText = editText
+            textInputLayout.addView(textInputEditText)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                textView.id = View.generateViewId()
-                editText.id = View.generateViewId()
-                dateLinearLayout.id = View.generateViewId()
+                textInputLayout.id = View.generateViewId()
+                textInputEditText.id = View.generateViewId()
             }
-            dateLinearLayout.addView(editText)
-
-            return dateLinearLayout
+            element.editText = textInputEditText
+            return textInputLayout
         }
 
         private fun showDatePicker(context: Context, editText: EditText) {
@@ -203,15 +208,22 @@ class UIElementUtil {
         /**
          * Create Dropdown
          */
-        fun createDropdownElement(context: Context, element: KYCParamModel.DropdownElement) : LinearLayout {
+        fun createDropdownElement(context: Context,
+                                  element: KYCParamModel.DropdownElement,
+                                  isSharingRow: Boolean = false) : LinearLayout {
             val dropdownLinearLayout = LinearLayout(context)
-            dropdownLinearLayout.orientation = LinearLayout.HORIZONTAL
+            dropdownLinearLayout.orientation = LinearLayout.VERTICAL
 
-            val layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1F)
-            dropdownLinearLayout.layoutParams = layoutParams
+            dropdownLinearLayout.layoutParams = if (isSharingRow) {
+                LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1F)
+            } else {
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT)
+            }
 
             val textView = if (element.style != null) {
                 TextView(ContextThemeWrapper(context, element.style!!), null, 0)
@@ -219,6 +231,7 @@ class UIElementUtil {
                 TextView(context)
             }
             textView.text = element.hint
+            textView.textSize = 11F
             dropdownLinearLayout.addView(textView)
 
             val spinner = Spinner(context)
@@ -243,45 +256,48 @@ class UIElementUtil {
         /**
          * Create EditText that shows list choices when clicked
          */
-        fun createListElement(context: Context, element: KYCParamModel.ListElement) : LinearLayout {
-            val listLinearLayout = LinearLayout(context)
-            listLinearLayout.orientation = LinearLayout.HORIZONTAL
-
-            listLinearLayout.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT)
-
-            val textView = if (element.style != null) {
-                TextView(ContextThemeWrapper(context, element.style!!), null, 0)
-            } else {
-                TextView(context)
+        fun createListElement(context: Context,
+                              element: KYCParamModel.ListElement,
+                              isSharingRow: Boolean = false): TextInputLayout {
+            val textInputLayout = TextInputLayout(context)
+            DisplayUtil.customizeLinearElement(
+                context,
+                textInputLayout,
+                element
+            )
+            if (isSharingRow) {
+                textInputLayout.layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1F)
             }
+            textInputLayout.isErrorEnabled = true
 
-            textView.text = element.hint
-            listLinearLayout.addView(textView)
-
-            val editText = if (element.style != null) {
-                EditText(ContextThemeWrapper(context, element.style!!), null, 0)
+            val textInputEditText = if (element.style != null) {
+                TextInputEditText(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
-                EditText(context)
+                TextInputEditText(context)
+            }
+            if (element.gravity != null) {
+                textInputEditText.gravity = element.gravity!!
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                editText.focusable = View.NOT_FOCUSABLE
+                textInputEditText.focusable = View.NOT_FOCUSABLE
             }
-            editText.hint = "Choose one"
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+            element.editText = textInputEditText
+            textInputEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0,
                 R.drawable.ic_arrow_down_2, 0);
-            element.editText = editText
 
+            textInputEditText.hint = element.hint + (if (element.isRequired) " *" else "")
+
+            textInputLayout.addView(textInputEditText)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                textView.id = View.generateViewId()
-                editText.id = View.generateViewId()
-                listLinearLayout.id = View.generateViewId()
+                textInputLayout.id = View.generateViewId()
+                textInputEditText.id = View.generateViewId()
             }
-            listLinearLayout.addView(editText)
-
-            return listLinearLayout
+            element.editText = textInputEditText
+            return textInputLayout
         }
 
         /**
