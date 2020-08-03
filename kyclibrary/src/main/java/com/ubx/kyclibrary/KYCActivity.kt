@@ -203,10 +203,6 @@ class KYCActivity: Activity(), ListAdapter.Listener {
         parentLayout.addView(currentLinearLayout)
     }
 
-    override fun finish() {
-        super.finish()
-    }
-
     companion object {
         private const val TAG = "KYCLibrary"
         fun getIntent(context: Context): Intent {

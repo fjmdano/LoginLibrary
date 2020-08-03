@@ -43,6 +43,13 @@ class LoginActivity: Activity() {
         addLoginPage()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (loginViewModel.getUser() != null) {
+            finish()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
