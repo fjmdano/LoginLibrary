@@ -13,6 +13,7 @@ class LoginParamDataRepository {
                 null
             }
         }
+    var inputElements: MutableList<LoginParamModel.InputElement> = mutableListOf()
 
     private object HOLDER {
         val INSTANCE = LoginParamDataRepository()

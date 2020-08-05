@@ -74,6 +74,8 @@ class DisplayUtil {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     view.background = ContextCompat.getDrawable(context, element.background!!)
                 } else {
+
+                    @Suppress("DEPRECATION")
                     view.setBackgroundDrawable(ContextCompat.getDrawable(context, element.background!!))
                 }
             }

@@ -1,15 +1,13 @@
 package com.ubx.kyclibrary
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.model.UIElement
-import com.ubx.kyclibrary.util.DisplayUtil
 
-class KYCHelper(val context: Context, appName: String): KYCInterface {
+interface KYCInterface {
 
+    /*******************[START] CUSTOMIZE KYC LAYOUT (GENERAL) *********************************/
     /**
      * Set Padding of login view
      *
@@ -18,9 +16,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param right right padding
      * @param bottom bottom padding
      */
-    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        KYCParamHelper.setPadding(left, top, right, bottom)
-    }
+    fun setPadding(left: Int, top: Int, right: Int, bottom: Int)
 
     /**
      * Set Margins of login view
@@ -30,10 +26,10 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param right right margins
      * @param bottom bottom margins
      */
-    override fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
-        KYCParamHelper.setMargins(left, top, right, bottom)
-    }
+    fun setMargins(left: Int, top: Int, right: Int, bottom: Int)
+    /***********************[END] CUSTOMIZE KYC LAYOUT (GENERAL) ********************************/
 
+    /*******************[START] ADD PAGES AND UI ELEMENTS TO KYC VIEW****************************/
     /**
      * Add new page
      *
@@ -42,9 +38,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param leftContent either text of resource id that will be displayed at the top left
      *                  when clicked
      */
-    override fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
-        KYCParamHelper.addPage(pageTitle, leftContent, rightContent)
-    }
+    fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?)
 
     /**
      * Add a row with multiple UI Elements
@@ -53,9 +47,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      *       addTextInRow(), addInputInRow(), addButtonInRow(),
      *       addDateInRow(), addDropdownInRow(), addListInRow()
      */
-    override fun addPageRow(uiElements: MutableList<UIElement>) {
-        KYCParamHelper.addRow(uiElements)
-    }
+    fun addPageRow(uiElements: MutableList<UIElement>)
 
     /**
      * Add an text in the view
@@ -66,9 +58,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addText(label: String, width: Int, height: Int): KYCParamModel.TextElement {
-        return KYCParamHelper.addText(label, width, height, true)
-    }
+    fun addText(label: String, width: Int, height: Int): KYCParamModel.TextElement
 
     /**
      * Add an text in the view
@@ -80,9 +70,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addTextInRow(label: String, width: Int, height: Int): KYCParamModel.TextElement {
-        return KYCParamHelper.addText(label, width, height, false)
-    }
+    fun addTextInRow(label: String, width: Int, height: Int): KYCParamModel.TextElement
 
     /**
      * Add an input text in the view
@@ -95,11 +83,8 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return InputElement that can be customized with style, background, padding and margins
      */
-    override fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement {
-        return KYCParamHelper.addInput(hint, isPassword, inputType,
-            width, height,key, isRequired, true)
-    }
+    fun addInput(hint: String, isPassword: Boolean, inputType: Int,
+                 width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement
 
     /**
      * Add an input text in the view
@@ -113,11 +98,8 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return InputElement that can be customized with style, background, padding and margins
      */
-    override fun addInputInRow(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement {
-        return KYCParamHelper.addInput(hint, isPassword, inputType,
-            width, height, key, isRequired, false)
-    }
+    fun addInputInRow(hint: String, isPassword: Boolean, inputType: Int,
+                      width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement
 
     /**
      * Add a button in the view
@@ -129,9 +111,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addNextButton(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement {
-        return KYCParamHelper.addNextButton(label, width, height, true)
-    }
+    fun addNextButton(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement
 
     /**
      * Add a button in the view
@@ -144,9 +124,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addNextButtonInRow(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement {
-        return KYCParamHelper.addNextButton(label, width, height, false)
-    }
+    fun addNextButtonInRow(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement
 
     /**
      * Add a button in the view
@@ -159,10 +137,8 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addButton(label: String, listener: CustomListener,
-                           width: Int, height: Int): KYCParamModel.ButtonElement {
-        return KYCParamHelper.addButton(label, listener, width, height, true)
-    }
+    fun addButton(label: String, listener: KYCHelper.CustomListener,
+                           width: Int, height: Int): KYCParamModel.ButtonElement
 
     /**
      * Add a button in the view
@@ -176,10 +152,8 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addButtonInRow(label: String, listener: CustomListener,
-                                width: Int, height: Int): KYCParamModel.ButtonElement {
-        return KYCParamHelper.addButton(label, listener, width, height, false)
-    }
+    fun addButtonInRow(label: String, listener: KYCHelper.CustomListener,
+                                width: Int, height: Int): KYCParamModel.ButtonElement
 
     /**
      * Add an edittext with date picker in the view
@@ -190,9 +164,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement {
-        return KYCParamHelper.addDate(label, width, height, key, isRequired, true)
-    }
+    fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement
 
     /**
      * Add an edittext with date picker in the view
@@ -204,9 +176,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement {
-        return KYCParamHelper.addDate(label, width, height, key, isRequired, false)
-    }
+    fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement
 
     /**
      * Add a dropdown with date picker in the view
@@ -217,10 +187,8 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement {
-        return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, true)
-    }
+    fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
+                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement
 
     /**
      * Add a dropdown with date picker in the view
@@ -232,10 +200,9 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement {
-        return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, false)
-    }
+    fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
+                         key: String, isRequired: Boolean): KYCParamModel.DropdownElement
+
 
     /**
      * Add an edittext with choices viewed in separate view
@@ -246,10 +213,8 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addList(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.ListElement {
-        return KYCParamHelper.addList(label, choices, width, height, key, isRequired, true)
-    }
+    fun addList(label: String, choices: List<String>, width: Int, height: Int,
+                key: String, isRequired: Boolean): KYCParamModel.ListElement
 
     /**
      * Add an edittext with choices viewed in separate view
@@ -261,20 +226,18 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
-                         key: String, isRequired: Boolean): KYCParamModel.ListElement {
-        return KYCParamHelper.addList(label, choices, width, height, key, isRequired, false)
-    }
+    fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
+                     key: String, isRequired: Boolean): KYCParamModel.ListElement
+    /***********************[END] ADD PAGES AND UI ELEMENTS TO KYC VIEW**************************/
 
+    /***********************[START] INTENT RELATED***************************************/
     /**
      * Get intent for login view
      *
      * @return intent
      */
-    override fun getIntent(activity: Activity): Intent {
-        KYCParamHelper.setMainActivity(activity)
-        return KYCActivity.getIntent(context)
-    }
+    fun getIntent(activity: Activity): Intent
+    /*************************[END] INTENT RELATED***************************************/
 
     /**
      * Get size in DP
@@ -282,11 +245,5 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param size Int
      * @return size in DP
      */
-    override fun sizeInDP(size: Int): Int {
-        return DisplayUtil.sizeInDP(context, size)
-    }
-
-    interface CustomListener {
-        fun onClick()
-    }
+    fun sizeInDP(size: Int): Int
 }

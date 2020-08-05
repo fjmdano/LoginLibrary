@@ -1,14 +1,17 @@
 package com.ubx.kyclibrary.helper
 
 import android.app.Activity
-import android.content.Intent
 import android.widget.LinearLayout
+import com.ubx.kyclibrary.KYCHelper
 import com.ubx.kyclibrary.datarepository.KYCParamDataRepository
 import com.ubx.kyclibrary.model.KYCParamModel
 import com.ubx.kyclibrary.model.UIElement
 
 class KYCParamHelper {
     companion object {
+        fun resetLayoutPages() {
+            getDataRepo().layoutPages.clear()
+        }
 
         fun getLayoutPage(pageNumber: Int): LinearLayout? {
             val layoutPages = getDataRepo().layoutPages
@@ -117,15 +120,36 @@ class KYCParamHelper {
         }
 
         /**
-         * Add a button in the kyc view
+         * Add a next button in the kyc view
          *
          * @param label button label
          * @param width width of text
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addButton(label: String, width: Int, height: Int, addNow: Boolean = false): KYCParamModel.ButtonElement {
-            val button = KYCParamModel.ButtonElement(label, width, height)
+        fun addNextButton(label: String, width: Int, height: Int, addNow: Boolean = false): KYCParamModel.NextButtonElement {
+            val button = KYCParamModel.NextButtonElement(label, width, height)
+            getDataRepo().nextButtonElements.add(button)
+            if (addNow) {
+                val pageRow = KYCParamModel.PageRow(mutableListOf())
+                pageRow.elements.add(button)
+                getLastPage().rows.add(pageRow)
+            }
+            return button
+        }
+
+        /**
+         * Add a button (with custom listener) in the kyc view
+         *
+         * @param label button label
+         * @param listener custom button listener
+         * @param width width of text
+         * @param height height of text
+         * @return ButtonElement that can be customized with style, background, padding and margins
+         */
+        fun addButton(label: String, listener: KYCHelper.CustomListener,
+                      width: Int, height: Int, addNow: Boolean = false): KYCParamModel.ButtonElement {
+            val button = KYCParamModel.ButtonElement(label, listener, width, height)
             getDataRepo().buttonElements.add(button)
             if (addNow) {
                 val pageRow = KYCParamModel.PageRow(mutableListOf())
@@ -219,14 +243,6 @@ class KYCParamHelper {
             return KYCParamDataRepository.instance.pages
         }
 
-        fun setLoginIntent(intent: Intent) {
-            getDataRepo().loginIntent = intent
-        }
-
-        fun getLoginIntent(): Intent? {
-            return getDataRepo().loginIntent
-        }
-
         fun setMainActivity(activity: Activity) {
             getDataRepo().mainActivity = activity
         }
@@ -239,15 +255,8 @@ class KYCParamHelper {
             return KYCParamDataRepository.instance
         }
 
-
-
         /**
          * Get Padding of KYC view
-         *
-         * @param left left padding
-         * @param top top padding
-         * @param right right padding
-         * @param bottom bottom padding
          */
         fun getPadding(): UIElement.Padding {
             return getDataRepo().layoutPadding
@@ -255,11 +264,6 @@ class KYCParamHelper {
 
         /**
          * Get Margins of KYC view
-         *
-         * @param left left margins
-         * @param top top margins
-         * @param right right margins
-         * @param bottom bottom margins
          */
         fun getMargins(): UIElement.Margins {
             return getDataRepo().layoutMargins
@@ -315,8 +319,6 @@ class KYCParamHelper {
         fun getListStyle(): Int? {
             return getDataRepo().listStyle
         }
-
-
     }
 
 }
