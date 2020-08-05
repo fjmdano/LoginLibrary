@@ -1,12 +1,12 @@
 package com.ubx.loginlibrary.helper
 
 import android.app.Activity
-import android.content.Intent
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.UserDataRepository
 import com.ubx.loginlibrary.model.User
 
@@ -19,13 +19,13 @@ class UserHelper {
          * @return User
          */
         fun getSignedInUser(): User? {
-            var user = UserDataRepository.instance.user
+            var user = getDataRepo().user
             if (user == null) {
                 if (ThirdPartyConfigHelper.isFirebaseIntegrated()) {
                     val firebaseUser = Firebase.auth.currentUser
                     if (firebaseUser != null) {
                         user = User(User.AuthMethod.FIREBASE, firebaseUser)
-                        UserDataRepository.instance.user = user
+                        getDataRepo().user = user
                         return user
                     }
                 }
@@ -33,7 +33,7 @@ class UserHelper {
                     val facebookUser = AccessToken.getCurrentAccessToken()
                     if (facebookUser != null && !facebookUser.isExpired) {
                         user = User(User.AuthMethod.FACEBOOK, facebookUser)
-                        UserDataRepository.instance.user = user
+                        getDataRepo().user = user
                         return user
                     }
                 }
@@ -50,7 +50,7 @@ class UserHelper {
          *          Any if using own authentication)
          */
         fun setSignedInUser(account: Any) {
-            UserDataRepository.instance.user = when (account) {
+            getDataRepo().user = when (account) {
                 is FirebaseUser -> {
                     User(User.AuthMethod.FIREBASE, account)
                 }
@@ -67,7 +67,7 @@ class UserHelper {
          * Sign out user and remove stored user details
          */
         fun signOutUser() {
-            when (UserDataRepository.instance.user?.method) {
+            when (getDataRepo().user?.method) {
                 User.AuthMethod.FIREBASE -> Firebase.auth.signOut()
                 User.AuthMethod.FACEBOOK -> {
                     LoginManager.getInstance().logOut();
@@ -76,28 +76,22 @@ class UserHelper {
                     //TODO: Call BE API provided somewhere
                 }
             }
-            UserDataRepository.instance.user = null
+            getDataRepo().user = null
         }
 
-        /**
-         * Set KYC intent
-         */
-        fun setKYCIntent(intent: Intent) {
-            UserDataRepository.instance.kycIntent = intent
+        fun setCustomHandler(loginHandler: LoginHelper.CustomLoginHandler) {
+            getDataRepo().loginHandler = loginHandler
         }
 
-        /**
-         * Get KYC intent
-         */
-        fun getKYCIntent(): Intent? {
-            return UserDataRepository.instance.kycIntent
+        fun getCustomHandler(): LoginHelper.CustomLoginHandler? {
+            return getDataRepo().loginHandler
         }
 
         /**
          * Set Main Activity: where it will return once done
          */
         fun setMainActivity(activity: Activity) {
-            UserDataRepository.instance.mainActivity = activity
+            getDataRepo().mainActivity = activity
         }
 
         /**
@@ -105,7 +99,16 @@ class UserHelper {
          * Called once user is logged in
          */
         fun getMainActivity(): Activity? {
-            return UserDataRepository.instance.mainActivity
+            return getDataRepo().mainActivity
+        }
+
+        /**
+         * Get instance of UserDataRepository
+         *
+         * @return instance of UserDataRepository
+         */
+        private fun getDataRepo(): UserDataRepository {
+            return UserDataRepository.instance
         }
     }
 }

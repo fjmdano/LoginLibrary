@@ -43,6 +43,11 @@ class KYCActivity: Activity(), ListAdapter.Listener {
         displayNextView()
     }
 
+    override fun onBackPressed() {
+        kycViewModel.dismiss()
+        finish()
+    }
+
     /**
      * Show Toolbar
      */
@@ -196,10 +201,6 @@ class KYCActivity: Activity(), ListAdapter.Listener {
         parentLayout.removeView(currentRecyclerView)
         currentRecyclerView = null
         parentLayout.addView(currentLinearLayout)
-    }
-
-    override fun finish() {
-        super.finish()
     }
 
     companion object {

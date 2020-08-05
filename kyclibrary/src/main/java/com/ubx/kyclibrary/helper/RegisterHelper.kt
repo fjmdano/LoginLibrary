@@ -27,7 +27,6 @@ class RegisterHelper {
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success")
-                            val user = firebaseAuth.currentUser
                             Toast.makeText(activity, "Successful registration.",
                                 Toast.LENGTH_SHORT).show()
                             KYCValueHelper.storeInDB(activity)

@@ -83,7 +83,7 @@ class ThirdPartyConfigHelper {
          *
          * @return instance of Google Sign-in client
          */
-        fun getGoogleSigninClient(context: Context): GoogleSignInClient? {
+        fun getGoogleSignInClient(): GoogleSignInClient? {
             return ThirdPartyConfigDataRepository.instance.googleSignInClient
         }
 
@@ -113,6 +113,8 @@ class ThirdPartyConfigHelper {
          */
         private fun integrateFacebook(context: Context, facebookConfig: FacebookConfig) {
             FacebookSdk.setApplicationId(facebookConfig.appID)
+
+            @Suppress("DEPRECATION")
             FacebookSdk.sdkInitialize(context)
             getDataRepo().isFacebookInitialized = true
         }
@@ -135,17 +137,14 @@ class ThirdPartyConfigHelper {
                     .build()
                 FirebaseApp.initializeApp(context, options)
 
-                val firebaseApp = Firebase.initialize(context, options, firebaseConfig.projectId)
+                Firebase.initialize(context, options, firebaseConfig.projectId)
 
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(firebaseConfig.clientId)
                     .requestEmail()
                     .build()
 
-                //isFirebaseSdkInitialized = true
                 getDataRepo().googleSignInClient = GoogleSignIn.getClient(context, gso)
-
-                Toast.makeText(context, "Firebase initialized!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Firebase previously initialized", Toast.LENGTH_SHORT).show()
             }
@@ -153,7 +152,6 @@ class ThirdPartyConfigHelper {
             getDataRepo().firebaseAuth = Firebase.auth
             getDataRepo().isFirebaseInitialized = true
         }
-
 
         /**
          * Get instance of ThirdPartyConfigDataRepository

@@ -2,6 +2,7 @@ package com.ubx.kyclibrary.model
 
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
+import com.ubx.kyclibrary.KYCHelper
 
 class KYCParamModel {
 
@@ -75,7 +76,11 @@ class KYCParamModel {
         val isRequired: Boolean
     ): UIElement(width, height)
 
-    data class ButtonElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
+    data class NextButtonElement(val text: String,
+                                 override var width: Int, override var height: Int): UIElement(width, height)
+
+    data class ButtonElement(val text: String, val listener: KYCHelper.CustomListener,
+                             override var width: Int, override var height: Int): UIElement(width, height)
 
     enum class ElementType {
         IMAGE,

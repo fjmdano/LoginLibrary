@@ -106,9 +106,12 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
         DisplayUtil.setMargins(context, linearLayout, KYCParamHelper.getMargins())
+        var isSharingRow: Boolean
 
         page.rows.forEach {
+            isSharingRow = false
             val layoutToUse = if (it.elements.size > 1) {
+                isSharingRow = true
                 //Add another linear layout
                 val innerLinearLayout = LinearLayout(context)
                 innerLinearLayout.orientation = LinearLayout.HORIZONTAL
@@ -132,7 +135,7 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                     is KYCParamModel.ImageElement -> {
                         layoutToUse.addView(UIElementUtil.createImageElement(context, element))
                     }
-                    is KYCParamModel.ButtonElement -> {
+                    is KYCParamModel.NextButtonElement -> {
                         val button = UIElementUtil.createButtonElement(context, element)
                         button.setOnClickListener {
                             activity.displayNextView()
@@ -140,10 +143,10 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                         layoutToUse.addView(button)
                     }
                     is KYCParamModel.DateElement -> {
-                        layoutToUse.addView(UIElementUtil.createDateElement(context, element))
+                        layoutToUse.addView(UIElementUtil.createDateElement(context, element, isSharingRow))
                     }
                     is KYCParamModel.DropdownElement -> {
-                        layoutToUse.addView(UIElementUtil.createDropdownElement(context, element))
+                        layoutToUse.addView(UIElementUtil.createDropdownElement(context, element, isSharingRow))
                     }
                     is KYCParamModel.ListElement -> {
                         val listElement = UIElementUtil.createListElement(context, element)
@@ -192,5 +195,10 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
             }
         }
         return hasError
+    }
+
+    fun dismiss() {
+        currentPage = -1
+        KYCParamHelper.resetLayoutPages()
     }
 }

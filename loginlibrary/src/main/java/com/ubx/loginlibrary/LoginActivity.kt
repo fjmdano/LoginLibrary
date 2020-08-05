@@ -43,6 +43,13 @@ class LoginActivity: Activity() {
         addLoginPage()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (loginViewModel.getUser() != null) {
+            finish()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -167,6 +174,25 @@ class LoginActivity: Activity() {
     }
 
     /**
+     * Sign-in using email and password in Firebase
+     */
+    fun firebaseAuthWithEmail(email: String, password: String) {
+        loginViewModel.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d(TAG, "firebaseAuthWithEmail:success")
+                setUserAndReturn(loginViewModel.getFirebaseAuth().currentUser)
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "firebaseAuthWithEmail:failure", task.exception)
+                Log.w(TAG, "firebaseAuthWithEmail:trying to use custom sign in function", task.exception)
+                loginViewModel.customSignIn()
+            }
+        }
+    }
+
+    /**
      * Store user credentials and return control to main application
      * @param account user credentials
      * (type is FirebaseUser if using Firebase,
@@ -234,7 +260,7 @@ class LoginActivity: Activity() {
 
         } catch (e: ApiException) {
             Toast.makeText(this, "Error: " + e.message, Toast.LENGTH_SHORT).show()
-            Log.w(TAG, e.localizedMessage)
+            Log.w(TAG, "handleGoogleSignInResult: error", e)
         }
     }
 

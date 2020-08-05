@@ -4,12 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
@@ -21,6 +21,7 @@ class MainActivity : Activity() {
 
     lateinit var loginIntent: Intent
     lateinit var kycIntent: Intent
+    val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +32,11 @@ class MainActivity : Activity() {
         //Create Login Parameters
         createHelpers()
         useThirdParties()
-        createIntents()
 
         createLoginContent()
         createKYCContent()
+
+        createIntents()
 
         setSignOutHandler()
     }
@@ -63,6 +65,15 @@ class MainActivity : Activity() {
             ConstraintLayout.LayoutParams.MATCH_PARENT)
 
         kycHelper = KYCHelper(applicationContext, "LoginHelper")
+
+        loginHelper.setCustomSigninHandler(object: LoginHelper.CustomLoginHandler {
+            override fun login(): Any? {
+                Log.d(TAG, "Custom signing in")
+                Log.d(TAG, "email: ${loginHelper.getValue("email")}")
+                Log.d(TAG, "password: ${loginHelper.getValue("password")}")
+                return null
+            }
+        })
     }
 
     /**
@@ -86,11 +97,9 @@ class MainActivity : Activity() {
     private fun createIntents() {
         if (!this::loginIntent.isInitialized) {
             loginIntent = loginHelper.getIntent(this)
-            kycHelper.setLoginIntent(loginIntent)
         }
         if (!this::kycIntent.isInitialized) {
             kycIntent = kycHelper.getIntent(this)
-            loginHelper.setKYCIntent(kycIntent)
         }
     }
 
@@ -123,7 +132,8 @@ class MainActivity : Activity() {
             false,
             InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "email"
         )
         inputUsername.style = R.style.EditText_DefaultAlpha
 
@@ -131,11 +141,12 @@ class MainActivity : Activity() {
             true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "password"
         )
         inputPassword.style = R.style.EditText_DefaultAlpha
 
-        val buttonLogin = loginHelper.addEmailLoginButton("Log-in",
+        val buttonLogin = loginHelper.addLoginButton("Log-in",
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -160,8 +171,12 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        val buttonRegister = loginHelper.addIntentButton("No account yet? Register now!",
-            kycIntent,
+        val buttonRegister = loginHelper.addButton("No account yet? Register now!",
+            object: LoginHelper.CustomListener {
+                override fun onClick() {
+                    startActivity(kycHelper.getIntent(activity))
+                }
+            },
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -176,7 +191,7 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        kycHelper.addButton("I agree to the Terms and Agreement",
+        kycHelper.addNextButton("I agree to the Terms and Agreement",
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
 
@@ -230,9 +245,10 @@ class MainActivity : Activity() {
             "address",
             true
         )
+
         kycHelper.addPageRow(mutableListOf(
             kycHelper.addDateInRow("Birthday",
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 "birthday",
                 true
@@ -247,4 +263,8 @@ class MainActivity : Activity() {
 
     }
 
+
+    companion object {
+        private const val TAG = "MAIN"
+    }
 }
