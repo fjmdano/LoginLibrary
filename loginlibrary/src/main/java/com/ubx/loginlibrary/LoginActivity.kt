@@ -177,19 +177,17 @@ class LoginActivity: Activity() {
      * Sign-in using email and password in Firebase
      */
     fun firebaseAuthWithEmail(email: String, password: String) {
-        Log.d(TAG, "firebaseAuthWithEmail:$email")
-        Log.d(TAG, "firebaseAuthWithEmail:Password:$password")
         loginViewModel.getFirebaseAuth().signInWithEmailAndPassword(email, password)
         .addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "signInWithEmail:success")
+                Log.d(TAG, "firebaseAuthWithEmail:success")
                 setUserAndReturn(loginViewModel.getFirebaseAuth().currentUser)
             } else {
                 // If sign in fails, display a message to the user.
-                Log.w(TAG, "signInWithEmail:failure", task.exception)
-                Toast.makeText(baseContext, "Authentication failed.",
-                    Toast.LENGTH_SHORT).show()
+                Log.w(TAG, "firebaseAuthWithEmail:failure", task.exception)
+                Log.w(TAG, "firebaseAuthWithEmail:trying to use custom sign in function", task.exception)
+                loginViewModel.customSignIn()
             }
         }
     }
@@ -262,7 +260,7 @@ class LoginActivity: Activity() {
 
         } catch (e: ApiException) {
             Toast.makeText(this, "Error: " + e.message, Toast.LENGTH_SHORT).show()
-            Log.w(TAG, e.localizedMessage)
+            Log.w(TAG, "handleGoogleSignInResult: error", e)
         }
     }
 

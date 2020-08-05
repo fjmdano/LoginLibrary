@@ -1,30 +1,13 @@
 package com.ubx.loginlibrary
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ubx.loginlibrary.model.LoginParamModel
 import com.ubx.loginlibrary.model.User
-import com.ubx.loginlibrary.util.DisplayUtil
-import com.ubx.loginlibrary.helper.LoginParamHelper
-import com.ubx.loginlibrary.helper.LoginValuesHelper
-import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
-import com.ubx.loginlibrary.helper.UserHelper
 
-class LoginHelper(val context: Context, appName: String,
-                  width: Int, height: Int): LoginInterface {
-    private lateinit var linearLayout: LinearLayout
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private var viewGroup: ViewGroup? = null
-    private var isThirdPartyInitialized = false
+interface LoginInterface {
 
-    init {
-        LoginParamHelper.setLoginParam(appName, width, height)
-    }
-
+    /*******************[START] CUSTOMIZE MAIN LOGIN LAYOUT ******************************/
     /**
      * Set Padding of login view
      *
@@ -33,9 +16,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param right right padding
      * @param bottom bottom padding
      */
-    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        LoginParamHelper.setPadding(left, top, right, bottom)
-    }
+    fun setPadding(left: Int, top: Int, right: Int, bottom: Int)
 
     /**
      * Set Margins of login view
@@ -45,28 +26,24 @@ class LoginHelper(val context: Context, appName: String,
      * @param right right margins
      * @param bottom bottom margins
      */
-    override fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
-        LoginParamHelper.setMargins(left, top, right, bottom)
-    }
+    fun setMargins(left: Int, top: Int, right: Int, bottom: Int)
 
     /**
      * Set Background of login view
      *
      * @param background background (i.e. R.drawable.*)
      */
-    override fun setBackground(background: Int) {
-        LoginParamHelper.setBackground(background)
-    }
+    fun setBackground(background: Int)
 
     /**
      * Set Style of login view
      *
      * @param style style (i.e. R.style.*)
      */
-    override fun setStyle(style: Int) {
-        LoginParamHelper.setStyle(style)
-    }
+    fun setStyle(style: Int)
+    /***********************[END] CUSTOMIZE MAIN LOGIN LAYOUT ****************************/
 
+    /*******************[START] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
     /**
      * Add an image in the login view
      *
@@ -75,9 +52,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of image
      * @return ImageElement that can be customized with style, background, padding and margins
      */
-    override fun addImage(image: Int, width: Int, height: Int): LoginParamModel.ImageElement {
-        return LoginParamHelper.addImage(image, width, height)
-    }
+    fun addImage(image: Int, width: Int, height: Int): LoginParamModel.ImageElement
 
     /**
      * Add a text in the login view
@@ -87,9 +62,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addText(label: String, width: Int, height: Int): LoginParamModel.TextElement {
-        return LoginParamHelper.addText(label, width, height)
-    }
+    fun addText(label: String, width: Int, height: Int): LoginParamModel.TextElement
 
     /**
      * Add an input text in the login view
@@ -102,10 +75,8 @@ class LoginHelper(val context: Context, appName: String,
      * @param key input key - to be used for retrieving the input value
      * @return InputElement that can be customized with style, background, padding and margins
      */
-    override fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                width: Int, height: Int, key: String): LoginParamModel.InputElement {
-        return LoginParamHelper.addInput(hint, isPassword, inputType, width, height, key)
-    }
+    fun addInput(hint: String, isPassword: Boolean, inputType: Int,
+                 width: Int, height: Int, key: String): LoginParamModel.InputElement
 
     /**
      * Add a button in the login view
@@ -115,9 +86,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    override fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.LoginButtonElement {
-        return LoginParamHelper.addLoginButton(label, width, height)
-    }
+    fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.LoginButtonElement
 
     /**
      * Add a button (with intent to next activity) in the login view
@@ -128,9 +97,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    override fun addButton(label: String, listener: CustomListener, width: Int, height: Int): LoginParamModel.ButtonElement {
-        return LoginParamHelper.addButton(label, listener, width, height)
-    }
+    fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): LoginParamModel.ButtonElement
 
     /**
      * Add Sign in with Google
@@ -139,9 +106,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return Google Sign In Button that can be customized with style, background, padding and margins
      */
-    override fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle {
-        return LoginParamHelper.addGoogleSignIn(width, height)
-    }
+    fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle
 
     /**
      * Add Sign in with Facebook
@@ -150,9 +115,10 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return Facebook Sign In Button that can be customized with style, background, padding and margins
      */
-    override fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook {
-        return LoginParamHelper.addFacebookSignIn(width, height)
-    }
+    fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook
+    /*********************[END] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
+
+    /*********************[START] THIRD PARTY RELATED************************************/
 
     /**
      * Use Firebase SDK for logging in
@@ -165,12 +131,9 @@ class LoginHelper(val context: Context, appName: String,
      * @param apiKey client[0]["api_key"]["current_key"] in the google-services.json file
      * @param clientId client[0]["oauth_client"]["client_id"] where client_type=3 in the google-services.json file
      */
-    override fun useFirebase(projectNumber: String, firebaseUrl: String,
+    fun useFirebase(projectNumber: String, firebaseUrl: String,
                     projectId: String, storageBucket: String,
-                    appId: String, apiKey: String, clientId: String) {
-        ThirdPartyConfigHelper.setFirebaseConfig(projectNumber, firebaseUrl,
-            projectId, storageBucket, appId, apiKey, clientId)
-    }
+                    appId: String, apiKey: String, clientId: String)
 
     /**
      * Use Facebook SDK for logging in
@@ -178,43 +141,40 @@ class LoginHelper(val context: Context, appName: String,
      * @param appID App ID (or facebook_app_id) generated from https://developers.facebook.com/
      * @param protocolScheme Protocol Scheme (or fb_login_protocol_scheme) generated from https://developers.facebook.com/
      */
-    override fun useFacebook(appID: String, protocolScheme: String) {
-        ThirdPartyConfigHelper.setFacebookConfig(appID, protocolScheme)
-    }
+    fun useFacebook(appID: String, protocolScheme: String)
+    /***********************[END] THIRD PARTY RELATED************************************/
 
+    /***********************[START] USER RELATED*****************************************/
     /**
      * Get currently logged in user
      *
      * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
      */
-    override fun getUser(): User? {
-        initializeThirdParty()
-        return UserHelper.getSignedInUser()
-    }
+    fun getUser(): User?
 
     /**
      * Sign out current user
      *
      * @return user with type (can be FACEBOOK, GOOGLE, or OWN) and the account details (based from the auth method)
      */
-    override fun signOutUser() {
-        UserHelper.signOutUser()
-    }
+    fun signOutUser()
+    /*************************[END] USER RELATED*****************************************/
 
+    /***********************[START] INTENT RELATED***************************************/
     /**
      * Get intent for login view
      *
      * @return intent
      */
-    override fun getIntent(activity: Activity): Intent {
-        initializeThirdParty()
-        UserHelper.setMainActivity(activity)
-        return LoginActivity.getIntent(context)
-    }
+    fun getIntent(activity: Activity): Intent
+    /*************************[END] INTENT RELATED***************************************/
 
-    override fun getValue(key: String): String {
-        return LoginValuesHelper.getValue(key)
-    }
+    /**
+     * Get value of input text
+     *
+     * @return string value
+     */
+    fun getValue(key: String): String
 
     /**
      * Get size in DP
@@ -222,34 +182,12 @@ class LoginHelper(val context: Context, appName: String,
      * @param size Int
      * @return size in DP
      */
-    override fun sizeInDP(size: Int): Int {
-        return DisplayUtil.sizeInDP(context, size)
-    }
+    fun sizeInDP(size: Int): Int
 
     /**
      * Set Custom Sign in Handler
      *
      * @param loginHandler function handler
      */
-    override fun setCustomSigninHandler(loginHandler: CustomLoginHandler) {
-        UserHelper.setCustomHandler(loginHandler)
-    }
-
-    /**
-     * Initialize Third Party SDKS if not yet previously done
-     */
-    private fun initializeThirdParty() {
-        if (!isThirdPartyInitialized) {
-            ThirdPartyConfigHelper.initializeThirdParty(context)
-            isThirdPartyInitialized = true
-        }
-    }
-
-    interface CustomLoginHandler {
-        fun login(): Any?
-    }
-
-    interface CustomListener {
-        fun onClick()
-    }
+    fun setCustomSigninHandler(loginHandler: LoginHelper.CustomLoginHandler)
 }

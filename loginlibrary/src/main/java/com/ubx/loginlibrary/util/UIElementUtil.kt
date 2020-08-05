@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.facebook.login.widget.LoginButton
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.SignInButton
 import com.google.android.material.textfield.TextInputEditText
@@ -74,6 +73,7 @@ class UIElementUtil {
                 textInputLayout,
                 element
             )
+            @Suppress("DEPRECATION")
             textInputLayout.isPasswordVisibilityToggleEnabled = element.isPassword
 
             val textInputEditText = if (element.style != null) {
@@ -81,7 +81,6 @@ class UIElementUtil {
             } else {
                 TextInputEditText(context)
             }
-            element.editText = textInputEditText
             if (element.gravity != null) {
                 textInputEditText.gravity = element.gravity!!
             }
@@ -89,6 +88,9 @@ class UIElementUtil {
             textInputEditText.inputType = element.inputType
             textInputEditText.hint = element.hint
             textInputLayout.addView(textInputEditText)
+
+            element.inputLayout = textInputLayout
+            element.editText = textInputEditText
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textInputLayout.id = View.generateViewId()
@@ -98,9 +100,9 @@ class UIElementUtil {
         }
 
         /**
-        * Create Button
+        * Create Login Button
         */
-        fun createButtonElement(context: Context, element: LoginParamModel.ButtonElement) : Button {
+        fun createLoginButtonElement(context: Context, element: LoginParamModel.LoginButtonElement) : Button {
             val button = if (element.style != null) {
                 Button(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -125,9 +127,9 @@ class UIElementUtil {
 
 
         /**
-         * Create Button with onClickHandler based from activity intent
+         * Create Button with onClickHandler
          */
-        fun createIntentButtonElement(context: Context, element: LoginParamModel.IntentButtonElement) : Button {
+        fun createButtonElement(context: Context, element: LoginParamModel.ButtonElement) : Button {
             val button = if (element.style != null) {
                 Button(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -194,9 +196,7 @@ class UIElementUtil {
             )
 
             googleButton.setOnClickListener {
-                val signInIntent = signInClient.signInIntent
-                val task = GoogleSignIn.getSignedInAccountFromIntent(signInIntent)
-                activity.startActivityForResult(signInIntent, LoginActivity.RC_SIGN_IN)
+                activity.startActivityForResult(signInClient.signInIntent, LoginActivity.RC_SIGN_IN)
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

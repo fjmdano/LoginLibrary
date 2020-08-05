@@ -1,7 +1,7 @@
 package com.ubx.loginlibrary.model
 
-import android.content.Intent
 import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
 import com.ubx.loginlibrary.LoginHelper
 
 
@@ -17,9 +17,9 @@ data class LoginParamModel(var appName: String,
 
     data class TextElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
 
-    data class ButtonElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
+    data class LoginButtonElement(val text: String, override var width: Int, override var height: Int): UIElement(width, height)
 
-    data class IntentButtonElement(val text: String, val listener: LoginHelper.CustomOnClickButtonListener, override var width: Int, override var height: Int): UIElement(width, height)
+    data class ButtonElement(val text: String, val listener: LoginHelper.CustomListener, override var width: Int, override var height: Int): UIElement(width, height)
 
     data class InputElement(
         val hint: String,
@@ -29,7 +29,8 @@ data class LoginParamModel(var appName: String,
         override var height: Int,
         val key: String
     ): UIElement(width, height) {
-        var editText: EditText? = null
+        lateinit var inputLayout: TextInputLayout
+        lateinit var editText: EditText
     }
 
     data class ThirdPartyFacebook(

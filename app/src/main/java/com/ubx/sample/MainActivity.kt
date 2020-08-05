@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
@@ -31,10 +32,11 @@ class MainActivity : Activity() {
         //Create Login Parameters
         createHelpers()
         useThirdParties()
-        createIntents()
 
         createLoginContent()
         createKYCContent()
+
+        createIntents()
 
         setSignOutHandler()
     }
@@ -64,14 +66,11 @@ class MainActivity : Activity() {
 
         kycHelper = KYCHelper(applicationContext, "LoginHelper")
 
-        val activity = this
-        loginHelper.setCustomHandler(object: LoginHelper.CustomHandler {
-            override fun getRegistrationIntent(): Intent {
-                return kycHelper.getIntent(activity)
-            }
-
-            override fun signIn(): Any? {
-                println("Custom signing in. Get details from loginhelper")
+        loginHelper.setCustomSigninHandler(object: LoginHelper.CustomLoginHandler {
+            override fun login(): Any? {
+                Log.d(TAG, "Custom signing in")
+                Log.d(TAG, "email: ${loginHelper.getValue("email")}")
+                Log.d(TAG, "password: ${loginHelper.getValue("password")}")
                 return null
             }
         })
@@ -98,7 +97,6 @@ class MainActivity : Activity() {
     private fun createIntents() {
         if (!this::loginIntent.isInitialized) {
             loginIntent = loginHelper.getIntent(this)
-            kycHelper.setLoginIntent(loginIntent)
         }
         if (!this::kycIntent.isInitialized) {
             kycIntent = kycHelper.getIntent(this)
@@ -148,7 +146,7 @@ class MainActivity : Activity() {
         )
         inputPassword.style = R.style.EditText_DefaultAlpha
 
-        val buttonLogin = loginHelper.addEmailLoginButton("Log-in",
+        val buttonLogin = loginHelper.addLoginButton("Log-in",
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -173,8 +171,8 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        val buttonRegister = loginHelper.addIntentButton("No account yet? Register now!",
-            object: LoginHelper.CustomOnClickButtonListener {
+        val buttonRegister = loginHelper.addButton("No account yet? Register now!",
+            object: LoginHelper.CustomListener {
                 override fun onClick() {
                     startActivity(kycHelper.getIntent(activity))
                 }
@@ -193,7 +191,7 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        kycHelper.addButton("I agree to the Terms and Agreement",
+        kycHelper.addNextButton("I agree to the Terms and Agreement",
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
 
@@ -265,4 +263,8 @@ class MainActivity : Activity() {
 
     }
 
+
+    companion object {
+        private const val TAG = "MAIN"
+    }
 }

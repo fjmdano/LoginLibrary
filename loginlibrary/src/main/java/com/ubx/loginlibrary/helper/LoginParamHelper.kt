@@ -1,6 +1,5 @@
 package com.ubx.loginlibrary.helper
 
-import android.content.Intent
 import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.LoginParamDataRepository
 import com.ubx.loginlibrary.model.LoginParamModel
@@ -111,6 +110,7 @@ class LoginParamHelper {
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.EDIT, input
             ))
+            addInputElement(input)
             return input
         }
 
@@ -122,8 +122,8 @@ class LoginParamHelper {
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.ButtonElement {
-            val button = LoginParamModel.ButtonElement(label, width, height)
+        fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.LoginButtonElement {
+            val button = LoginParamModel.LoginButtonElement(label, width, height)
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.BUTTON, button
             ))
@@ -139,8 +139,8 @@ class LoginParamHelper {
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addIntentButton(label: String, listener: LoginHelper.CustomOnClickButtonListener, width: Int, height: Int): LoginParamModel.IntentButtonElement {
-            val button = LoginParamModel.IntentButtonElement(label, listener, width, height)
+        fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): LoginParamModel.ButtonElement {
+            val button = LoginParamModel.ButtonElement(label, listener, width, height)
             getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
                 LoginParamModel.ElementType.BUTTON, button
             ))
@@ -175,6 +175,22 @@ class LoginParamHelper {
                 LoginParamModel.ElementType.THIRD_PARTY, button
             ))
             return button
+        }
+
+        /**
+         * Store input elements to data array
+         */
+        private fun addInputElement(element: LoginParamModel.InputElement) {
+            LoginParamDataRepository.instance.inputElements.add(element)
+        }
+
+        /**
+         * Get stored input elements
+         *
+         * @return stored input elements
+         */
+        fun getInputElements(): MutableList<LoginParamModel.InputElement> {
+            return LoginParamDataRepository.instance.inputElements
         }
 
         /**

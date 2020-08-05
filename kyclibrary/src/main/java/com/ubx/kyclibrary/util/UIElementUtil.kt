@@ -1,12 +1,10 @@
 package com.ubx.kyclibrary.util
 
 import android.app.DatePickerDialog
-import android.bluetooth.BluetoothClass.Device
 import android.content.Context
 import android.os.Build
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
-import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
@@ -81,6 +79,7 @@ class UIElementUtil {
                 textInputLayout,
                 element
             )
+            @Suppress("DEPRECATION")
             textInputLayout.isPasswordVisibilityToggleEnabled = element.isPassword
             textInputLayout.isErrorEnabled = true
 
@@ -113,7 +112,7 @@ class UIElementUtil {
         /**
          * Create Button
          */
-        fun createButtonElement(context: Context, element: KYCParamModel.ButtonElement) : Button {
+        fun createButtonElement(context: Context, element: KYCParamModel.NextButtonElement) : Button {
             val button = if (element.style != null) {
                 Button(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -194,12 +193,11 @@ class UIElementUtil {
             val formatter = SimpleDateFormat(DATE_FORMAT)
             val dpd: DatePickerDialog = DatePickerDialog(context)
             dpd.updateDate(now[Calendar.YEAR], now[Calendar.MONTH], now[Calendar.DAY_OF_MONTH])
-            dpd.setOnDateSetListener { view, year, month, dayOfMonth ->
+            dpd.setOnDateSetListener { _, year, month, dayOfMonth ->
                 val cal = Calendar.getInstance()
                 cal[Calendar.YEAR] = year
                 cal[Calendar.MONTH] = month
                 cal[Calendar.DAY_OF_MONTH] = dayOfMonth
-                val dateRepresentation = cal.time
                 editText.setText(formatter.format(cal.time))
             }
             dpd.show()
@@ -303,7 +301,7 @@ class UIElementUtil {
         /**
          * E-mail validator
          */
-        fun isValidEmail(target: CharSequence?): Boolean {
+        fun isValidEmail(target: CharSequence): Boolean {
             return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target)
                 .matches()
         }

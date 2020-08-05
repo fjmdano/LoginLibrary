@@ -106,7 +106,7 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
         DisplayUtil.setMargins(context, linearLayout, KYCParamHelper.getMargins())
-        var isSharingRow = false
+        var isSharingRow: Boolean
 
         page.rows.forEach {
             isSharingRow = false
@@ -135,7 +135,7 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                     is KYCParamModel.ImageElement -> {
                         layoutToUse.addView(UIElementUtil.createImageElement(context, element))
                     }
-                    is KYCParamModel.ButtonElement -> {
+                    is KYCParamModel.NextButtonElement -> {
                         val button = UIElementUtil.createButtonElement(context, element)
                         button.setOnClickListener {
                             activity.displayNextView()

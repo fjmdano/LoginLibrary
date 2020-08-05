@@ -1,7 +1,6 @@
 package com.ubx.loginlibrary.helper
 
 import android.app.Activity
-import android.content.Intent
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseUser
@@ -80,12 +79,12 @@ class UserHelper {
             getDataRepo().user = null
         }
 
-        fun setCustomHandler(handler: LoginHelper.CustomHandler) {
-            getDataRepo().handler = handler
+        fun setCustomHandler(loginHandler: LoginHelper.CustomLoginHandler) {
+            getDataRepo().loginHandler = loginHandler
         }
 
-        fun getCustomHandler(): LoginHelper.CustomHandler? {
-            return getDataRepo().handler
+        fun getCustomHandler(): LoginHelper.CustomLoginHandler? {
+            return getDataRepo().loginHandler
         }
 
         /**
