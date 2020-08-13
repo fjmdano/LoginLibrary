@@ -181,7 +181,7 @@ class UIElementUtil {
             element.editText = textInputEditText
             return textInputLayout
         }
-
+        
         private fun showDatePicker(context: Context, editText: EditText) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 Toast.makeText(context,
@@ -235,9 +235,7 @@ class UIElementUtil {
             val spinner = Spinner(context)
             ArrayAdapter(context, android.R.layout.simple_list_item_1, element.choices)
                 .also { adapter ->
-                    // Specify the layout to use when the list of choices appears
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    // Apply the adapter to the spinner
                     spinner.adapter = adapter
                 }
 
@@ -296,6 +294,31 @@ class UIElementUtil {
             }
             element.editText = textInputEditText
             return textInputLayout
+        }
+
+        /**
+         * Create ImageView that when clicked, user can select an existing picture from gallery
+         * or new picture via camera
+         */
+        fun createMediaElement(context: Context,
+                               element: KYCParamModel.MediaElement): ImageView {
+            val imageView = if (element.style != null) {
+                ImageView(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                ImageView(context)
+            }
+            DisplayUtil.customizeLinearElement(
+                context,
+                imageView,
+                element
+            )
+            imageView.setBackgroundResource(R.drawable.dotted_border)
+            imageView.setImageResource(R.drawable.icon_camera)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                imageView.id = View.generateViewId()
+            }
+            element.imageView = imageView
+            return imageView
         }
 
         /**

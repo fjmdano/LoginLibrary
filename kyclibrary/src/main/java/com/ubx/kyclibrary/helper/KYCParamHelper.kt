@@ -64,6 +64,7 @@ class KYCParamHelper {
          * @param image image (i.e. R.drawable.*)
          * @param width width of image
          * @param height height of image
+         * @param addNow if true, element is added immediately to page row
          * @return ImageElement that can be customized with style, background, padding and margins
          */
         fun addImage(image: Int, width: Int, height: Int, addNow: Boolean = false): KYCParamModel.ImageElement {
@@ -83,6 +84,7 @@ class KYCParamHelper {
          * @param label text label
          * @param width width of text
          * @param height height of text
+         * @param addNow if true, element is added immediately to page row
          * @return TextElement that can be customized with style, background, padding and margins
          */
         fun addText(label: String, width: Int, height: Int, addNow: Boolean = false): KYCParamModel.TextElement {
@@ -104,6 +106,9 @@ class KYCParamHelper {
          * @param inputType input type
          * @param width width of text
          * @param height height of text
+         * @param key key in getting the item value
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param addNow if true, element is added immediately to page row
          * @return InputElement that can be customized with style, background, padding and margins
          */
         fun addInput(hint: String, isPassword: Boolean, inputType: Int,
@@ -125,6 +130,7 @@ class KYCParamHelper {
          * @param label button label
          * @param width width of text
          * @param height height of text
+         * @param addNow if true, element is added immediately to page row
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
         fun addNextButton(label: String, width: Int, height: Int, addNow: Boolean = false): KYCParamModel.NextButtonElement {
@@ -145,6 +151,7 @@ class KYCParamHelper {
          * @param listener custom button listener
          * @param width width of text
          * @param height height of text
+         * @param addNow if true, element is added immediately to page row
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
         fun addButton(label: String, listener: KYCHelper.CustomListener,
@@ -165,6 +172,8 @@ class KYCParamHelper {
          * @param label button label
          * @param width width of text
          * @param height height of text
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param addNow if true, element is added immediately to page row
          * @return DateElement that can be customized with style, background, padding and margins
          */
         fun addDate(label: String, width: Int, height: Int, key: String,
@@ -187,7 +196,8 @@ class KYCParamHelper {
          * @param width width of text
          * @param height height of text
          * @param key key in getting the item value
-         * @param addNow true if item is added immediately to row, else false
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param addNow if true, element is added immediately to page row
          * @return DropdownElement that can be customized with style, background, padding and margins
          */
         fun addDropdown(label: String, choices: List<String>, width: Int, height: Int, key: String,
@@ -210,7 +220,8 @@ class KYCParamHelper {
          * @param width width of text
          * @param height height of text
          * @param key key in getting the item value
-         * @param addNow true if item is added immediately to row, else false
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param addNow if true, element is added immediately to page row
          * @return DropdownElement that can be customized with style, background, padding and margins
          */
         fun addList(label: String, choices: List<String>, width: Int, height: Int, key: String,
@@ -223,6 +234,29 @@ class KYCParamHelper {
                 getLastPage().rows.add(pageRow)
             }
             return listElement
+        }
+
+        /**
+         * Add a imageview button in the kyc view
+         *
+         * @param label media label
+         * @param width width of image
+         * @param height height of image
+         * @param key key in getting the item value
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param addNow if true, element is added immediately to page row
+         * @return MediaElement that can be customized with style, background, padding and margins
+         */
+        fun addMedia(label: String,  width: Int, height: Int, key: String, isRequired: Boolean,
+                     addNow: Boolean = false): KYCParamModel.MediaElement {
+            val mediaElement = KYCParamModel.MediaElement(label, width, height, key, isRequired)
+            getDataRepo().mediaElements.add(mediaElement)
+            if (addNow) {
+                val pageRow = KYCParamModel.PageRow(mutableListOf())
+                pageRow.elements.add(mediaElement)
+                getLastPage().rows.add(pageRow)
+            }
+            return mediaElement
         }
 
         /**

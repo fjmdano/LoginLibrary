@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="media_choose">
+        <item>Choose existing photo from Gallery</item>
+        <item>Capture new photo</item>
+    </string-array>
+</resources>

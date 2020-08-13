@@ -1,7 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ubx.kyclibrary">
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
-        android:allowBackup="false">
+        android:allowBackup="false"
+        android:theme="@style/AppTheme">
         <activity android:name="com.ubx.kyclibrary.KYCActivity"/>
+        <activity android:name="com.ubx.kyclibrary.CameraActivity"/>
     </application>
 </manifest>

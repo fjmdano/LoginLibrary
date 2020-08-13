@@ -17,9 +17,10 @@ class KYCValueHelper {
             return getDataRepo().values[key] ?: ""
         }
 
-        fun storeInDB(activity: Activity) {
+        fun storeInDB(): Boolean {
+            var isOK = false
             //Check if logged in
-            val firebaseUser = Firebase.auth.currentUser ?: return
+            val firebaseUser = Firebase.auth.currentUser ?: return isOK
             try {
                 val database = Firebase.database.getReference("users")
                     .child(firebaseUser.uid).child("profile")
@@ -28,10 +29,13 @@ class KYCValueHelper {
                         database.child(it.key).setValue(it.value)
                     }
                 }
-                activity.finish()
+                //activity.finish()
+                isOK = true
             } catch (e: Exception){
                 Log.d("FirebaseDB", "storeInDB: failure", e)
+                isOK = false
             }
+            return isOK
         }
 
         private fun getDataRepo(): KYCValuesDataRepository {

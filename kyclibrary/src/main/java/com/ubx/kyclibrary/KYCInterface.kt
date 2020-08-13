@@ -228,6 +228,37 @@ interface KYCInterface {
      */
     fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
                      key: String, isRequired: Boolean): KYCParamModel.ListElement
+
+    /**
+     * Add an imageview button that when clicked, user can set an existing
+     * image from gallery or new image from camera
+     * This will consume one row in view
+     *
+     * @param label media label
+     * @param width width of image
+     * @param height height of image
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @return MediaElement that can be customized with style, background, padding and margins
+     */
+    fun addMedia(label: String,  width: Int, height: Int, key: String,
+                          isRequired: Boolean): KYCParamModel.MediaElement
+
+    /**
+     * Add an imageview button that when clicked, user can set an existing
+     * image from gallery or new image from camera
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label media label
+     * @param width width of image
+     * @param height height of image
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @return MediaElement that can be customized with style, background, padding and margins
+     */
+    fun addMediaInRow(label: String,  width: Int, height: Int, key: String,
+                               isRequired: Boolean): KYCParamModel.MediaElement
     /***********************[END] ADD PAGES AND UI ELEMENTS TO KYC VIEW**************************/
 
     /***********************[START] INTENT RELATED***************************************/

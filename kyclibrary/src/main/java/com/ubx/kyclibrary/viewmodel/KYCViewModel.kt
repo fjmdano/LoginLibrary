@@ -4,104 +4,119 @@ import android.app.Activity
 import android.content.Context
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.ubx.kyclibrary.KYCActivity
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
-import com.ubx.kyclibrary.helper.RegisterHelper
 import com.ubx.kyclibrary.model.KYCParamModel
+import com.ubx.kyclibrary.model.User
 import com.ubx.kyclibrary.util.DisplayUtil
 import com.ubx.kyclibrary.util.UIElementUtil
 
-class KYCViewModel(private val context: Context, private val activity: KYCActivity) {
-    private var currentPage = -1
-
-    /**
-     * Get Current Page
-     */
-    fun getCurrentPage(): KYCParamModel.Page {
-        if (currentPage >= KYCParamHelper.getPageSize()) {
-            currentPage = KYCParamHelper.getPageSize() - 1
-        }
-        return KYCParamHelper.getPage(currentPage)!!
+class KYCViewModel: ViewModel() {
+    var pageNumber = -1
+    lateinit var page: KYCParamModel.Page
+    val pageTitle: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val leftContent: MutableLiveData<Any?> by lazy {
+        MutableLiveData<Any?>()
+    }
+    val rightContent: MutableLiveData<Any?> by lazy {
+        MutableLiveData<Any?>()
+    }
+    val pageForLinearLayout: MutableLiveData<KYCParamModel.Page> by lazy {
+        MutableLiveData<KYCParamModel.Page>()
+    }
+    val linearLayoutToDisplay: MutableLiveData<LinearLayout> by lazy {
+        MutableLiveData<LinearLayout>()
+    }
+    val toastMessage: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val selectedListElement: MutableLiveData<KYCParamModel.ListElement> by lazy {
+        MutableLiveData<KYCParamModel.ListElement>()
+    }
+    val selectedMediaElement: MutableLiveData<KYCParamModel.MediaElement> by lazy {
+        MutableLiveData<KYCParamModel.MediaElement>()
+    }
+    val userToRegister: MutableLiveData<User> by lazy {
+        MutableLiveData<User>()
+    }
+    val isSaved: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
-    /**
-     * Get Previous Page
-     */
-    fun getPrevPage(): KYCParamModel.Page {
-        currentPage = if (currentPage <= 0) {
+    fun getPreviousPage() {
+        //Decrement page number
+        pageNumber = if (pageNumber <= 0) {
             0
         } else {
-            currentPage - 1
+            pageNumber - 1
         }
-        return KYCParamHelper.getPage(currentPage)!!
+        setUIPage(pageNumber)
     }
+
+    fun getNextPage() {
+        if (pageNumber != -1 && !verifyInputs()) {
+            toastMessage.value = "Please verify inputs before proceeding"
+            return
+        }
+
+        //Increment page number
+        if (pageNumber < KYCParamHelper.getPageSize() - 1) {
+            pageNumber += 1
+        } else {
+            submit()
+        }
+        setUIPage(pageNumber)
+    }
+
 
     /**
      * Set Toolbar Contents
      */
-    fun setToolbar() {
-        val page = KYCParamHelper.getPage(currentPage)!!
-        activity.setTitle(page.pageTitle)
-        activity.setLeftContent(page.leftContent)
-        activity.setRightContent(page.rightContent)
+    private fun setToolbar(page: KYCParamModel.Page) {
+        pageTitle.value = page.pageTitle
+        leftContent.value = page.leftContent
+        rightContent.value = page.rightContent
     }
 
     /**
-     * Get Previous Linear Layout
+     * Set Page to be displayed
      */
-    fun getPrevLayoutPage(): LinearLayout {
-        currentPage = if (currentPage <= 0) {
-            0
-        } else {
-            currentPage - 1
-        }
-        return getLayoutPage(currentPage)
-    }
-
-    /**
-     * Get Next Linear Layout
-     */
-    fun getNextLayoutPage(activity: Activity): LinearLayout {
-        if (currentPage < KYCParamHelper.getPageSize() - 1) {
-            currentPage += 1
-        } else {
-            //Toast.makeText(context, "Last page, sorry.", Toast.LENGTH_SHORT).show()
-            submit(activity)
-        }
-        return getLayoutPage(currentPage)
-    }
-
-    fun submit(activity: Activity) {
-        val email = KYCValueHelper.getValue("email")
-        val password = KYCValueHelper.getValue("password")
-        if (Firebase.auth.currentUser != null) {
-            KYCValueHelper.storeInDB(activity)
-        } else {
-            RegisterHelper.createUserWithEmail(activity, email, password)
-        }
-    }
-
-    /**
-     * Get Linear Layout
-     * Called by either getPrevLayoutPage() or getNextLayoutPage()
-     */
-    private fun getLayoutPage(currentPage: Int): LinearLayout {
-        var linearLayout = KYCParamHelper.getLayoutPage(currentPage)
+    private fun setUIPage(pageNumber: Int) {
+        page = KYCParamHelper.getPage(pageNumber)!!
+        setToolbar(page)
+        val linearLayout = KYCParamHelper.getLayoutPage(pageNumber)
         if (linearLayout == null) {
-            //Create linear layout page
-            linearLayout = createLayoutPage(KYCParamHelper.getPage(currentPage)!!)
-            KYCParamHelper.addLayoutPage(linearLayout)
+            // set page to pageForLinearLayout
+            pageForLinearLayout.value = page
+        } else {
+            linearLayoutToDisplay.value = linearLayout
         }
-        return linearLayout
+    }
+
+    private fun submit() {
+        if (Firebase.auth.currentUser != null) {
+            saveDataToDB()
+        } else {
+            // Need to register first before saving data
+            userToRegister.value = User(KYCValueHelper.getValue("email"), KYCValueHelper.getValue("password"))
+        }
+    }
+
+    fun saveDataToDB() {
+        //RegisterHelper.createUserWithEmail(activity, email, password)
+        isSaved.value = KYCValueHelper.storeInDB()
     }
 
     /**
      * Create Linear Layout
      */
-    private fun createLayoutPage(page: KYCParamModel.Page): LinearLayout {
+    fun createLayoutPage(page: KYCParamModel.Page, context: Context): LinearLayout {
         val linearLayout = LinearLayout(context)
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
@@ -138,7 +153,7 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                     is KYCParamModel.NextButtonElement -> {
                         val button = UIElementUtil.createButtonElement(context, element)
                         button.setOnClickListener {
-                            activity.displayNextView()
+                            getNextPage()
                         }
                         layoutToUse.addView(button)
                     }
@@ -151,9 +166,16 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                     is KYCParamModel.ListElement -> {
                         val listElement = UIElementUtil.createListElement(context, element)
                         element.editText!!.setOnClickListener {
-                            activity.displayList(element)
+                            selectedListElement.value = element
                         }
                         layoutToUse.addView(listElement)
+                    }
+                    is KYCParamModel.MediaElement -> {
+                        val mediaElement = UIElementUtil.createMediaElement(context, element)
+                        mediaElement.setOnClickListener {
+                            selectedMediaElement.value = element
+                        }
+                        layoutToUse.addView(mediaElement)
                     }
                     else -> {
                         Toast.makeText(context, "Not yet supported (for now)", Toast.LENGTH_SHORT).show()
@@ -164,6 +186,10 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                 linearLayout.addView(layoutToUse)
             }
         }
+
+        KYCParamHelper.addLayoutPage(linearLayout)
+
+        linearLayoutToDisplay.value = linearLayout
         return linearLayout
     }
 
@@ -172,20 +198,23 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
      *
      * @return true if errors are encountered
      */
-    fun verifyInputs(): Boolean {
-        val page = KYCParamHelper.getPage(currentPage)!!
-        var hasError = false
+    private fun verifyInputs(): Boolean {
+        if (!this::page.isInitialized) return false
+        var isOK = true
         page.rows.forEach {
             it.elements.forEach{element ->
                 if (element is KYCParamModel.InputElement) {
                     val text = element.editText!!.text
                     KYCValueHelper.setValue(element.key, text.toString())
-                    if (text.length < element.minimumLength) {
+                    if (text.isBlank()) {
+                        element.inputLayout?.error = element.hint + " is required."
+                        isOK = false
+                    } else if (text.length < element.minimumLength) {
                         element.inputLayout?.error = element.hint + " should be have at least " + element.minimumLength + " characters."
-                        hasError = true
+                        isOK = false
                     } else if (!UIElementUtil.isValidInput(text.toString(), element.regexPositiveValidation, element.regexNegativeValidation)) {
                         element.inputLayout?.error = element.hint + " is not valid."
-                        hasError = true
+                        isOK = false
                     } else {
                         element.inputLayout?.error = null
                     }
@@ -194,11 +223,11 @@ class KYCViewModel(private val context: Context, private val activity: KYCActivi
                 }
             }
         }
-        return hasError
+        return isOK
     }
 
     fun dismiss() {
-        currentPage = -1
+        pageNumber = -1
         KYCParamHelper.resetLayoutPages()
     }
 }

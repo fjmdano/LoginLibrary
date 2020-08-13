@@ -16,7 +16,7 @@ class ListAdapter(private val element: KYCParamModel.ListElement,
 
     private val items = element.choices
 
-    class ViewHolder(val textview: TextView, val element: KYCParamModel.ListElement): RecyclerView.ViewHolder(textview) {
+    class ViewHolder(private val textview: TextView, val element: KYCParamModel.ListElement): RecyclerView.ViewHolder(textview) {
         fun bind(item: String, listener: Listener) {
             textview.text = item
             textview.setOnClickListener {

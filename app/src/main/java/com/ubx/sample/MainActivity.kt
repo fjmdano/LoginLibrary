@@ -1,33 +1,32 @@
 package com.ubx.sample
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.Gravity
-import android.view.Window
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.model.UIElement
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
     lateinit var kycHelper: KYCHelper
 
     lateinit var loginIntent: Intent
     lateinit var kycIntent: Intent
+    private val model: MainActivityViewModel by viewModels()
     val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
 
         //Create Login Parameters
         createHelpers()
@@ -106,6 +105,7 @@ class MainActivity : Activity() {
     private fun showLogin() {
         startActivity(loginIntent)
     }
+
 
     private fun createLoginContent() {
         loginHelper.setPadding(10, 10, 10, 10)
@@ -196,6 +196,8 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams.WRAP_CONTENT)
 
         kycHelper.addPage("Registration", null, "Next")
+        kycHelper.addMedia("Camera", LinearLayout.LayoutParams.MATCH_PARENT,
+            kycHelper.sizeInDP(150), "selfie", true)
         kycHelper.addInput("E-mail", false,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -262,7 +264,6 @@ class MainActivity : Activity() {
         ))
 
     }
-
 
     companion object {
         private const val TAG = "MAIN"

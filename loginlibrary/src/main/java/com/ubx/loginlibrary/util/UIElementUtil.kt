@@ -183,7 +183,7 @@ class UIElementUtil {
         * Create Google Log-in Button
         */
         fun createGoogleButton(context: Context, element: LoginParamModel.ThirdPartyGoogle,
-                               signInClient: GoogleSignInClient, activity: Activity) : SignInButton {
+                               signInClient: GoogleSignInClient) : SignInButton {
             val googleButton = if (element.style != null) {
                 SignInButton(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -194,10 +194,6 @@ class UIElementUtil {
                 googleButton,
                 element
             )
-
-            googleButton.setOnClickListener {
-                activity.startActivityForResult(signInClient.signInIntent, LoginActivity.RC_SIGN_IN)
-            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 googleButton.id = View.generateViewId()

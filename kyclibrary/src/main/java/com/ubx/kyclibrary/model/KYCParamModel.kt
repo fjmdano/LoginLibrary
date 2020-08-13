@@ -1,6 +1,8 @@
 package com.ubx.kyclibrary.model
 
+import android.graphics.Bitmap
 import android.widget.EditText
+import android.widget.ImageView
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.kyclibrary.KYCHelper
 
@@ -63,18 +65,19 @@ class KYCParamModel {
         val key: String,
         val isRequired: Boolean
     ): UIElement(width, height) {
-        var editText: EditText? = null
+        lateinit var editText: EditText
     }
 
     data class MediaElement(
         val hint: String,
-        val fromCamera: Boolean,
-        val fromStorage: Boolean,
         override var width: Int,
         override var height: Int,
         val key: String,
         val isRequired: Boolean
-    ): UIElement(width, height)
+    ): UIElement(width, height) {
+        lateinit var imageView: ImageView
+        var bitmap: Bitmap? = null
+    }
 
     data class NextButtonElement(val text: String,
                                  override var width: Int, override var height: Int): UIElement(width, height)

@@ -3,10 +3,20 @@ package com.ubx.loginlibrary.viewmodel
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.ubx.loginlibrary.LoginActivity
 import com.ubx.loginlibrary.helper.LoginParamHelper
@@ -14,15 +24,83 @@ import com.ubx.loginlibrary.helper.LoginValuesHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
 import com.ubx.loginlibrary.helper.UserHelper
 import com.ubx.loginlibrary.model.LoginParamModel
+import com.ubx.loginlibrary.model.SignInCredentials
 import com.ubx.loginlibrary.model.User
 import com.ubx.loginlibrary.util.*
 
-class LoginViewModel(private val context: Context) {
-    private var isFacebookSdkInitialized = false
-    private var isFirebaseSdkInitialized = false
+class LoginViewModel: ViewModel() {
     private lateinit var linearLayout: LinearLayout
-    private val loginParameters = LoginParamHelper.getLoginParam()!!
+    private lateinit var callbackManager: CallbackManager
+    private val loginParameters = LoginParamHelper.getLoginParam()
     private val googleSignInClient = ThirdPartyConfigHelper.getGoogleSignInClient()
+
+    val googleSignInIntent: MutableLiveData<Intent> by lazy {
+        MutableLiveData<Intent>()
+    }
+    val emailCredentials: MutableLiveData<SignInCredentials> by lazy {
+        MutableLiveData<SignInCredentials>()
+    }
+    val facebookAccessToken: MutableLiveData<AccessToken> by lazy {
+        MutableLiveData<AccessToken>()
+    }
+    val googleIdToken: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+    val toastMessage: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+    /**
+     * Setup Callback for Facebook LoginManager
+     */
+    fun setupFacebook() {
+        if (!isFacebookIntegrated()) {
+            return
+        }
+        callbackManager = CallbackManager.Factory.create()
+        LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult?> {
+                override fun onSuccess(loginResult: LoginResult?) {
+                    if (loginResult != null) {
+                        toastMessage.value = "[Facebook] Logged in successfully"
+                        facebookAccessToken.value = loginResult.accessToken
+                    }
+                }
+
+                override fun onCancel() {
+                    toastMessage.value = "[Facebook] Logged in canceled"
+                }
+
+                override fun onError(exception: FacebookException) {
+                    toastMessage.value = "[Facebook] Error!"
+                    Log.w(TAG, "Facebook sign in failed", exception)
+                }
+            })
+    }
+
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (isFacebookIntegrated()) {
+            callbackManager.onActivityResult(requestCode, resultCode, data)
+        }
+
+        if (isFirebaseIntegrated()) {
+            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+            if (requestCode == LoginActivity.RC_SIGN_IN) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    val account = task.getResult(ApiException::class.java)!!
+                    Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+                    googleIdToken.value = account.idToken!!
+                } catch (exception: ApiException) {
+                    // Google Sign In failed, update UI appropriately
+                    Log.w(TAG, "Google sign in failed", exception)
+                    toastMessage.value = "Error signing in"
+                }
+            }
+        }
+    }
 
     /**
      * Create Login Page
@@ -31,7 +109,8 @@ class LoginViewModel(private val context: Context) {
      * @param activity Parent Activity
      * @return LinearLayout containing the login items
      */
-    fun createLoginPage(activity: LoginActivity): LinearLayout {
+    fun createLoginPage(context: Context): LinearLayout {
+        if (loginParameters == null) return LinearLayout(context)
         val linearLayout = if (loginParameters.style != null) {
             LinearLayout(ContextThemeWrapper(context, loginParameters.style!!), null, 0)
         } else {
@@ -60,11 +139,10 @@ class LoginViewModel(private val context: Context) {
                 }
                 LoginParamModel.ElementType.BUTTON -> {
                     if (it.value is LoginParamModel.LoginButtonElement) {
-                        val button =
-                            UIElementUtil.createLoginButtonElement(
+                        val button = UIElementUtil.createLoginButtonElement(
                                 context, it.value)
                         button.setOnClickListener {
-                            onClickLoginButton(activity)
+                            onClickLoginButton()
                         }
                         linearLayout.addView(button)
                     } else if (it.value is LoginParamModel.ButtonElement) {
@@ -83,10 +161,12 @@ class LoginViewModel(private val context: Context) {
                         if (googleSignInClient == null) {
                             println("Google not initialized!")
                         } else {
-                            linearLayout.addView(
-                                UIElementUtil.createGoogleButton(
-                                    context, it.value, googleSignInClient, activity
-                                ))
+                            val googleButton = UIElementUtil.createGoogleButton(
+                                context, it.value, googleSignInClient)
+                                googleButton.setOnClickListener {
+                                    googleSignInIntent.value = googleSignInClient.signInIntent
+                                }
+                            linearLayout.addView(googleButton)
                         }
                     } else {
                         //Do nothing
@@ -104,7 +184,7 @@ class LoginViewModel(private val context: Context) {
      * Function that handles on click login button
      *
      */
-    private fun onClickLoginButton(activity: LoginActivity) {
+    private fun onClickLoginButton() {
         var noError = true
         var value: String
         LoginParamHelper.getInputElements().forEach {
@@ -119,7 +199,7 @@ class LoginViewModel(private val context: Context) {
         }
 
         if (noError) {
-            activity.firebaseAuthWithEmail(
+            emailCredentials.value = SignInCredentials(
                 LoginValuesHelper.getValue(KEY_EMAIL),
                 LoginValuesHelper.getValue(KEY_PASSWORD))
         }
@@ -183,11 +263,12 @@ class LoginViewModel(private val context: Context) {
         if (customHandler != null) {
             customHandler.login()
         } else {
-            Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
+            toastMessage.value = "Authentication failed"
         }
     }
 
     companion object {
+        const val TAG = "LoginViewModel"
         const val KEY_EMAIL = "email"
         const val KEY_PASSWORD = "password"
     }
