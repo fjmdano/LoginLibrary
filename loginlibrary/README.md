@@ -35,6 +35,15 @@ The following items can be created, with customization similar to #3 (i.e. setPa
                     }
                 }
     ```
+* `loginHelper.addForgotPassword(LABEL, IMAGE, HEADER, SUBHEADER, INPUT_HINT, BUTTON_LABEL)`
+    * IMAGE can be null
+    * Elements in Forgot Password can be customized:
+        * `forgotPassword.button` : button displayed in login page
+        * `forgotPassword.image` : image in Forgot Password UI, displayed at the top of the page
+        * `forgotPassword.header` : header in Forgot Password UI, dsplayed below the image
+        * `forgotPassword.subheader` : subheader in Forgot Password UI, displayed below the header
+        * `forgotPassword.inputField` : email inputField in Forgot Password UI, displayed below the subheader
+        * `forgotPassword.button` : submit button in Forgot Password UI, displayed below the inputField
 * `loginHelper.addGoogleSignIn(WIDTH, HEIGTH)`
 * `loginHelper.addFacebookSignIn(WIDTH, HEIGTH)`
 

@@ -9,7 +9,9 @@ class ForgotPasswordElement(
     label: String,
     imageDrawable: Int?,
     headerText: String,
-    subheaderText: String
+    subheaderText: String,
+    inputFieldHint: String,
+    buttonLabel: String
 ): UIElement(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) {
     var button: ParamModel.CustomButtonElement = ParamModel.CustomButtonElement(label,
         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -37,7 +39,7 @@ class ForgotPasswordElement(
     }
 
     var inputField = ParamModel.InputElement(
-        "E-mail",
+        if (inputFieldHint.isBlank()) "E-mail" else inputFieldHint,
         false,
         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -46,7 +48,8 @@ class ForgotPasswordElement(
         true
     )
 
-    var resetButton = ParamModel.CustomButtonElement("Reset Password",
+    var resetButton = ParamModel.CustomButtonElement(
+        if (buttonLabel.isBlank()) "Reset Password" else buttonLabel,
         LinearLayout.LayoutParams.MATCH_PARENT,
         LinearLayout.LayoutParams.WRAP_CONTENT)
 

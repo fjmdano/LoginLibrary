@@ -2,8 +2,11 @@ package com.ubx.loginlibrary
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -165,17 +168,9 @@ class LoginActivity: AppCompatActivity() {
      * Add created linear layout to display
      */
     private fun addPage() {
-        val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
-
+        val scrollView = findViewById<ScrollView>(R.id.login_scroll)
         val linearLayout = viewModel.createLayoutPage(this)
-        constraintLayout.addView(linearLayout)
-
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(constraintLayout)
-        constraintSet.connect(linearLayout.id, ConstraintSet.LEFT, constraintLayout.id, ConstraintSet.LEFT, 0)
-        constraintSet.connect(linearLayout.id, ConstraintSet.RIGHT, constraintLayout.id, ConstraintSet.RIGHT, 0)
-        constraintSet.connect(linearLayout.id, ConstraintSet.TOP, constraintLayout.id, ConstraintSet.TOP, 0)
-        constraintSet.applyTo(constraintLayout)
+        scrollView.addView(linearLayout)
     }
 
     companion object {

@@ -146,10 +146,14 @@ interface LoginInterface {
      * @param imageDrawable width of text
      * @param header UI header
      * @param subheader UI subheader
+     * @param inputFieldHint Input Field Hint
+     * @param buttonLabel proceed button label
      */
     fun addForgotPassword(label: String, imageDrawable: Int?,
-                          headerText: String,
-                          subheaderText: String): ForgotPasswordElement
+                                   headerText: String,
+                                   subheaderText: String,
+                                   inputFieldHint: String = "E-mail",
+                                   buttonLabel: String = "Reset Password"): ForgotPasswordElement
     /*********************[END] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
 
     /*********************[START] THIRD PARTY RELATED************************************/

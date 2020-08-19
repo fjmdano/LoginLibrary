@@ -185,10 +185,12 @@ class LoginParamHelper {
 
         fun addForgotPassword(label: String, imageDrawable: Int?,
                               headerText: String,
-                              subheaderText: String): ForgotPasswordElement {
+                              subheaderText: String,
+                              inputFieldHint: String,
+                              buttonLabel: String): ForgotPasswordElement {
 
             val forgotPasswordElement = ForgotPasswordElement(label, imageDrawable,
-                headerText, subheaderText)
+                headerText, subheaderText, inputFieldHint, buttonLabel)
             getDataRepo().forgotPasswordElement = forgotPasswordElement
             getLoginParam()?.elements?.add(forgotPasswordElement)
             return forgotPasswordElement

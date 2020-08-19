@@ -169,11 +169,16 @@ class LoginHelper(val context: Context, appName: String,
      * @param imageDrawable width of text
      * @param header UI header
      * @param subheader UI subheader
+     * @param inputFieldHint Input Field Hint
+     * @param buttonLabel proceed button label
      */
     override fun addForgotPassword(label: String, imageDrawable: Int?,
                                    headerText: String,
-                                   subheaderText: String): ForgotPasswordElement {
-        return LoginParamHelper.addForgotPassword(label, imageDrawable, headerText, subheaderText)
+                                   subheaderText: String,
+                                   inputFieldHint: String,
+                                   buttonLabel: String): ForgotPasswordElement {
+        return LoginParamHelper.addForgotPassword(label, imageDrawable, headerText, subheaderText,
+            inputFieldHint, buttonLabel)
     }
 
     /**
