@@ -19,19 +19,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
-import com.ubx.kyclibrary.adapter.ListAdapter
-import com.ubx.kyclibrary.model.KYCParamModel
-import com.ubx.kyclibrary.viewmodel.KYCViewModel
-import androidx.lifecycle.Observer
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.ubx.kyclibrary.model.User
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.SignInCredentials
+import com.ubx.kyclibrary.adapter.ListAdapter
+import com.ubx.kyclibrary.viewmodel.KYCViewModel
+
 
 class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
-    private val kycViewModel: KYCViewModel by viewModels()
+    private val viewModel: KYCViewModel by viewModels()
 
     private lateinit var parentLayout: NestedScrollView
     private var currentLinearLayout: LinearLayout? = null
@@ -43,8 +44,6 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
     private lateinit var toolbarRightImage: ImageView
     private lateinit var toolbarRightText: TextView
 
-    private var selectedMediaElement: KYCParamModel.MediaElement? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kyc)
@@ -53,7 +52,7 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         parentLayout = findViewById(R.id.sv_container)
         observeViewModelData()
         setActionHandler()
-        kycViewModel.getNextPage()
+        viewModel.getNextPage()
     }
 
     override fun onRequestPermissionsResult(
@@ -64,7 +63,8 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
-                PERMISSION_CODE_CAMERA -> startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                PERMISSION_CODE_CAMERA -> startActivityForResult(
+                                            CameraActivity.getIntent(applicationContext, true),
                                             IMAGE_SHOT_FROM_CAMERA
                                         )
                 PERMISSION_CODE_STORAGE -> startActivityForResult(Intent(
@@ -84,31 +84,38 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_LOAD_FROM_GALLERY && resultCode == RESULT_OK && null != data) {
-            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-            val cursor = data.data?.let {
-                contentResolver.query(
-                    it, filePathColumn,
-                    null, null, null
-                )
-            }?: return
-            cursor.moveToFirst()
-            val columnIndex = cursor.getColumnIndex(filePathColumn[0])
-            val picturePath = cursor.getString(columnIndex)
-
-            val bitmap = BitmapFactory.decodeFile(picturePath)
-            selectedMediaElement?.bitmap = bitmap
-            selectedMediaElement?.imageView?.setImageBitmap(bitmap)
-            cursor.close()
+        Log.d(TAG, "onActivityResult($requestCode, $resultCode)")
+        if (resultCode == RESULT_OK && null != data) {
+            if (requestCode == IMAGE_LOAD_FROM_GALLERY) {
+                val cursor = data.data?.let {
+                    contentResolver.query(
+                        it, arrayOf(MediaStore.Images.Media.DATA),
+                        null, null, null
+                    )
+                }?: return
+                viewModel.setImageBitmap(cursor)
+                cursor.close()
+            } else if (requestCode == IMAGE_SHOT_FROM_CAMERA) {
+                val filename = data.getStringExtra("image")
+                try {
+                    val inputStream = openFileInput(filename)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    viewModel.setImageBitmap(bitmap)
+                    inputStream.close()
+                } catch (e: java.lang.Exception) {
+                    Log.w(TAG, "Error displaying camera image.", e)
+                    showToast("Error displaying camera image.")
+                }
+            }
         }
     }
 
     override fun onBackPressed() {
-        kycViewModel.dismiss()
+        viewModel.dismiss()
         finish()
     }
 
-    override fun onClickRecyclerViewListElement(element: KYCParamModel.ListElement) {
+    override fun onClickRecyclerViewListElement(element: ParamModel.ListElement) {
         parentLayout.removeView(currentRecyclerView)
         currentRecyclerView = null
         parentLayout.addView(currentLinearLayout)
@@ -119,40 +126,40 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
      */
     private fun observeViewModelData() {
         val context: Context = this
-        kycViewModel.pageTitle.observe(this, Observer {
+        viewModel.pageTitle.observe(this, Observer {
             if (!this::toolbarTitle.isInitialized) {
                 toolbarTitle = findViewById(R.id.tv_title)
             }
             toolbarTitle.text = it
         })
-        kycViewModel.leftContent.observe(this, Observer {
+        viewModel.leftContent.observe(this, Observer {
             setLeftContent(it)
         })
-        kycViewModel.rightContent.observe(this, Observer {
+        viewModel.rightContent.observe(this, Observer {
             setRightContent(it)
         })
-        kycViewModel.rightContent.observe(this, Observer {
+        viewModel.rightContent.observe(this, Observer {
             setRightContent(it)
         })
-        kycViewModel.pageForLinearLayout.observe(this, Observer {
-            kycViewModel.createLayoutPage(it, context)
+        viewModel.pageForLinearLayout.observe(this, Observer {
+            viewModel.createLayoutPage(it, context)
         })
-        kycViewModel.linearLayoutToDisplay.observe(this, Observer {
+        viewModel.linearLayoutToDisplay.observe(this, Observer {
             displayLayout(it)
         })
-        kycViewModel.selectedListElement.observe(this, Observer {
+        viewModel.selectedListElement.observe(this, Observer {
             displayList(it)
         })
-        kycViewModel.selectedMediaElement.observe(this, Observer {
-            selectImage(it)
+        viewModel.isMediaSelected.observe(this, Observer {
+            selectImage()
         })
-        kycViewModel.toastMessage.observe(this, Observer{
+        viewModel.toastMessage.observe(this, Observer{
             showToast(it)
         })
-        kycViewModel.userToRegister.observe(this, Observer {
+        viewModel.signInCredentialsToRegister.observe(this, Observer {
             createUserWithEmail(it)
         })
-        kycViewModel.isSaved.observe(this, Observer { 
+        viewModel.isSaved.observe(this, Observer {
             if (it) {
                 finish()
             } else {
@@ -163,10 +170,10 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
 
     private fun setActionHandler() {
         findViewById<ConstraintLayout>(R.id.cl_left).setOnClickListener {
-            kycViewModel.getPreviousPage()
+            viewModel.getPreviousPage()
         }
         findViewById<ConstraintLayout>(R.id.cl_right).setOnClickListener {
-            kycViewModel.getNextPage()
+            viewModel.getNextPage()
         }
     }
 
@@ -269,11 +276,11 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
             parentLayout.removeView(currentLinearLayout)
             currentLinearLayout = null
         }
+        parentLayout.addView(layout)
         currentLinearLayout = layout
-        parentLayout.addView(currentLinearLayout)
     }
 
-    private fun displayList(element: KYCParamModel.ListElement) {
+    private fun displayList(element: ParamModel.ListElement) {
         parentLayout.removeView(currentLinearLayout)
         currentRecyclerView = RecyclerView(applicationContext)
         currentRecyclerView!!.layoutManager = LinearLayoutManager(this)
@@ -281,8 +288,7 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         parentLayout.addView(currentRecyclerView)
     }
 
-    private fun selectImage(mediaElement: KYCParamModel.MediaElement) {
-        selectedMediaElement = mediaElement
+    private fun selectImage() {
         val carouselDialog = KYCMediaChooserDialog(this)
         carouselDialog.show()
     }
@@ -293,9 +299,8 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
             ActivityCompat.requestPermissions(this, arrayOf(permission),requestCode)
         } else {
             when (requestCode) {
-                PERMISSION_CODE_CAMERA -> startActivityForResult(Intent(
-                                                MediaStore.ACTION_IMAGE_CAPTURE
-                                            ),
+                PERMISSION_CODE_CAMERA -> startActivityForResult(
+                                            CameraActivity.getIntent(applicationContext, true),
                                             IMAGE_SHOT_FROM_CAMERA
                                         )
                 PERMISSION_CODE_STORAGE -> startActivityForResult(Intent(
@@ -308,16 +313,18 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         }
     }
 
-    private fun createUserWithEmail(user: User) {
+    private fun createUserWithEmail(signInCredentials: SignInCredentials) {
         try {
+            Log.d(TAG,"username: " + signInCredentials.username)
+            Log.d(TAG,"password: " + signInCredentials.password)
             val firebaseAuth = Firebase.auth
-            firebaseAuth.createUserWithEmailAndPassword(user.username, user.password)
+            firebaseAuth.createUserWithEmailAndPassword(signInCredentials.username, signInCredentials.password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         showToast("Successful registration.")
-                        kycViewModel.saveDataToDB()
+                        viewModel.saveDataToDB()
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)

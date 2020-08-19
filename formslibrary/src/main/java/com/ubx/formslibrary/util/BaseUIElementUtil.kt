@@ -1,10 +1,9 @@
-package com.ubx.kyclibrary.util
+package com.ubx.formslibrary.util
 
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
 import android.text.InputFilter
-import android.text.InputFilter.LengthFilter
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
@@ -13,21 +12,20 @@ import android.view.View
 import android.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.ubx.kyclibrary.R
-import com.ubx.kyclibrary.model.KYCParamModel
+import com.ubx.formslibrary.R
+import com.ubx.formslibrary.model.ParamModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class UIElementUtil {
+class BaseUIElementUtil {
     companion object {
-        private const val TAG = "KYCLibrary"
+        private const val TAG = "Util"
         private const val DATE_FORMAT = "MM/dd/yyyy"
 
         /**
          * Create ImageView
          */
-        fun createImageElement(context: Context, element: KYCParamModel.ImageElement): ImageView {
+        fun createImageElement(context: Context, element: ParamModel.ImageElement): ImageView {
             val imageView = if (element.style != null) {
                 ImageView(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -48,7 +46,7 @@ class UIElementUtil {
         /**
          * Create TextView
          */
-        fun createTextElement(context: Context, element: KYCParamModel.TextElement): TextView {
+        fun createTextElement(context: Context, element: ParamModel.TextElement): TextView {
             val textView = if (element.style != null) {
                 TextView(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -72,7 +70,7 @@ class UIElementUtil {
         /**
          * Create TextInputLayout with TextInputEditText (for show/hide password functionality
          */
-        fun createInputElement(context: Context, element: KYCParamModel.InputElement): TextInputLayout {
+        fun createInputElement(context: Context, element: ParamModel.InputElement): TextInputLayout {
             val textInputLayout = TextInputLayout(context)
             DisplayUtil.customizeLinearElement(
                 context,
@@ -95,7 +93,7 @@ class UIElementUtil {
             textInputEditText.hint = element.hint + (if (element.isRequired) " *" else "")
 
             if (element.maximumLength > 0) {
-                textInputEditText.filters = arrayOf<InputFilter>(LengthFilter(element.maximumLength))
+                textInputEditText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(element.maximumLength))
             }
             textInputLayout.addView(textInputEditText)
 
@@ -112,7 +110,7 @@ class UIElementUtil {
         /**
          * Create Button
          */
-        fun createButtonElement(context: Context, element: KYCParamModel.NextButtonElement) : Button {
+        fun createCustomButtonElement(context: Context, element: ParamModel.CustomButtonElement) : Button {
             val button = if (element.style != null) {
                 Button(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {
@@ -135,11 +133,41 @@ class UIElementUtil {
             return button
         }
 
+
+        /**
+         * Create Button
+         */
+        fun createButtonElement(context: Context, element: ParamModel.ButtonElement) : Button {
+            val button = if (element.style != null) {
+                Button(ContextThemeWrapper(context, element.style!!), null, 0)
+            } else {
+                Button(context)
+            }
+            button.isAllCaps = false
+            if (element.gravity != null) {
+                button.gravity = element.gravity!!
+            }
+            DisplayUtil.customizeLinearElement(
+                context,
+                button,
+                element
+            )
+            button.text = element.text
+            button.setOnClickListener {
+                element.listener.onClick()
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                button.id = View.generateViewId()
+            }
+            return button
+        }
+
         /**
          * Create EditText with Date Picker
          */
         fun createDateElement(context: Context,
-                              element: KYCParamModel.DateElement,
+                              element: ParamModel.DateElement,
                               isSharingRow: Boolean = false): TextInputLayout {
             val textInputLayout = TextInputLayout(context)
             DisplayUtil.customizeLinearElement(
@@ -181,7 +209,7 @@ class UIElementUtil {
             element.editText = textInputEditText
             return textInputLayout
         }
-        
+
         private fun showDatePicker(context: Context, editText: EditText) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 Toast.makeText(context,
@@ -207,7 +235,7 @@ class UIElementUtil {
          * Create Dropdown
          */
         fun createDropdownElement(context: Context,
-                                  element: KYCParamModel.DropdownElement,
+                                  element: ParamModel.DropdownElement,
                                   isSharingRow: Boolean = false) : LinearLayout {
             val dropdownLinearLayout = LinearLayout(context)
             dropdownLinearLayout.orientation = LinearLayout.VERTICAL
@@ -238,6 +266,7 @@ class UIElementUtil {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
                 }
+            element.spinner = spinner
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.id = View.generateViewId()
@@ -253,7 +282,7 @@ class UIElementUtil {
          * Create EditText that shows list choices when clicked
          */
         fun createListElement(context: Context,
-                              element: KYCParamModel.ListElement,
+                              element: ParamModel.ListElement,
                               isSharingRow: Boolean = false): TextInputLayout {
             val textInputLayout = TextInputLayout(context)
             DisplayUtil.customizeLinearElement(
@@ -301,7 +330,8 @@ class UIElementUtil {
          * or new picture via camera
          */
         fun createMediaElement(context: Context,
-                               element: KYCParamModel.MediaElement): ImageView {
+                               element: ParamModel.MediaElement
+        ): ImageView {
             val imageView = if (element.style != null) {
                 ImageView(ContextThemeWrapper(context, element.style!!), null, 0)
             } else {

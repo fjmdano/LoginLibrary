@@ -2,8 +2,8 @@ package com.ubx.kyclibrary
 
 import android.app.Activity
 import android.content.Intent
-import com.ubx.kyclibrary.model.KYCParamModel
-import com.ubx.kyclibrary.model.UIElement
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.UIElement
 
 interface KYCInterface {
 
@@ -58,7 +58,7 @@ interface KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addText(label: String, width: Int, height: Int): KYCParamModel.TextElement
+    fun addText(label: String, width: Int, height: Int): ParamModel.TextElement
 
     /**
      * Add an text in the view
@@ -70,7 +70,7 @@ interface KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addTextInRow(label: String, width: Int, height: Int): KYCParamModel.TextElement
+    fun addTextInRow(label: String, width: Int, height: Int): ParamModel.TextElement
 
     /**
      * Add an input text in the view
@@ -84,7 +84,7 @@ interface KYCInterface {
      * @return InputElement that can be customized with style, background, padding and margins
      */
     fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement
+                 width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.InputElement
 
     /**
      * Add an input text in the view
@@ -99,7 +99,7 @@ interface KYCInterface {
      * @return InputElement that can be customized with style, background, padding and margins
      */
     fun addInputInRow(hint: String, isPassword: Boolean, inputType: Int,
-                      width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement
+                      width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.InputElement
 
     /**
      * Add a button in the view
@@ -111,7 +111,7 @@ interface KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addNextButton(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement
+    fun addNextButton(label: String, width: Int, height: Int): ParamModel.CustomButtonElement
 
     /**
      * Add a button in the view
@@ -124,7 +124,7 @@ interface KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addNextButtonInRow(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement
+    fun addNextButtonInRow(label: String, width: Int, height: Int): ParamModel.CustomButtonElement
 
     /**
      * Add a button in the view
@@ -138,7 +138,7 @@ interface KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addButton(label: String, listener: KYCHelper.CustomListener,
-                           width: Int, height: Int): KYCParamModel.ButtonElement
+                  width: Int, height: Int): ParamModel.ButtonElement
 
     /**
      * Add a button in the view
@@ -153,7 +153,7 @@ interface KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addButtonInRow(label: String, listener: KYCHelper.CustomListener,
-                                width: Int, height: Int): KYCParamModel.ButtonElement
+                       width: Int, height: Int): ParamModel.ButtonElement
 
     /**
      * Add an edittext with date picker in the view
@@ -164,7 +164,7 @@ interface KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement
+    fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.DateElement
 
     /**
      * Add an edittext with date picker in the view
@@ -176,7 +176,7 @@ interface KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement
+    fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.DateElement
 
     /**
      * Add a dropdown with date picker in the view
@@ -188,7 +188,7 @@ interface KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement
+                    key: String, isRequired: Boolean): ParamModel.DropdownElement
 
     /**
      * Add a dropdown with date picker in the view
@@ -201,7 +201,7 @@ interface KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
-                         key: String, isRequired: Boolean): KYCParamModel.DropdownElement
+                         key: String, isRequired: Boolean): ParamModel.DropdownElement
 
 
     /**
@@ -214,7 +214,7 @@ interface KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addList(label: String, choices: List<String>, width: Int, height: Int,
-                key: String, isRequired: Boolean): KYCParamModel.ListElement
+                key: String, isRequired: Boolean): ParamModel.ListElement
 
     /**
      * Add an edittext with choices viewed in separate view
@@ -227,7 +227,7 @@ interface KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
-                     key: String, isRequired: Boolean): KYCParamModel.ListElement
+                     key: String, isRequired: Boolean): ParamModel.ListElement
 
     /**
      * Add an imageview button that when clicked, user can set an existing
@@ -242,7 +242,7 @@ interface KYCInterface {
      * @return MediaElement that can be customized with style, background, padding and margins
      */
     fun addMedia(label: String,  width: Int, height: Int, key: String,
-                          isRequired: Boolean): KYCParamModel.MediaElement
+                 isRequired: Boolean): ParamModel.MediaElement
 
     /**
      * Add an imageview button that when clicked, user can set an existing
@@ -258,7 +258,7 @@ interface KYCInterface {
      * @return MediaElement that can be customized with style, background, padding and margins
      */
     fun addMediaInRow(label: String,  width: Int, height: Int, key: String,
-                               isRequired: Boolean): KYCParamModel.MediaElement
+                      isRequired: Boolean): ParamModel.MediaElement
     /***********************[END] ADD PAGES AND UI ELEMENTS TO KYC VIEW**************************/
 
     /***********************[START] INTENT RELATED***************************************/

@@ -3,12 +3,13 @@ package com.ubx.kyclibrary
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import com.ubx.formslibrary.listener.ViewListener
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.UIElement
+import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.kyclibrary.helper.KYCParamHelper
-import com.ubx.kyclibrary.model.KYCParamModel
-import com.ubx.kyclibrary.model.UIElement
-import com.ubx.kyclibrary.util.DisplayUtil
 
-class KYCHelper(val context: Context, appName: String): KYCInterface {
+class KYCHelper(private val context: Context, appName: String): KYCInterface {
 
     /**
      * Set Padding of login view
@@ -66,7 +67,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addText(label: String, width: Int, height: Int): KYCParamModel.TextElement {
+    override fun addText(label: String, width: Int, height: Int): ParamModel.TextElement {
         return KYCParamHelper.addText(label, width, height, true)
     }
 
@@ -80,7 +81,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addTextInRow(label: String, width: Int, height: Int): KYCParamModel.TextElement {
+    override fun addTextInRow(label: String, width: Int, height: Int): ParamModel.TextElement {
         return KYCParamHelper.addText(label, width, height, false)
     }
 
@@ -96,7 +97,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return InputElement that can be customized with style, background, padding and margins
      */
     override fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement {
+                          width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.InputElement {
         return KYCParamHelper.addInput(hint, isPassword, inputType,
             width, height,key, isRequired, true)
     }
@@ -114,7 +115,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return InputElement that can be customized with style, background, padding and margins
      */
     override fun addInputInRow(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.InputElement {
+                               width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.InputElement {
         return KYCParamHelper.addInput(hint, isPassword, inputType,
             width, height, key, isRequired, false)
     }
@@ -129,7 +130,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addNextButton(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement {
+    override fun addNextButton(label: String, width: Int, height: Int): ParamModel.CustomButtonElement {
         return KYCParamHelper.addNextButton(label, width, height, true)
     }
 
@@ -144,7 +145,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addNextButtonInRow(label: String, width: Int, height: Int): KYCParamModel.NextButtonElement {
+    override fun addNextButtonInRow(label: String, width: Int, height: Int): ParamModel.CustomButtonElement {
         return KYCParamHelper.addNextButton(label, width, height, false)
     }
 
@@ -160,7 +161,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     override fun addButton(label: String, listener: CustomListener,
-                           width: Int, height: Int): KYCParamModel.ButtonElement {
+                           width: Int, height: Int): ParamModel.ButtonElement {
         return KYCParamHelper.addButton(label, listener, width, height, true)
     }
 
@@ -177,7 +178,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     override fun addButtonInRow(label: String, listener: CustomListener,
-                                width: Int, height: Int): KYCParamModel.ButtonElement {
+                                width: Int, height: Int): ParamModel.ButtonElement {
         return KYCParamHelper.addButton(label, listener, width, height, false)
     }
 
@@ -190,7 +191,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement {
+    override fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.DateElement {
         return KYCParamHelper.addDate(label, width, height, key, isRequired, true)
     }
 
@@ -204,7 +205,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): KYCParamModel.DateElement {
+    override fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): ParamModel.DateElement {
         return KYCParamHelper.addDate(label, width, height, key, isRequired, false)
     }
 
@@ -218,7 +219,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     override fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement {
+                             key: String, isRequired: Boolean): ParamModel.DropdownElement {
         return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, true)
     }
 
@@ -233,7 +234,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     override fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.DropdownElement {
+                                  key: String, isRequired: Boolean): ParamModel.DropdownElement {
         return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, false)
     }
 
@@ -247,7 +248,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     override fun addList(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): KYCParamModel.ListElement {
+                         key: String, isRequired: Boolean): ParamModel.ListElement {
         return KYCParamHelper.addList(label, choices, width, height, key, isRequired, true)
     }
 
@@ -262,7 +263,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return TextElement that can be customized with style, background, padding and margins
      */
     override fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
-                         key: String, isRequired: Boolean): KYCParamModel.ListElement {
+                              key: String, isRequired: Boolean): ParamModel.ListElement {
         return KYCParamHelper.addList(label, choices, width, height, key, isRequired, false)
     }
 
@@ -279,7 +280,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return MediaElement that can be customized with style, background, padding and margins
      */
     override fun addMedia(label: String,  width: Int, height: Int, key: String,
-                          isRequired: Boolean): KYCParamModel.MediaElement {
+                          isRequired: Boolean): ParamModel.MediaElement {
         return KYCParamHelper.addMedia(label, width, height, key, isRequired, true)
     }
 
@@ -297,7 +298,7 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
      * @return MediaElement that can be customized with style, background, padding and margins
      */
     override fun addMediaInRow(label: String,  width: Int, height: Int, key: String,
-                          isRequired: Boolean): KYCParamModel.MediaElement {
+                               isRequired: Boolean): ParamModel.MediaElement {
         return KYCParamHelper.addMedia(label, width, height, key, isRequired, false)
     }
 
@@ -321,7 +322,5 @@ class KYCHelper(val context: Context, appName: String): KYCInterface {
         return DisplayUtil.sizeInDP(context, size)
     }
 
-    interface CustomListener {
-        fun onClick()
-    }
+    interface CustomListener: ViewListener
 }

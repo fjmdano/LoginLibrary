@@ -2,24 +2,23 @@ package com.ubx.kyclibrary.datarepository
 
 import android.app.Activity
 import android.widget.LinearLayout
-import com.ubx.kyclibrary.model.KYCParamModel
-import com.ubx.kyclibrary.model.UIElement
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.UIElement
 
 class KYCParamDataRepository {
     var layoutPadding: UIElement.Padding = UIElement.Padding(0, 0,0,0)
     var layoutMargins: UIElement.Margins = UIElement.Margins(0, 0,0,0)
     var layoutPages: MutableList<LinearLayout> = mutableListOf()
-    var pages: MutableList<KYCParamModel.Page> = mutableListOf()
-    var registerValues: MutableList<KYCParamModel.Values> = mutableListOf()
-    var imageElements: MutableList<KYCParamModel.ImageElement> = mutableListOf()
-    var textElements: MutableList<KYCParamModel.TextElement> = mutableListOf()
-    var inputElements: MutableList<KYCParamModel.InputElement> = mutableListOf()
-    var dateElements: MutableList<KYCParamModel.DateElement> = mutableListOf()
-    var dropdownElements: MutableList<KYCParamModel.DropdownElement> = mutableListOf()
-    var listElements: MutableList<KYCParamModel.ListElement> = mutableListOf()
-    var mediaElements: MutableList<KYCParamModel.MediaElement> = mutableListOf()
-    var nextButtonElements: MutableList<KYCParamModel.NextButtonElement> = mutableListOf()
-    var buttonElements: MutableList<KYCParamModel.ButtonElement> = mutableListOf()
+    var pages: MutableList<ParamModel.Page> = mutableListOf()
+    var imageElements: MutableList<ParamModel.ImageElement> = mutableListOf()
+    var textElements: MutableList<ParamModel.TextElement> = mutableListOf()
+    var inputElements: MutableList<ParamModel.InputElement> = mutableListOf()
+    var dateElements: MutableList<ParamModel.DateElement> = mutableListOf()
+    var dropdownElements: MutableList<ParamModel.DropdownElement> = mutableListOf()
+    var listElements: MutableList<ParamModel.ListElement> = mutableListOf()
+    var mediaElements: MutableList<ParamModel.MediaElement> = mutableListOf()
+    var nextButtonElements: MutableList<ParamModel.CustomButtonElement> = mutableListOf()
+    var buttonElements: MutableList<ParamModel.ButtonElement> = mutableListOf()
 
     var imageStyle: Int? = null
     var textStyle: Int? = null
@@ -67,7 +66,6 @@ class KYCParamDataRepository {
     }
 
     companion object {
-        private const val TAG = "KYCLibrary"
-        val instance: KYCParamDataRepository by lazy { KYCParamDataRepository.HOLDER.INSTANCE }
+        val instance: KYCParamDataRepository by lazy { HOLDER.INSTANCE }
     }
 }

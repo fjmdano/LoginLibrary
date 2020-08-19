@@ -1,8 +1,8 @@
 package com.ubx.loginlibrary.datarepository
 
 import android.app.Activity
+import com.ubx.formslibrary.model.User
 import com.ubx.loginlibrary.LoginHelper
-import com.ubx.loginlibrary.model.User
 
 class UserDataRepository {
     var user: User? = null

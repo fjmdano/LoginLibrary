@@ -5,24 +5,24 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.RecyclerView
+import com.ubx.formslibrary.model.ParamModel
 import com.ubx.kyclibrary.R
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
-import com.ubx.kyclibrary.model.KYCParamModel
 
-class ListAdapter(private val element: KYCParamModel.ListElement,
+class ListAdapter(private val element: ParamModel.ListElement,
                   val context: Context,
-                  val listener:Listener): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+                  private val listener:Listener): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
     private val items = element.choices
 
-    class ViewHolder(private val textview: TextView, val element: KYCParamModel.ListElement): RecyclerView.ViewHolder(textview) {
+    class ViewHolder(private val textview: TextView, val element: ParamModel.ListElement): RecyclerView.ViewHolder(textview) {
         fun bind(item: String, listener: Listener) {
             textview.text = item
             textview.setOnClickListener {
                 val text = (it as TextView).text
                 KYCValueHelper.setValue(element.key, text.toString())
-                element.editText!!.setText(text)
+                element.editText.setText(text)
                 listener.onClickRecyclerViewListElement(element)
             }
         }
@@ -46,7 +46,7 @@ class ListAdapter(private val element: KYCParamModel.ListElement,
     }
 
     interface Listener {
-        fun onClickRecyclerViewListElement(element: KYCParamModel.ListElement)
+        fun onClickRecyclerViewListElement(element: ParamModel.ListElement)
     }
 
 }

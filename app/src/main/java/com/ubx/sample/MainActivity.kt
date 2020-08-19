@@ -10,9 +10,9 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
-import com.ubx.loginlibrary.model.UIElement
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.ubx.formslibrary.model.UIElement
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
         kycHelper = KYCHelper(applicationContext, "LoginHelper")
 
-        loginHelper.setCustomSigninHandler(object: LoginHelper.CustomLoginHandler {
+        loginHelper.setCustomSignInHandler(object: LoginHelper.CustomLoginHandler {
             override fun login(): Any? {
                 Log.d(TAG, "Custom signing in")
                 Log.d(TAG, "email: ${loginHelper.getValue("email")}")
@@ -111,65 +111,62 @@ class MainActivity : AppCompatActivity() {
         loginHelper.setPadding(10, 10, 10, 10)
         loginHelper.setBackground(R.color.white)
         loginHelper.setStyle(R.style.Background)
+        loginHelper.setInputStyle(R.style.EditText_DefaultAlpha)
 
-        val iconImage = loginHelper.addImage(R.drawable.wallet_icon ,
+        val iconImage = loginHelper.addImage(R.drawable.wallet_icon,
             loginHelper.sizeInDP(150),
             loginHelper.sizeInDP(150)
         )
         iconImage.layoutGravity = Gravity.CENTER_HORIZONTAL
         iconImage.margins = UIElement.Margins(0, loginHelper.sizeInDP(20), 0, 0)
 
-        val textLogin = loginHelper.addText("Log in",
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        val textLogin = loginHelper.addText("Log in")
         textLogin.style = R.style.TitleText
         textLogin.layoutGravity = Gravity.CENTER_HORIZONTAL
         textLogin.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
             0, loginHelper.sizeInDP(5))
 
-        val inputUsername = loginHelper.addInput("Username",
+        loginHelper.addInput("Username",
             false,
             InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             "email"
         )
-        inputUsername.style = R.style.EditText_DefaultAlpha
 
-        val inputPassword = loginHelper.addInput("Password",
+        loginHelper.addInput("Password",
             true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             "password"
         )
-        inputPassword.style = R.style.EditText_DefaultAlpha
 
-        val buttonLogin = loginHelper.addLoginButton("Log-in",
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        val forgotPassword = loginHelper.addForgotPassword("Forgot password?",
+            R.drawable.wallet_icon,
+            "Forgot your password?",
+            "Confirm your email and we'll send you instructions")
+        forgotPassword.setImageDimensions(loginHelper.sizeInDP(150), loginHelper.sizeInDP(150))
+        forgotPassword.button.style = R.style.Button_RightLink
+        forgotPassword.button.layoutGravity = Gravity.END
+        forgotPassword.image?.margins = UIElement.Margins(0, loginHelper.sizeInDP(20), 0, 0)
+        forgotPassword.header?.style = R.style.TitleText
+        forgotPassword.header?.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
+            0, loginHelper.sizeInDP(5))
+        forgotPassword.subheader?.margins = UIElement.Margins(0, 0,
+            0, loginHelper.sizeInDP(3))
+
+        val buttonLogin = loginHelper.addLoginButton("Log-in")
         buttonLogin.margins = UIElement.Margins(0, loginHelper.sizeInDP(5), 0, 0)
 
-        val textOthers = loginHelper.addText("------- or -------",
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        val textOthers = loginHelper.addText("------- or -------")
         textOthers.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
             0, loginHelper.sizeInDP(5))
         textOthers.style = R.style.LabelText
         textOthers.layoutGravity = Gravity.CENTER_HORIZONTAL
 
-        loginHelper.addFacebookSignIn(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        loginHelper.addGoogleSignIn(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        loginHelper.addFacebookSignIn()
+        loginHelper.addGoogleSignIn()
 
         val buttonRegister = loginHelper.addButton("No account yet? Register now!",
             object: LoginHelper.CustomListener {

@@ -16,8 +16,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.ubx.loginlibrary.viewmodel.LoginViewModel
 
 class LoginActivity: AppCompatActivity() {
-    private val loginViewModel: LoginViewModel by viewModels()
-    var isSignedIn = false
+    private val viewModel: LoginViewModel by viewModels()
+    private var isSignedIn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,41 +25,44 @@ class LoginActivity: AppCompatActivity() {
         supportActionBar?.hide()
 
         observeViewModelData()
-        loginViewModel.setupFacebook()
-        addLoginPage()
+        viewModel.setupFacebook()
+        addPage()
     }
 
     override fun onResume() {
         super.onResume()
-        if (loginViewModel.getUser() != null) {
+        if (viewModel.getUser() != null) {
             finish()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        loginViewModel.onActivityResult(requestCode, resultCode, data)
+        viewModel.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun observeViewModelData() {
-        loginViewModel.toastMessage.observe(this, Observer {
+        viewModel.toastMessage.observe(this, Observer {
             showToast(it)
         })
-        loginViewModel.emailCredentials.observe(this, Observer {
+        viewModel.emailCredentials.observe(this, Observer {
             firebaseAuthWithEmail(it.username, it.password)
         })
-        loginViewModel.facebookAccessToken.observe(this, Observer {
-            if (loginViewModel.isFirebaseIntegrated()) {
+        viewModel.facebookAccessToken.observe(this, Observer {
+            if (viewModel.isFirebaseIntegrated()) {
                 firebaseAuthWithFacebook(it)
             } else {
                 setUserAndReturn(it)
             }
         })
-        loginViewModel.googleIdToken.observe(this, Observer {
+        viewModel.googleIdToken.observe(this, Observer {
             firebaseAuthWithGoogle(it)
         })
-        loginViewModel.googleSignInIntent.observe(this, Observer {
+        viewModel.googleSignInIntent.observe(this, Observer {
             startActivityForResult(it, RC_SIGN_IN)
+        })
+        viewModel.isForgotPasswordButtonClicked.observe(this, Observer {
+            startActivity(ForgotPasswordActivity.getIntent(this))
         })
 
     }
@@ -69,12 +72,12 @@ class LoginActivity: AppCompatActivity() {
      */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        loginViewModel.getFirebaseAuth().signInWithCredential(credential)
+        viewModel.getFirebaseAuth().signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    setUserAndReturn(loginViewModel.getFirebaseAuth().currentUser)
+                    setUserAndReturn(viewModel.getFirebaseAuth().currentUser)
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     showToast( "Authentication Failed.")
@@ -88,12 +91,12 @@ class LoginActivity: AppCompatActivity() {
     private fun firebaseAuthWithFacebook(accessToken: AccessToken) {
         Log.d(TAG, "handleFacebookAccessToken:$accessToken")
         val credential = FacebookAuthProvider.getCredential(accessToken.token)
-        loginViewModel.getFirebaseAuth().signInWithCredential(credential)
+        viewModel.getFirebaseAuth().signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    setUserAndReturn(loginViewModel.getFirebaseAuth().currentUser)
+                    setUserAndReturn(viewModel.getFirebaseAuth().currentUser)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -107,17 +110,17 @@ class LoginActivity: AppCompatActivity() {
      * Sign-in using email and password in Firebase
      */
     private fun firebaseAuthWithEmail(email: String, password: String) {
-        loginViewModel.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+        viewModel.getFirebaseAuth().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "firebaseAuthWithEmail:success")
-                    setUserAndReturn(loginViewModel.getFirebaseAuth().currentUser)
+                    setUserAndReturn(viewModel.getFirebaseAuth().currentUser)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "firebaseAuthWithEmail:failure", task.exception)
                     Log.w(TAG, "firebaseAuthWithEmail:trying to use custom sign in function", task.exception)
-                    loginViewModel.customSignIn()
+                    viewModel.customSignIn()
                 }
         }
     }
@@ -131,8 +134,8 @@ class LoginActivity: AppCompatActivity() {
      */
     private fun setUserAndReturn(account: Any?) {
         if (account != null) {
-            loginViewModel.setUser(account)
-            startActivity(loginViewModel.getMainActivityIntent())
+            viewModel.setUser(account)
+            startActivity(viewModel.getMainActivityIntent())
             isSignedIn = true
             onBackPressed()
         }
@@ -161,10 +164,10 @@ class LoginActivity: AppCompatActivity() {
     /**
      * Add created linear layout to display
      */
-    private fun addLoginPage() {
+    private fun addPage() {
         val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
 
-        val linearLayout = loginViewModel.createLoginPage(this)
+        val linearLayout = viewModel.createLayoutPage(this)
         constraintLayout.addView(linearLayout)
 
         val constraintSet = ConstraintSet()
@@ -176,7 +179,7 @@ class LoginActivity: AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "LoginLibrary"
+        private const val TAG = "LoginActivity"
         const val RC_SIGN_IN = 9001
         fun getIntent(context: Context): Intent {
             return Intent(context, Class.forName("com.ubx.loginlibrary.LoginActivity"))

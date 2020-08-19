@@ -6,9 +6,9 @@ import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.ubx.formslibrary.model.User
 import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.UserDataRepository
-import com.ubx.loginlibrary.model.User
 
 class UserHelper {
     companion object {

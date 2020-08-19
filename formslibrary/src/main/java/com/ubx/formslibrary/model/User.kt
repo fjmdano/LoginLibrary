@@ -1,4 +1,4 @@
-package com.ubx.loginlibrary.model
+package com.ubx.formslibrary.model
 
 data class User(val method: AuthMethod, val details: Any) {
     enum class AuthMethod {

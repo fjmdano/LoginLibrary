@@ -31,7 +31,7 @@
             app:camera_focus="continuous" />
 
         <Button
-            android:id="@+id/btnCapturePhoto"
+            android:id="@+id/btn_capture_photo"
             android:text="Capture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

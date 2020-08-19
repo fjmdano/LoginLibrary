@@ -1,4 +1,4 @@
-package com.ubx.kyclibrary.util
+package com.ubx.formslibrary.util
 
 import android.content.Context
 import android.os.Build
@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.ubx.kyclibrary.model.UIElement
+import com.ubx.formslibrary.model.UIElement
+
 
 class DisplayUtil {
     companion object {

@@ -1,21 +1,19 @@
-package com.ubx.kyclibrary.model
+package com.ubx.formslibrary.model
 
 import android.graphics.Bitmap
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import com.google.android.material.textfield.TextInputLayout
-import com.ubx.kyclibrary.KYCHelper
+import com.ubx.formslibrary.listener.ViewListener
 
-class KYCParamModel {
-
+open class ParamModel {
     data class Page(var pageTitle: String,
                     var leftContent: Any?,
                     var rightContent: Any?,
                     var rows: MutableList<PageRow>)
 
     data class PageRow(var elements: MutableList<UIElement>)
-
-    data class Values(val key: String, var value: Any)
 
     data class ImageElement(val image: Int, override var width: Int, override var height: Int): UIElement(width, height)
 
@@ -30,8 +28,8 @@ class KYCParamModel {
         val key: String,
         val isRequired: Boolean
     ): UIElement(width, height) {
-        var inputLayout: TextInputLayout? = null
-        var editText: EditText? = null
+        lateinit var inputLayout: TextInputLayout
+        lateinit var editText: EditText
         var minimumLength: Int = 0
         var maximumLength: Int = 0
         var regexPositiveValidation: MutableList<String> = mutableListOf()
@@ -55,7 +53,9 @@ class KYCParamModel {
         override var height: Int,
         val key: String,
         val isRequired: Boolean
-    ): UIElement(width, height)
+    ): UIElement(width, height) {
+        lateinit var spinner: Spinner
+    }
 
     data class ListElement(
         val hint: String,
@@ -79,10 +79,10 @@ class KYCParamModel {
         var bitmap: Bitmap? = null
     }
 
-    data class NextButtonElement(val text: String,
+    data class CustomButtonElement(val text: String,
                                  override var width: Int, override var height: Int): UIElement(width, height)
 
-    data class ButtonElement(val text: String, val listener: KYCHelper.CustomListener,
+    data class ButtonElement(val text: String, val listener: ViewListener,
                              override var width: Int, override var height: Int): UIElement(width, height)
 
     enum class ElementType {

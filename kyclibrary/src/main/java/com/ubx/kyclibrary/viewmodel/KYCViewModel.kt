@@ -1,23 +1,28 @@
 package com.ubx.kyclibrary.viewmodel
 
-import android.app.Activity
 import android.content.Context
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.provider.MediaStore
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.SignInCredentials
+import com.ubx.formslibrary.util.DisplayUtil
+import com.ubx.formslibrary.util.BaseUIElementUtil
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
-import com.ubx.kyclibrary.model.KYCParamModel
-import com.ubx.kyclibrary.model.User
-import com.ubx.kyclibrary.util.DisplayUtil
-import com.ubx.kyclibrary.util.UIElementUtil
+import java.io.ByteArrayOutputStream
 
 class KYCViewModel: ViewModel() {
     var pageNumber = -1
-    lateinit var page: KYCParamModel.Page
+    lateinit var page: ParamModel.Page
+    var selectedMediaElement: ParamModel.MediaElement? = null
     val pageTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -27,8 +32,8 @@ class KYCViewModel: ViewModel() {
     val rightContent: MutableLiveData<Any?> by lazy {
         MutableLiveData<Any?>()
     }
-    val pageForLinearLayout: MutableLiveData<KYCParamModel.Page> by lazy {
-        MutableLiveData<KYCParamModel.Page>()
+    val pageForLinearLayout: MutableLiveData<ParamModel.Page> by lazy {
+        MutableLiveData<ParamModel.Page>()
     }
     val linearLayoutToDisplay: MutableLiveData<LinearLayout> by lazy {
         MutableLiveData<LinearLayout>()
@@ -36,14 +41,14 @@ class KYCViewModel: ViewModel() {
     val toastMessage: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val selectedListElement: MutableLiveData<KYCParamModel.ListElement> by lazy {
-        MutableLiveData<KYCParamModel.ListElement>()
+    val selectedListElement: MutableLiveData<ParamModel.ListElement> by lazy {
+        MutableLiveData<ParamModel.ListElement>()
     }
-    val selectedMediaElement: MutableLiveData<KYCParamModel.MediaElement> by lazy {
-        MutableLiveData<KYCParamModel.MediaElement>()
+    val isMediaSelected: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
-    val userToRegister: MutableLiveData<User> by lazy {
-        MutableLiveData<User>()
+    val signInCredentialsToRegister: MutableLiveData<SignInCredentials> by lazy {
+        MutableLiveData<SignInCredentials>()
     }
     val isSaved: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
@@ -74,11 +79,30 @@ class KYCViewModel: ViewModel() {
         setUIPage(pageNumber)
     }
 
+    fun setImageBitmap(cursor: Cursor) {
+        cursor.moveToFirst()
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+        val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+        val picturePath = cursor.getString(columnIndex)
+
+        val bitmap = BitmapFactory.decodeFile(picturePath)
+        selectedMediaElement?.bitmap = bitmap
+        selectedMediaElement?.imageView?.setImageBitmap(bitmap)
+    }
+
+    fun setImageBitmap(rawBitmap: Bitmap) {
+        val stream = ByteArrayOutputStream()
+        val bitmap = Bitmap.createScaledBitmap(rawBitmap, 300, 500, true)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 70, stream)
+
+        selectedMediaElement?.bitmap = bitmap
+        selectedMediaElement?.imageView?.setImageBitmap(bitmap)
+    }
 
     /**
      * Set Toolbar Contents
      */
-    private fun setToolbar(page: KYCParamModel.Page) {
+    private fun setToolbar(page: ParamModel.Page) {
         pageTitle.value = page.pageTitle
         leftContent.value = page.leftContent
         rightContent.value = page.rightContent
@@ -104,7 +128,7 @@ class KYCViewModel: ViewModel() {
             saveDataToDB()
         } else {
             // Need to register first before saving data
-            userToRegister.value = User(KYCValueHelper.getValue("email"), KYCValueHelper.getValue("password"))
+            signInCredentialsToRegister.value = SignInCredentials(KYCValueHelper.getValue("email"), KYCValueHelper.getValue("password"))
         }
     }
 
@@ -116,7 +140,7 @@ class KYCViewModel: ViewModel() {
     /**
      * Create Linear Layout
      */
-    fun createLayoutPage(page: KYCParamModel.Page, context: Context): LinearLayout {
+    fun createLayoutPage(page: ParamModel.Page, context: Context): LinearLayout {
         val linearLayout = LinearLayout(context)
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
@@ -141,39 +165,40 @@ class KYCViewModel: ViewModel() {
             }
             it.elements.forEach{ element ->
                 when (element) {
-                    is KYCParamModel.TextElement -> {
-                        layoutToUse.addView(UIElementUtil.createTextElement(context, element))
+                    is ParamModel.TextElement -> {
+                        layoutToUse.addView(BaseUIElementUtil.createTextElement(context, element))
                     }
-                    is KYCParamModel.InputElement -> {
-                        layoutToUse.addView(UIElementUtil.createInputElement(context, element))
+                    is ParamModel.InputElement -> {
+                        layoutToUse.addView(BaseUIElementUtil.createInputElement(context, element))
                     }
-                    is KYCParamModel.ImageElement -> {
-                        layoutToUse.addView(UIElementUtil.createImageElement(context, element))
+                    is ParamModel.ImageElement -> {
+                        layoutToUse.addView(BaseUIElementUtil.createImageElement(context, element))
                     }
-                    is KYCParamModel.NextButtonElement -> {
-                        val button = UIElementUtil.createButtonElement(context, element)
+                    is ParamModel.CustomButtonElement -> {
+                        val button = BaseUIElementUtil.createCustomButtonElement(context, element)
                         button.setOnClickListener {
                             getNextPage()
                         }
                         layoutToUse.addView(button)
                     }
-                    is KYCParamModel.DateElement -> {
-                        layoutToUse.addView(UIElementUtil.createDateElement(context, element, isSharingRow))
+                    is ParamModel.DateElement -> {
+                        layoutToUse.addView(BaseUIElementUtil.createDateElement(context, element, isSharingRow))
                     }
-                    is KYCParamModel.DropdownElement -> {
-                        layoutToUse.addView(UIElementUtil.createDropdownElement(context, element, isSharingRow))
+                    is ParamModel.DropdownElement -> {
+                        layoutToUse.addView(BaseUIElementUtil.createDropdownElement(context, element, isSharingRow))
                     }
-                    is KYCParamModel.ListElement -> {
-                        val listElement = UIElementUtil.createListElement(context, element)
-                        element.editText!!.setOnClickListener {
+                    is ParamModel.ListElement -> {
+                        val listElement = BaseUIElementUtil.createListElement(context, element)
+                        element.editText.setOnClickListener {
                             selectedListElement.value = element
                         }
                         layoutToUse.addView(listElement)
                     }
-                    is KYCParamModel.MediaElement -> {
-                        val mediaElement = UIElementUtil.createMediaElement(context, element)
+                    is ParamModel.MediaElement -> {
+                        val mediaElement = BaseUIElementUtil.createMediaElement(context, element)
                         mediaElement.setOnClickListener {
-                            selectedMediaElement.value = element
+                            selectedMediaElement = element
+                            isMediaSelected.value = true
                         }
                         layoutToUse.addView(mediaElement)
                     }
@@ -203,23 +228,29 @@ class KYCViewModel: ViewModel() {
         var isOK = true
         page.rows.forEach {
             it.elements.forEach{element ->
-                if (element is KYCParamModel.InputElement) {
+                if (element is ParamModel.InputElement) {
                     val text = element.editText!!.text
                     KYCValueHelper.setValue(element.key, text.toString())
                     if (text.isBlank()) {
-                        element.inputLayout?.error = element.hint + " is required."
+                        element.inputLayout.error = element.hint + " is required."
                         isOK = false
                     } else if (text.length < element.minimumLength) {
-                        element.inputLayout?.error = element.hint + " should be have at least " + element.minimumLength + " characters."
+                        element.inputLayout.error = element.hint + " should be have at least " + element.minimumLength + " characters."
                         isOK = false
-                    } else if (!UIElementUtil.isValidInput(text.toString(), element.regexPositiveValidation, element.regexNegativeValidation)) {
-                        element.inputLayout?.error = element.hint + " is not valid."
+                    } else if (!BaseUIElementUtil.isValidInput(text.toString(), element.regexPositiveValidation, element.regexNegativeValidation)) {
+                        element.inputLayout.error = element.hint + " is not valid."
                         isOK = false
                     } else {
-                        element.inputLayout?.error = null
+                        element.inputLayout.error = null
                     }
-                } else if (element is KYCParamModel.DateElement) {
+                } else if (element is ParamModel.DateElement) {
                     KYCValueHelper.setValue(element.key, element.editText!!.text.toString())
+                } else if (element is ParamModel.DropdownElement) {
+                    KYCValueHelper.setValue(element.key, element.spinner.selectedItem.toString())
+                } else if (element is ParamModel.MediaElement) {
+                    element.bitmap?.let {bitmap ->
+                        KYCValueHelper.setBitmap(element.key, bitmap)
+                    }
                 }
             }
         }

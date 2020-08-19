@@ -3,7 +3,7 @@
 
     <application
         android:allowBackup="false">
-        <activity android:name="com.ubx.loginlibrary.LoginActivity">
-        </activity>
+        <activity android:name="com.ubx.loginlibrary.LoginActivity"/>
+        <activity android:name="com.ubx.loginlibrary.ForgotPasswordActivity"/>
     </application>
 </manifest>

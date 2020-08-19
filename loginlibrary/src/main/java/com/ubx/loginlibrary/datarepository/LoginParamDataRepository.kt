@@ -1,6 +1,8 @@
 package com.ubx.loginlibrary.datarepository
 
 import android.util.Log
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.loginlibrary.model.ForgotPasswordElement
 import com.ubx.loginlibrary.model.LoginParamModel
 
 class LoginParamDataRepository {
@@ -13,7 +15,9 @@ class LoginParamDataRepository {
                 null
             }
         }
-    var inputElements: MutableList<LoginParamModel.InputElement> = mutableListOf()
+    var inputElements: MutableList<ParamModel.InputElement> = mutableListOf()
+    var inputStyle: Int = -1
+    var forgotPasswordElement: ForgotPasswordElement? = null
 
     private object HOLDER {
         val INSTANCE = LoginParamDataRepository()

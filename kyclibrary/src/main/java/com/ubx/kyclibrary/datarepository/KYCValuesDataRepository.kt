@@ -1,7 +1,10 @@
 package com.ubx.kyclibrary.datarepository
 
+import android.graphics.Bitmap
+
 class KYCValuesDataRepository {
     var values: MutableMap<String, String> = mutableMapOf()
+    var images: MutableMap<String, Bitmap> = mutableMapOf()
 
     private object HOLDER {
         val INSTANCE = KYCValuesDataRepository()

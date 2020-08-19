@@ -2,8 +2,12 @@ package com.ubx.loginlibrary
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.LinearLayout
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.UIElement
+import com.ubx.formslibrary.model.User
+import com.ubx.loginlibrary.model.ForgotPasswordElement
 import com.ubx.loginlibrary.model.LoginParamModel
-import com.ubx.loginlibrary.model.User
 
 interface LoginInterface {
 
@@ -41,6 +45,13 @@ interface LoginInterface {
      * @param style style (i.e. R.style.*)
      */
     fun setStyle(style: Int)
+
+    /**
+     * Set Style of input fields
+     *
+     * @param style style (i.e. R.style.*)
+     */
+    fun setInputStyle(style: Int)
     /***********************[END] CUSTOMIZE MAIN LOGIN LAYOUT ****************************/
 
     /*******************[START] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
@@ -52,7 +63,8 @@ interface LoginInterface {
      * @param height height of image
      * @return ImageElement that can be customized with style, background, padding and margins
      */
-    fun addImage(image: Int, width: Int, height: Int): LoginParamModel.ImageElement
+    fun addImage(image: Int, width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                 height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.ImageElement
 
     /**
      * Add a text in the login view
@@ -62,7 +74,9 @@ interface LoginInterface {
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    fun addText(label: String, width: Int, height: Int): LoginParamModel.TextElement
+    fun addText(label: String,
+                width: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
+                height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.TextElement
 
     /**
      * Add an input text in the login view
@@ -76,7 +90,9 @@ interface LoginInterface {
      * @return InputElement that can be customized with style, background, padding and margins
      */
     fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String): LoginParamModel.InputElement
+                 width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                 height: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
+                 key: String): ParamModel.InputElement
 
     /**
      * Add a button in the login view
@@ -86,7 +102,9 @@ interface LoginInterface {
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.LoginButtonElement
+    fun addLoginButton(label: String,
+                       width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                       height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.CustomButtonElement
 
     /**
      * Add a button (with intent to next activity) in the login view
@@ -97,7 +115,9 @@ interface LoginInterface {
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): LoginParamModel.ButtonElement
+    fun addButton(label: String, listener: LoginHelper.CustomListener,
+                  width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                  height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.ButtonElement
 
     /**
      * Add Sign in with Google
@@ -106,7 +126,8 @@ interface LoginInterface {
      * @param height height of text
      * @return Google Sign In Button that can be customized with style, background, padding and margins
      */
-    fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle
+    fun addGoogleSignIn(width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): LoginParamModel.ThirdPartyGoogle
 
     /**
      * Add Sign in with Facebook
@@ -115,7 +136,20 @@ interface LoginInterface {
      * @param height height of text
      * @return Facebook Sign In Button that can be customized with style, background, padding and margins
      */
-    fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook
+    fun addFacebookSignIn(width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                          height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): LoginParamModel.ThirdPartyFacebook
+
+    /**
+     * Add Forgot Password
+     *
+     * @param label button label
+     * @param imageDrawable width of text
+     * @param header UI header
+     * @param subheader UI subheader
+     */
+    fun addForgotPassword(label: String, imageDrawable: Int?,
+                          headerText: String,
+                          subheaderText: String): ForgotPasswordElement
     /*********************[END] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
 
     /*********************[START] THIRD PARTY RELATED************************************/
@@ -189,5 +223,5 @@ interface LoginInterface {
      *
      * @param loginHandler function handler
      */
-    fun setCustomSigninHandler(loginHandler: LoginHelper.CustomLoginHandler)
+    fun setCustomSignInHandler(loginHandler: LoginHelper.CustomLoginHandler)
 }

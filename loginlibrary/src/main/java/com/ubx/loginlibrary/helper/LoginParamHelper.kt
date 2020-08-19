@@ -1,9 +1,11 @@
 package com.ubx.loginlibrary.helper
 
+import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.model.UIElement
 import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.LoginParamDataRepository
+import com.ubx.loginlibrary.model.ForgotPasswordElement
 import com.ubx.loginlibrary.model.LoginParamModel
-import com.ubx.loginlibrary.model.UIElement
 
 class LoginParamHelper {
 
@@ -16,7 +18,7 @@ class LoginParamHelper {
          * @param height height that the login view can consume
          */
         fun setLoginParam(appName: String, width: Int, height: Int) {
-            LoginParamDataRepository.instance.loginParamModel = LoginParamModel(appName, width, height)
+            getDataRepo().loginParamModel = LoginParamModel(appName, width, height)
         }
 
         /**
@@ -62,6 +64,24 @@ class LoginParamHelper {
         }
 
         /**
+         * Set Style of input fields
+         *
+         * @param style style (i.e. R.style.*)
+         */
+        fun setInputStyle(style: Int) {
+            getDataRepo().inputStyle = style
+        }
+
+        /**
+         * Get Style of input fields
+         *
+         * @param style style (i.e. R.style.*)
+         */
+        fun getInputStyle(): Int {
+            return getDataRepo().inputStyle
+        }
+
+        /**
          * Add an image in the login view
          *
          * @param image image (i.e. R.drawable.*)
@@ -69,11 +89,9 @@ class LoginParamHelper {
          * @param height height of image
          * @return ImageElement that can be customized with style, background, padding and margins
          */
-        fun addImage(image: Int, width: Int, height: Int): LoginParamModel.ImageElement {
-            val imageElement = LoginParamModel.ImageElement(image, width, height)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.IMAGE, imageElement
-            ))
+        fun addImage(image: Int, width: Int, height: Int): ParamModel.ImageElement {
+            val imageElement = ParamModel.ImageElement(image, width, height)
+            getLoginParam()?.elements?.add(imageElement)
             return imageElement
         }
 
@@ -85,11 +103,9 @@ class LoginParamHelper {
          * @param height height of text
          * @return TextElement that can be customized with style, background, padding and margins
          */
-        fun addText(label: String, width: Int, height: Int): LoginParamModel.TextElement {
-            val text = LoginParamModel.TextElement(label, width, height)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.TEXT, text
-            ))
+        fun addText(label: String, width: Int, height: Int): ParamModel.TextElement {
+            val text = ParamModel.TextElement(label, width, height)
+            getLoginParam()?.elements?.add(text)
             return text
         }
 
@@ -105,11 +121,9 @@ class LoginParamHelper {
          * @return InputElement that can be customized with style, background, padding and margins
          */
         fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                     width: Int, height: Int, key: String): LoginParamModel.InputElement {
-            val input = LoginParamModel.InputElement(hint, isPassword, inputType, width, height, key)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.EDIT, input
-            ))
+                     width: Int, height: Int, key: String): ParamModel.InputElement {
+            val input = ParamModel.InputElement(hint, isPassword, inputType, width, height, key, true)
+            getLoginParam()?.elements?.add(input)
             addInputElement(input)
             return input
         }
@@ -122,11 +136,9 @@ class LoginParamHelper {
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addLoginButton(label: String, width: Int, height: Int): LoginParamModel.LoginButtonElement {
-            val button = LoginParamModel.LoginButtonElement(label, width, height)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.BUTTON, button
-            ))
+        fun addLoginButton(label: String, width: Int, height: Int): ParamModel.CustomButtonElement {
+            val button = ParamModel.CustomButtonElement(label, width, height)
+            getLoginParam()?.elements?.add(button)
             return button
         }
 
@@ -139,11 +151,9 @@ class LoginParamHelper {
          * @param height height of text
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
-        fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): LoginParamModel.ButtonElement {
-            val button = LoginParamModel.ButtonElement(label, listener, width, height)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.BUTTON, button
-            ))
+        fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): ParamModel.ButtonElement {
+            val button = ParamModel.ButtonElement(label, listener, width, height)
+            getLoginParam()?.elements?.add(button)
             return button
         }
 
@@ -156,9 +166,7 @@ class LoginParamHelper {
          */
         fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle {
             val button = LoginParamModel.ThirdPartyGoogle(width, height)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.THIRD_PARTY, button
-            ))
+            getLoginParam()?.elements?.add(button)
             return button
         }
 
@@ -171,17 +179,26 @@ class LoginParamHelper {
          */
         fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook {
             val button = LoginParamModel.ThirdPartyFacebook(width, height)
-            getLoginParam()?.elements?.add(LoginParamModel.LoginElement(
-                LoginParamModel.ElementType.THIRD_PARTY, button
-            ))
+            getLoginParam()?.elements?.add(button)
             return button
+        }
+
+        fun addForgotPassword(label: String, imageDrawable: Int?,
+                              headerText: String,
+                              subheaderText: String): ForgotPasswordElement {
+
+            val forgotPasswordElement = ForgotPasswordElement(label, imageDrawable,
+                headerText, subheaderText)
+            getDataRepo().forgotPasswordElement = forgotPasswordElement
+            getLoginParam()?.elements?.add(forgotPasswordElement)
+            return forgotPasswordElement
         }
 
         /**
          * Store input elements to data array
          */
-        private fun addInputElement(element: LoginParamModel.InputElement) {
-            LoginParamDataRepository.instance.inputElements.add(element)
+        private fun addInputElement(element: ParamModel.InputElement) {
+            getDataRepo().inputElements.add(element)
         }
 
         /**
@@ -189,8 +206,17 @@ class LoginParamHelper {
          *
          * @return stored input elements
          */
-        fun getInputElements(): MutableList<LoginParamModel.InputElement> {
-            return LoginParamDataRepository.instance.inputElements
+        fun getInputElements(): MutableList<ParamModel.InputElement> {
+            return getDataRepo().inputElements
+        }
+
+        /**
+         * Get singleton instance of ForgotPasswordElement
+         *
+         * @return instance of LoginParamModel
+         */
+        fun getForgotPasswordElement(): ForgotPasswordElement? {
+            return getDataRepo().forgotPasswordElement
         }
 
         /**
@@ -199,7 +225,11 @@ class LoginParamHelper {
          * @return instance of LoginParamModel
          */
         fun getLoginParam(): LoginParamModel? {
-            return LoginParamDataRepository.instance.loginParamModel
+            return getDataRepo().loginParamModel
+        }
+
+        private fun getDataRepo(): LoginParamDataRepository {
+            return LoginParamDataRepository.instance
         }
     }
 }

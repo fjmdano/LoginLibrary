@@ -1,4 +1,6 @@
-package com.ubx.loginlibrary.model
+package com.ubx.formslibrary.model
+
+import android.view.Gravity
 
 open class UIElement(
     open var width: Int,
@@ -21,7 +23,7 @@ open class UIElement(
     var style: Int? = null
     var background: Int? = null
     var gravity: Int? = null
-    var layoutGravity: Int? = null
+    var layoutGravity: Int = Gravity.CENTER_HORIZONTAL
     var padding: Padding? = null
     var margins: Margins? = null
 }
