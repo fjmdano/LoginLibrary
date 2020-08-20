@@ -54,6 +54,10 @@ class KYCViewModel: ViewModel() {
         MutableLiveData<Boolean>()
     }
 
+    /**
+     * Get previous UI page
+     * Currently, page is expected to be saved in layout list
+     */
     fun getPreviousPage() {
         //Decrement page number
         pageNumber = if (pageNumber <= 0) {
@@ -64,6 +68,10 @@ class KYCViewModel: ViewModel() {
         setUIPage(pageNumber)
     }
 
+    /**
+     * Get next UI page
+     * page is either created or retrieved from saved layout list
+     */
     fun getNextPage() {
         if (pageNumber != -1 && !verifyInputs()) {
             toastMessage.value = "Please verify inputs before proceeding"
@@ -79,6 +87,11 @@ class KYCViewModel: ViewModel() {
         setUIPage(pageNumber)
     }
 
+    /**
+     * Save selected image and display in UI
+     * This function is called when image is existing from gallery
+     * @param cursor Cursor of selected image
+     */
     fun setImageBitmap(cursor: Cursor) {
         cursor.moveToFirst()
         val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
@@ -90,6 +103,11 @@ class KYCViewModel: ViewModel() {
         selectedMediaElement?.imageView?.setImageBitmap(bitmap)
     }
 
+    /**
+     * Save captured image and display in UI
+     * This function is called when image is newly captured by camera
+     * @param rawBitmap raw captured bitmap
+     */
     fun setImageBitmap(rawBitmap: Bitmap) {
         val stream = ByteArrayOutputStream()
         val bitmap = Bitmap.createScaledBitmap(rawBitmap, 300, 500, true)
@@ -123,6 +141,9 @@ class KYCViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Submit KYC form
+     */
     private fun submit() {
         if (Firebase.auth.currentUser != null) {
             saveDataToDB()
@@ -132,13 +153,17 @@ class KYCViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Save user data to DB
+     */
     fun saveDataToDB() {
-        //RegisterHelper.createUserWithEmail(activity, email, password)
         isSaved.value = KYCValueHelper.storeInDB()
     }
 
     /**
      * Create Linear Layout
+     * @param page containing the pageRows containing the UI elements
+     * @param context application context
      */
     fun createLayoutPage(page: ParamModel.Page, context: Context): LinearLayout {
         val linearLayout = LinearLayout(context)
@@ -257,6 +282,9 @@ class KYCViewModel: ViewModel() {
         return isOK
     }
 
+    /**
+     * Reset KYC variables
+     */
     fun dismiss() {
         pageNumber = -1
         KYCParamHelper.resetLayoutPages()

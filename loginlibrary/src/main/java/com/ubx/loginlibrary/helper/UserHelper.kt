@@ -79,10 +79,18 @@ class UserHelper {
             getDataRepo().user = null
         }
 
+        /**
+         * Set custom log-in handler that will be called once log-in button is clicked
+         * @param loginHandler custom handler
+         */
         fun setCustomHandler(loginHandler: LoginHelper.CustomLoginHandler) {
             getDataRepo().loginHandler = loginHandler
         }
 
+        /**
+         * Get custom log-in handler that will be called once log-in button is clicked
+         * @return custom handler
+         */
         fun getCustomHandler(): LoginHelper.CustomLoginHandler? {
             return getDataRepo().loginHandler
         }

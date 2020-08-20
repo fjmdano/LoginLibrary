@@ -33,6 +33,9 @@ class KYCMediaChooserDialog(var activity: KYCActivity) : Dialog(activity) {
         this.setCancelable(true)
     }
 
+    /**
+     * Add button onClickListener
+     */
     private fun addListener() {
         val tvGallery = findViewById<TextView>(R.id.tv_from_gallery)
         tvGallery.setOnClickListener {

@@ -23,6 +23,9 @@ class ForgotPasswordActivity: AppCompatActivity() {
         addPage()
     }
 
+    /**
+     * Observe ViewModel Variables
+     */
     private fun observeViewModelData() {
         viewModel.toastMessage.observe(this, Observer {
             showToast(it)
@@ -38,6 +41,7 @@ class ForgotPasswordActivity: AppCompatActivity() {
     private fun showToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
+
     /**
      * Add created linear layout to display
      */

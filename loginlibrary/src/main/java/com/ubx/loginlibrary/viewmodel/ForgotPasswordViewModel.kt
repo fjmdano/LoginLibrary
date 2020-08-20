@@ -90,13 +90,16 @@ class ForgotPasswordViewModel: ViewModel() {
         }
         linearLayout.addView(button)
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             linearLayout.id = View.generateViewId()
         }
         return linearLayout
     }
 
+    /**
+     * Send password reset to e-mail
+     * Current assumption: Project is using Firebase
+     */
     private fun sendPasswordReset() {
         if (isValidEmail()) {
             ThirdPartyConfigHelper.getFirebaseAuth().sendPasswordResetEmail(userEmail)
@@ -110,7 +113,10 @@ class ForgotPasswordViewModel: ViewModel() {
         }
     }
 
-    fun isValidEmail(): Boolean {
+    /**
+     * Check if input email is valid
+     */
+    private fun isValidEmail(): Boolean {
         var isValid = true
         if (userEmail.isBlank()) {
             isValid = false

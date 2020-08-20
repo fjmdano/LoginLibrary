@@ -115,6 +115,10 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         finish()
     }
 
+    /**
+     * Handle return to main flow of KYC
+     * This function is called by ListAdapter
+     */
     override fun onClickRecyclerViewListElement(element: ParamModel.ListElement) {
         parentLayout.removeView(currentRecyclerView)
         currentRecyclerView = null
@@ -122,7 +126,7 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
     }
 
     /**
-     * Set title, left image/text and right image/text
+     * Observe ViewModel Variables
      */
     private fun observeViewModelData() {
         val context: Context = this
@@ -168,6 +172,9 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         })
     }
 
+    /**
+     * Set onClickListener to toolbar left and right items
+     */
     private fun setActionHandler() {
         findViewById<ConstraintLayout>(R.id.cl_left).setOnClickListener {
             viewModel.getPreviousPage()
@@ -271,6 +278,9 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         toolbar.visibility = View.VISIBLE
     }
 
+    /**
+     * Display created layout
+     */
     private fun displayLayout(layout: LinearLayout) {
         if (currentLinearLayout != null) {
             parentLayout.removeView(currentLinearLayout)
@@ -280,6 +290,10 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         currentLinearLayout = layout
     }
 
+    /**
+     * Display list in new view
+     * This will be called when ListElement is clicked
+     */
     private fun displayList(element: ParamModel.ListElement) {
         parentLayout.removeView(currentLinearLayout)
         currentRecyclerView = RecyclerView(applicationContext)
@@ -288,12 +302,24 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         parentLayout.addView(currentRecyclerView)
     }
 
+    /**
+     * Show MediaChooserDialog
+     * This will be called when MediaElement is clicked
+     */
     private fun selectImage() {
         val carouselDialog = KYCMediaChooserDialog(this)
         carouselDialog.show()
     }
 
-    // Function to check and request permission
+    /**
+     * Function to check and request permission
+     * @param permission app permissions (Currently handled are
+     *                   Manifest.permission.WRITE_EXTERNAL_STORAGE and
+     *                   Manifest.permission.CAMERA)
+     * @param requestCode permission request code (Currently handled are
+     *                   PERMISSION_CODE_CAMERA [100] and
+     *                   PERMISSION_CODE_STORAGE[101])
+     */
     fun checkPermission(permission: String, requestCode: Int) {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, arrayOf(permission),requestCode)
@@ -313,10 +339,12 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         }
     }
 
+    /**
+     * Create new user given email and password
+     * This is called if user is not yet logged in
+     */
     private fun createUserWithEmail(signInCredentials: SignInCredentials) {
         try {
-            Log.d(TAG,"username: " + signInCredentials.username)
-            Log.d(TAG,"password: " + signInCredentials.password)
             val firebaseAuth = Firebase.auth
             firebaseAuth.createUserWithEmailAndPassword(signInCredentials.username, signInCredentials.password)
                 .addOnCompleteListener(this) { task ->
@@ -336,6 +364,9 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         }
     }
 
+    /**
+     * Show Toast message
+     */
     private fun showToast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }

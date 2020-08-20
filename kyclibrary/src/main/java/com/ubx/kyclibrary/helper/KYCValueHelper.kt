@@ -12,22 +12,45 @@ import java.io.ByteArrayOutputStream
 
 class KYCValueHelper {
     companion object {
+        /**
+         * Store value
+         * @param key item key
+         * @param value item value
+         */
         fun setValue(key: String, value: String){
             getDataRepo().values[key] = value
         }
 
+        /**
+         * Retrieve stored value
+         * @param key item key
+         * @return empty string if key not found; else item value
+         */
         fun getValue(key: String): String {
             return getDataRepo().values[key] ?: ""
         }
 
+        /**
+         * Store bitmap
+         * @param key item key
+         * @param value item value (in Bitmap)
+         */
         fun setBitmap(key: String, value: Bitmap){
             getDataRepo().images[key] = value
         }
 
+        /**
+         * Retrieve stored bitmap
+         * @param key item key
+         * @return null if key not found; else item value (in Bitmap)
+         */
         fun getBitmap(key: String): Bitmap? {
             return getDataRepo().images[key]
         }
 
+        /**
+         * Store items in DB
+         */
         fun storeInDB(): Boolean {
             var isOK = false
             val outputStream = ByteArrayOutputStream()
@@ -41,6 +64,7 @@ class KYCValueHelper {
                         database.child(it.key).setValue(it.value)
                     }
                 }
+
                 val storage = Firebase.storage.getReference("users")
                     .child(firebaseUser.uid).child("profile")
                 getDataRepo().images.forEach {

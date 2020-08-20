@@ -54,6 +54,11 @@ class CameraActivity: AppCompatActivity() {
         camera.onStop()
     }
 
+    /**
+     * Capture image and save as temp file
+     * Function also finishes the activity and returns control to main KYC flow
+     * @param rawBitmap raw captured bitmap
+     */
     private fun setImageBase64(rawBitmap: Bitmap) {
         val filename = "captured_image.png"
         val stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -69,6 +74,11 @@ class CameraActivity: AppCompatActivity() {
         finish()
     }
 
+
+    /**
+     * Load Camera
+     * Set if camera is facing front or back
+     */
     private fun loadCamera() {
         camera = findViewById(R.id.camera)
         val isBackFacing = intent.extras?.get(ARGS_BACK_FACE) as Boolean

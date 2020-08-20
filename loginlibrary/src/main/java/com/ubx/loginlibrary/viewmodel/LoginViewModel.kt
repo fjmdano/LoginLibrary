@@ -87,6 +87,9 @@ class LoginViewModel: ViewModel() {
             })
     }
 
+    /**
+     * Handle sign in result
+     */
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (isFacebookIntegrated()) {
             callbackManager.onActivityResult(requestCode, resultCode, data)

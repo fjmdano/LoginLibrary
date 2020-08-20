@@ -272,7 +272,14 @@ class LoginHelper(val context: Context, appName: String,
         }
     }
 
+
+    /**
+     * interface for custom handling of login
+     */
     interface CustomLoginHandler: LoginHandler
 
+    /**
+     * interface for custom onClickListener
+     */
     interface CustomListener: ViewListener
 }

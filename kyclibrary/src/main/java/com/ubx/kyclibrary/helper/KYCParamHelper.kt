@@ -9,10 +9,18 @@ import com.ubx.kyclibrary.datarepository.KYCParamDataRepository
 
 class KYCParamHelper {
     companion object {
+
+        /**
+         * Reset store data of layout list
+         */
         fun resetLayoutPages() {
             getDataRepo().layoutPages.clear()
         }
 
+        /**
+         * Get Stored Linear Layout
+         * @param pageNumber index of linear layout in the list
+         */
         fun getLayoutPage(pageNumber: Int): LinearLayout? {
             val layoutPages = getDataRepo().layoutPages
             return if (pageNumber < 0 || pageNumber > layoutPages.size-1) {
@@ -22,6 +30,10 @@ class KYCParamHelper {
             }
         }
 
+        /**
+         * Get raw Page
+         * @param pageNumber index of page in the list
+         */
         fun getPage(pageNumber: Int): ParamModel.Page? {
             val pages = getDataRepo().pages
             return if (pageNumber < 0 || pageNumber > pages.size-1) {
@@ -31,25 +43,50 @@ class KYCParamHelper {
             }
         }
 
+        /**
+         * Get last linear layout stored in the list
+         *
+         * @return last linear layout
+         */
         fun getLastLayoutPage(): LinearLayout {
             val layoutPages = getDataRepo().layoutPages
             return layoutPages.last()
         }
 
+        /**
+         * Get last raw page stored in the list
+         *
+         * @return last raw page
+         */
         fun getLastPage(): ParamModel.Page {
             val pages = getDataRepo().pages
             return pages.last()
         }
 
+        /**
+         * Add linear layout to the list
+         *
+         * @param linearLayout created linear layout
+         */
         fun addLayoutPage(linearLayout: LinearLayout){
             getDataRepo().layoutPages.add(linearLayout)
         }
 
+        /**
+         * Add page
+         * @param pageTitle Page Title that will be displayed at the center of toolbar
+         * @param leftContent can be string, image or null
+         * @param rightContent can be string, image or null
+         */
         fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
             getDataRepo().pages.add(ParamModel.Page(pageTitle, leftContent,
                 rightContent, mutableListOf()))
         }
 
+        /**
+         * Add page row
+         * @param uiElements UI elements that will be displayed in one row
+         */
         fun addRow(uiElements: MutableList<UIElement>) {
             val pageRow = ParamModel.PageRow(mutableListOf())
             uiElements.forEach {

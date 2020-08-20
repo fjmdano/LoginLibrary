@@ -44,6 +44,9 @@ class LoginActivity: AppCompatActivity() {
         viewModel.onActivityResult(requestCode, resultCode, data)
     }
 
+    /**
+     * Observe ViewModel Variables
+     */
     private fun observeViewModelData() {
         viewModel.toastMessage.observe(this, Observer {
             showToast(it)

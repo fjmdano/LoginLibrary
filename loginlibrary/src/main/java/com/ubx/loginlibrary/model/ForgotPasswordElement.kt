@@ -53,6 +53,11 @@ class ForgotPasswordElement(
         LinearLayout.LayoutParams.MATCH_PARENT,
         LinearLayout.LayoutParams.WRAP_CONTENT)
 
+    /**
+     * Set image width and height
+     * @param width image width
+     * @param height image height
+     */
     fun setImageDimensions(width: Int, height: Int) {
         image?.width = width
         image?.height = height

@@ -322,5 +322,8 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
         return DisplayUtil.sizeInDP(context, size)
     }
 
+    /**
+     * interface for custom onClickListener
+     */
     interface CustomListener: ViewListener
 }
