@@ -5,16 +5,22 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.ubx.formslibrary.model.ParamModel
 import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.util.BaseUIElementUtil
+import com.ubx.kyclibrary.adapter.ListAdapter
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
 import java.io.ByteArrayOutputStream
@@ -241,6 +247,59 @@ class KYCViewModel: ViewModel() {
 
         linearLayoutToDisplay.value = linearLayout
         return linearLayout
+    }
+
+    /*
+    fun displayList(context: Context, listElement: ParamModel.ListElement): LinearLayout {
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.VERTICAL
+        DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
+        DisplayUtil.setMargins(context, linearLayout, KYCParamHelper.getMargins())
+
+        val element = ParamModel.InputElement("Search",
+            false,
+            InputType.TYPE_CLASS_TEXT,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "search",
+            false)
+        val textInput = BaseUIElementUtil.createInputElement(context, element)
+
+        val currentRecyclerView = RecyclerView(context)
+        currentRecyclerView.layoutManager = LinearLayoutManager(context)
+        val listAdapter = ListAdapter(listElement.choices, context,
+            object: ListAdapter.Listener {
+                override fun onClickRecyclerViewListElement(selected: String) {
+                    KYCValueHelper.setValue(listElement.key, selected)
+                    listElement.editText.setText(selected)
+                    toRemoveRecycleLayout.value = true
+                }
+            })
+
+        element.editText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) { }
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                val filteredList = listElement.choices.filter { it.contains(s, true) }
+                listAdapter.setItemList(filteredList)
+                //userEmail = s.toString()
+            }
+        })
+        currentRecyclerView.adapter = listAdapter
+        linearLayout.addView(textInput)
+        linearLayout.addView(currentRecyclerView)
+        return linearLayout
+    }
+    */
+
+    fun setValue(key: String, value: String) {
+        KYCValueHelper.setValue(key, value)
     }
 
     /**

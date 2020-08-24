@@ -193,8 +193,6 @@ class MainActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT)
 
         kycHelper.addPage("Registration", null, "Next")
-        kycHelper.addMedia("Camera", LinearLayout.LayoutParams.MATCH_PARENT,
-            kycHelper.sizeInDP(150), "selfie", true)
         kycHelper.addInput("E-mail", false,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -202,15 +200,6 @@ class MainActivity : AppCompatActivity() {
             "email",
             true
         )
-        val usernameInput = kycHelper.addInput("Username", false,
-            InputType.TYPE_CLASS_TEXT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "username",
-            true
-        )
-        usernameInput.minimumLength = 8
-        usernameInput.maximumLength = 15
         val passwordInput = kycHelper.addInput("Password", true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -230,11 +219,21 @@ class MainActivity : AppCompatActivity() {
 
         kycHelper.addPage("Personal Details", "Back", "Submit")
 
-        kycHelper.addList("Country",
-            listOf("Afghanistan", "Afghanistan US Military Base", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antigua And Barbuda", "Argentina", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bahrain US Military Base", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belgium US Military Base", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bonaire", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic of", "Congo-Brazzaville", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Cuba US Military Base", "Curacao", "Cyprus", "Cyprus (Northern)", "Czech Republic", "Denmark", "Djibouti", "Djibouti US Military Base", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "England", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "Gabon", "Gambia", "Georgia", "Germany", "Germany US Military Base", "Ghana", "Gibraltar", "Greece", "Greece US Military Base", "Grenada", "Guadeloupe", "Guam", "Guam US Military Base", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Honduras US Military Base", "Hong Kong", "Hungary", "Iceland", "Iceland US Military Base", "India", "Indonesia", "International Test Country", "Iraq", "Iraq US Military Base", "Ireland", "Israel", "Italy", "Italy US Military Base", "Ivory Coast", "Jamaica", "Japan", "Japan US Military Base", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea", "Korea US Military Base", "Kosovo", "Kosovo US Military Base", "Kuwait", "Kuwait US Military Base", "Kyrghyz Republic", "Kyrghyz Republic US Military Base", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands US Military Base", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "North Ireland", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Palestinian Authority", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Portugal US Military Base", "Puerto Rico", "Qatar", "Qatar US Military Base", "Reunion Island", "Romania", "Rota, CNMI", "Russia", "Rwanda", "Saint Barthelemy", "Saint Kitts And Nevis", "Saint Lucia", "Saint Vincent And The Grenadines", "Saipan, CNMI", "Samoa", "Sao Tome And Principe", "Saudi Arabia", "Scotland", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "Somaliland", "South Africa", "South Sudan", "Spain", "Spain US Military Base", "Sri Lanka", "St. Maarten", "St. Martin", "St. Thomas", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tinian, CNMI", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkey US Military Base", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "UAE US Military Base", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United Kingdom US Military Base", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands (US)", "Wales", "Yemen", "Zambia", "Zimbabwe"),
+        val usernameInput = kycHelper.addInput("Full Name", false,
+            InputType.TYPE_CLASS_TEXT,
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            "country",
+            "fullname",
+            true
+        )
+        usernameInput.minimumLength = 8
+        usernameInput.maximumLength = 15
+
+        kycHelper.addList("Province",
+            listOf("Metro Manila", "Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province", "Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan", "Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Batangas", "Cavite", "Laguna", "Quezon", "Rizal", "Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon", "Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon", "Aklan", "Antique", "Capiz", "Guimaras", "Iloilo", "Negros Occidental", "Bohol", "Cebu", "Negros Oriental", "Siquijor", "Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte", "Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay", "Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental", "Compostela Valley", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental", "Cotabato", "Sarangani", "South Cotabato", "Sultan Kudarat", "Agusan del Norte", "Agusan del Sur", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur", "Basilan", "Lanao del Sur", "Maguindanao", "Sulu", "Tawi-tawi"),
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "province",
             true
         )
         kycHelper.addInput("Address", false,
@@ -242,6 +241,13 @@ class MainActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             "address",
+            true
+        )
+        kycHelper.addInput("Phone", false,
+            InputType.TYPE_CLASS_PHONE,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            "phone",
             true
         )
 
@@ -259,7 +265,6 @@ class MainActivity : AppCompatActivity() {
                 "gender",
                 true)
         ))
-
     }
 
     companion object {

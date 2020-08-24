@@ -14,5 +14,6 @@
         android:theme="@style/AppTheme">
         <activity android:name="com.ubx.kyclibrary.KYCActivity"/>
         <activity android:name="com.ubx.kyclibrary.CameraActivity"/>
+        <activity android:name="com.ubx.kyclibrary.SelectListActivity"/>
     </application>
 </manifest>

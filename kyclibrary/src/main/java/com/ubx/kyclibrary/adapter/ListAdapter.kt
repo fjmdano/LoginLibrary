@@ -1,6 +1,8 @@
 package com.ubx.kyclibrary.adapter
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
@@ -10,30 +12,37 @@ import com.ubx.kyclibrary.R
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
 
-class ListAdapter(private val element: ParamModel.ListElement,
+class ListAdapter(private var items: List<String>,
                   val context: Context,
                   private val listener:Listener): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
-    private val items = element.choices
 
-    class ViewHolder(private val textview: TextView, val element: ParamModel.ListElement): RecyclerView.ViewHolder(textview) {
+    class ViewHolder(private val textview: TextView): RecyclerView.ViewHolder(textview) {
         fun bind(item: String, listener: Listener) {
             textview.text = item
             textview.setOnClickListener {
-                val text = (it as TextView).text
-                KYCValueHelper.setValue(element.key, text.toString())
-                element.editText.setText(text)
-                listener.onClickRecyclerViewListElement(element)
+                val text = (it as TextView).text.toString()
+                //KYCValueHelper.setValue(element.key, text.toString())
+                //element.editText.setText(text)
+                listener.onClickRecyclerViewListElement(text)
             }
+        }
+    }
+
+
+    fun setItemList(updatedList: List<String>) {
+        items = updatedList
+        Handler(Looper.getMainLooper()).post {
+            notifyDataSetChanged()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val style = KYCParamHelper.getListStyle()
         return if (style != null) {
-            ViewHolder(TextView(ContextThemeWrapper(context, style), null, 0), element)
+            ViewHolder(TextView(ContextThemeWrapper(context, style), null, 0))
         } else {
-            ViewHolder(TextView(ContextThemeWrapper(context, R.style.DefaultRecycleViewText), null, 0), element)
+            ViewHolder(TextView(ContextThemeWrapper(context, R.style.DefaultRecycleViewText), null, 0))
         }
     }
 
@@ -46,7 +55,7 @@ class ListAdapter(private val element: ParamModel.ListElement,
     }
 
     interface Listener {
-        fun onClickRecyclerViewListElement(element: ParamModel.ListElement)
+        fun onClickRecyclerViewListElement(selected: String)
     }
 
 }

@@ -1,19 +1,14 @@
 package com.ubx.kyclibrary
 
-import android.R.id.message
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.camerakit.CameraKit
 import com.camerakit.CameraKitView
-import com.ubx.kyclibrary.viewmodel.KYCViewModel
-
 
 class CameraActivity: AppCompatActivity() {
     lateinit var captureButton: Button

@@ -20,29 +20,30 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.ubx.formslibrary.model.ParamModel
 import com.ubx.formslibrary.model.SignInCredentials
-import com.ubx.kyclibrary.adapter.ListAdapter
 import com.ubx.kyclibrary.viewmodel.KYCViewModel
 
 
-class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
+class KYCActivity: AppCompatActivity() {
     private val viewModel: KYCViewModel by viewModels()
 
     private lateinit var parentLayout: NestedScrollView
     private var currentLinearLayout: LinearLayout? = null
-    private var currentRecyclerView: RecyclerView? = null
+    private var recyclerViewLayout: LinearLayout? = null
 
     private lateinit var toolbarTitle: TextView
+    private lateinit var toolbarLeftContainer: ConstraintLayout
     private lateinit var toolbarLeftImage: ImageView
     private lateinit var toolbarLeftText: TextView
+    private lateinit var toolbarRightContainer: ConstraintLayout
     private lateinit var toolbarRightImage: ImageView
     private lateinit var toolbarRightText: TextView
+
+    private var selectedList: ParamModel.ListElement? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +66,12 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
             when (requestCode) {
                 PERMISSION_CODE_CAMERA -> startActivityForResult(
                                             CameraActivity.getIntent(applicationContext, true),
-                                            IMAGE_SHOT_FROM_CAMERA
+                                            REQUEST_IMAGE_SHOT_FROM_CAMERA
                                         )
                 PERMISSION_CODE_STORAGE -> startActivityForResult(Intent(
                                             Intent.ACTION_PICK,
                                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                        ), IMAGE_LOAD_FROM_GALLERY)
+                                        ), REQUEST_IMAGE_LOAD_FROM_GALLERY)
                 else -> Toast.makeText(applicationContext,
                     "Permission for other requests granted",
                     Toast.LENGTH_SHORT).show()
@@ -86,7 +87,7 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d(TAG, "onActivityResult($requestCode, $resultCode)")
         if (resultCode == RESULT_OK && null != data) {
-            if (requestCode == IMAGE_LOAD_FROM_GALLERY) {
+            if (requestCode == REQUEST_IMAGE_LOAD_FROM_GALLERY) {
                 val cursor = data.data?.let {
                     contentResolver.query(
                         it, arrayOf(MediaStore.Images.Media.DATA),
@@ -95,8 +96,8 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
                 }?: return
                 viewModel.setImageBitmap(cursor)
                 cursor.close()
-            } else if (requestCode == IMAGE_SHOT_FROM_CAMERA) {
-                val filename = data.getStringExtra("image")
+            } else if (requestCode == REQUEST_IMAGE_SHOT_FROM_CAMERA) {
+                val filename = data.getStringExtra(ARGS_IMAGE)
                 try {
                     val inputStream = openFileInput(filename)
                     val bitmap = BitmapFactory.decodeStream(inputStream)
@@ -106,6 +107,14 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
                     Log.w(TAG, "Error displaying camera image.", e)
                     showToast("Error displaying camera image.")
                 }
+            } else if (requestCode == REQUEST_SELECT_LIST) {
+                val selected = data.getStringExtra(ARGS_SELECTED)
+                if (!selected.isNullOrEmpty()) {
+                    selectedList?.let {
+                        it.editText.setText(selected)
+                        viewModel.setValue(it.key, selected)
+                    }
+                }
             }
         }
     }
@@ -113,16 +122,6 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
     override fun onBackPressed() {
         viewModel.dismiss()
         finish()
-    }
-
-    /**
-     * Handle return to main flow of KYC
-     * This function is called by ListAdapter
-     */
-    override fun onClickRecyclerViewListElement(element: ParamModel.ListElement) {
-        parentLayout.removeView(currentRecyclerView)
-        currentRecyclerView = null
-        parentLayout.addView(currentLinearLayout)
     }
 
     /**
@@ -138,9 +137,6 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         })
         viewModel.leftContent.observe(this, Observer {
             setLeftContent(it)
-        })
-        viewModel.rightContent.observe(this, Observer {
-            setRightContent(it)
         })
         viewModel.rightContent.observe(this, Observer {
             setRightContent(it)
@@ -176,10 +172,12 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
      * Set onClickListener to toolbar left and right items
      */
     private fun setActionHandler() {
-        findViewById<ConstraintLayout>(R.id.cl_left).setOnClickListener {
+        toolbarLeftContainer = findViewById(R.id.cl_left)
+        toolbarLeftContainer.setOnClickListener {
             viewModel.getPreviousPage()
         }
-        findViewById<ConstraintLayout>(R.id.cl_right).setOnClickListener {
+        toolbarRightContainer = findViewById<ConstraintLayout>(R.id.cl_right)
+        toolbarRightContainer.setOnClickListener {
             viewModel.getNextPage()
         }
     }
@@ -194,33 +192,7 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         if (!this::toolbarLeftText.isInitialized) {
             toolbarLeftText = findViewById(R.id.tv_left)
         }
-        var isSet = false
-        if (content != null) {
-            when (content) {
-                is String -> {
-                    toolbarLeftText.visibility = View.VISIBLE
-                    toolbarLeftText.text = content
-                    toolbarLeftImage.visibility = View.INVISIBLE
-                    isSet = true
-                }
-                is Int -> {
-                    toolbarLeftImage.visibility = View.VISIBLE
-                    toolbarLeftImage.setImageResource(content)
-                    toolbarLeftText.visibility = View.INVISIBLE
-                    isSet = true
-                }
-                is Drawable -> {
-                    toolbarLeftImage.visibility = View.VISIBLE
-                    toolbarLeftImage.setImageDrawable(content)
-                    toolbarLeftText.visibility = View.INVISIBLE
-                    isSet = true
-                }
-            }
-        }
-        if (!isSet) {
-            toolbarLeftImage.visibility = View.INVISIBLE
-            toolbarLeftText.visibility = View.INVISIBLE
-        }
+        setNavContent(content, toolbarLeftContainer, toolbarLeftText, toolbarLeftImage)
     }
 
     /**
@@ -233,32 +205,44 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
         if (!this::toolbarRightText.isInitialized) {
             toolbarRightText = findViewById(R.id.tv_right)
         }
+        setNavContent(content, toolbarRightContainer, toolbarRightText, toolbarRightImage)
+    }
+
+    private fun setNavContent(content: Any?, container: ConstraintLayout,
+                              textView: TextView, imageView: ImageView) {
         var isSet = false
         if (content != null) {
             when (content) {
                 is String -> {
-                    toolbarRightText.visibility = View.VISIBLE
-                    toolbarRightText.text = content
-                    toolbarRightImage.visibility = View.INVISIBLE
+                    container.visibility = View.VISIBLE
+                    textView.visibility = View.VISIBLE
+                    textView.text = content
+                    imageView.visibility = View.INVISIBLE
                     isSet = true
                 }
                 is Int -> {
-                    toolbarRightImage.visibility = View.VISIBLE
-                    toolbarRightImage.setImageResource(content)
-                    toolbarRightText.visibility = View.INVISIBLE
+                    container.visibility = View.VISIBLE
+                    imageView.visibility = View.VISIBLE
+                    imageView.setImageResource(content)
+                    textView.visibility = View.INVISIBLE
                     isSet = true
                 }
                 is Drawable -> {
-                    toolbarRightImage.visibility = View.VISIBLE
-                    toolbarRightImage.setImageDrawable(content)
-                    toolbarRightText.visibility = View.INVISIBLE
+                    container.visibility = View.VISIBLE
+                    imageView.visibility = View.VISIBLE
+                    imageView.setImageDrawable(content)
+                    textView.visibility = View.INVISIBLE
                     isSet = true
+                }
+                else -> {
+                    //Do nothing
                 }
             }
         }
         if (!isSet) {
-            toolbarRightImage.visibility = View.INVISIBLE
-            toolbarRightText.visibility = View.INVISIBLE
+            container.visibility = View.INVISIBLE
+            imageView.visibility = View.INVISIBLE
+            textView.visibility = View.INVISIBLE
         }
     }
 
@@ -295,11 +279,11 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
      * This will be called when ListElement is clicked
      */
     private fun displayList(element: ParamModel.ListElement) {
-        parentLayout.removeView(currentLinearLayout)
-        currentRecyclerView = RecyclerView(applicationContext)
-        currentRecyclerView!!.layoutManager = LinearLayoutManager(this)
-        currentRecyclerView!!.adapter = ListAdapter(element, applicationContext, this)
-        parentLayout.addView(currentRecyclerView)
+        selectedList = element
+        startActivityForResult(
+            SelectListActivity.getIntent(applicationContext, ArrayList(element.choices)),
+            REQUEST_SELECT_LIST
+        )
     }
 
     /**
@@ -327,13 +311,13 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
             when (requestCode) {
                 PERMISSION_CODE_CAMERA -> startActivityForResult(
                                             CameraActivity.getIntent(applicationContext, true),
-                                            IMAGE_SHOT_FROM_CAMERA
+                                            REQUEST_IMAGE_SHOT_FROM_CAMERA
                                         )
                 PERMISSION_CODE_STORAGE -> startActivityForResult(Intent(
                                                 Intent.ACTION_PICK,
                                                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                                             ),
-                                            IMAGE_LOAD_FROM_GALLERY
+                                            REQUEST_IMAGE_LOAD_FROM_GALLERY
                                         )
             }
         }
@@ -373,11 +357,15 @@ class KYCActivity: AppCompatActivity(), ListAdapter.Listener {
 
     companion object {
         private const val TAG = "KYCLibrary: KYCActivity"
-        private const val IMAGE_SHOT_FROM_CAMERA = 1
-        private const val IMAGE_LOAD_FROM_GALLERY = 2
+        private const val REQUEST_IMAGE_SHOT_FROM_CAMERA = 1
+        private const val REQUEST_IMAGE_LOAD_FROM_GALLERY = 2
+        private const val REQUEST_SELECT_LIST = 3
 
         private const val PERMISSION_CODE_CAMERA = 100
         private const val PERMISSION_CODE_STORAGE = 101
+
+        private const val ARGS_IMAGE = "image"
+        private const val ARGS_SELECTED = "ARGS_SELECTED"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, Class.forName("com.ubx.kyclibrary.KYCActivity"))
