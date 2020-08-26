@@ -7,20 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.RecyclerView
-import com.ubx.formslibrary.model.ParamModel
 import com.ubx.kyclibrary.R
 import com.ubx.kyclibrary.helper.KYCParamHelper
-import com.ubx.kyclibrary.helper.KYCValueHelper
 
 class ListAdapter(private var items: List<String>,
-                  val context: Context,
+                  private val context: Context,
                   private val listener:Listener): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
-
-    class ViewHolder(private val textview: TextView): RecyclerView.ViewHolder(textview) {
+    class ViewHolder(private val textView: TextView): RecyclerView.ViewHolder(textView) {
         fun bind(item: String, listener: Listener) {
-            textview.text = item
-            textview.setOnClickListener {
+            textView.text = item
+            textView.setOnClickListener {
                 val text = (it as TextView).text.toString()
                 //KYCValueHelper.setValue(element.key, text.toString())
                 //element.editText.setText(text)

@@ -2,14 +2,16 @@ package com.ubx.kyclibrary.helper
 
 import android.app.Activity
 import android.widget.LinearLayout
-import com.ubx.formslibrary.model.ParamModel
-import com.ubx.formslibrary.model.UIElement
+import com.ubx.formslibrary.model.Margins
+import com.ubx.formslibrary.model.Padding
+import com.ubx.formslibrary.model.Page
+import com.ubx.formslibrary.model.PageRow
+import com.ubx.formslibrary.widget.*
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.kyclibrary.datarepository.KYCParamDataRepository
 
 class KYCParamHelper {
     companion object {
-
         /**
          * Reset store data of layout list
          */
@@ -34,7 +36,7 @@ class KYCParamHelper {
          * Get raw Page
          * @param pageNumber index of page in the list
          */
-        fun getPage(pageNumber: Int): ParamModel.Page? {
+        fun getPage(pageNumber: Int): Page? {
             val pages = getDataRepo().pages
             return if (pageNumber < 0 || pageNumber > pages.size-1) {
                 null
@@ -58,7 +60,7 @@ class KYCParamHelper {
          *
          * @return last raw page
          */
-        fun getLastPage(): ParamModel.Page {
+        fun getLastPage(): Page {
             val pages = getDataRepo().pages
             return pages.last()
         }
@@ -79,7 +81,7 @@ class KYCParamHelper {
          * @param rightContent can be string, image or null
          */
         fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
-            getDataRepo().pages.add(ParamModel.Page(pageTitle, leftContent,
+            getDataRepo().pages.add(Page(pageTitle, leftContent,
                 rightContent, mutableListOf()))
         }
 
@@ -87,10 +89,10 @@ class KYCParamHelper {
          * Add page row
          * @param uiElements UI elements that will be displayed in one row
          */
-        fun addRow(uiElements: MutableList<UIElement>) {
-            val pageRow = ParamModel.PageRow(mutableListOf())
+        fun addRow(uiElements: MutableList<BaseWidget>) {
+            val pageRow = PageRow(mutableListOf())
             uiElements.forEach {
-                pageRow.elements.add(it)
+                pageRow.widgets.add(it)
             }
             getLastPage().rows.add(pageRow)
         }
@@ -104,15 +106,15 @@ class KYCParamHelper {
          * @param addNow if true, element is added immediately to page row
          * @return ImageElement that can be customized with style, background, padding and margins
          */
-        fun addImage(image: Int, width: Int, height: Int, addNow: Boolean = false): ParamModel.ImageElement {
-            val imageElement = ParamModel.ImageElement(image, width, height)
-            getDataRepo().imageElements.add(imageElement)
+        fun addImage(image: Int, width: Int, height: Int, addNow: Boolean = false): ImageWidget {
+            val imageWidget = ImageWidget(image, width, height)
+            getDataRepo().imageWidgets.add(imageWidget)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(imageElement)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(imageWidget)
                 getLastPage().rows.add(pageRow)
             }
-            return imageElement
+            return imageWidget
         }
 
         /**
@@ -122,14 +124,14 @@ class KYCParamHelper {
          * @param width width of text
          * @param height height of text
          * @param addNow if true, element is added immediately to page row
-         * @return TextElement that can be customized with style, background, padding and margins
+         * @return TextWidget that can be customized with style, background, padding and margins
          */
-        fun addText(label: String, width: Int, height: Int, addNow: Boolean = false): ParamModel.TextElement {
-            val text = ParamModel.TextElement(label, width, height)
-            getDataRepo().textElements.add(text)
+        fun addText(label: String, width: Int, height: Int, addNow: Boolean = false): TextWidget {
+            val text = TextWidget(label, width, height)
+            getDataRepo().textWidgets.add(text)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(text)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(text)
                 getLastPage().rows.add(pageRow)
             }
             return text
@@ -150,12 +152,12 @@ class KYCParamHelper {
          */
         fun addInput(hint: String, isPassword: Boolean, inputType: Int,
                      width: Int, height: Int, key: String, isRequired: Boolean,
-                     addNow: Boolean = false): ParamModel.InputElement {
-            val input = ParamModel.InputElement(hint, isPassword, inputType, width, height, key, isRequired)
-            getDataRepo().inputElements.add(input)
+                     addNow: Boolean = false): InputWidget {
+            val input = InputWidget(hint, isPassword, inputType, width, height, key, isRequired)
+            getDataRepo().inputWidgets.add(input)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(input)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(input)
                 getLastPage().rows.add(pageRow)
             }
             return input
@@ -171,12 +173,13 @@ class KYCParamHelper {
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
         fun addNextButton(label: String, width: Int, height: Int,
-                          addNow: Boolean = false): ParamModel.CustomButtonElement {
-            val button = ParamModel.CustomButtonElement(label, width, height)
-            getDataRepo().nextButtonElements.add(button)
+                          addNow: Boolean = false): ButtonWidget {
+            val button = ButtonWidget(label, width, height)
+            button.setAsCustom(true)
+            getDataRepo().nextButtonWidgets.add(button)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(button)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(button)
                 getLastPage().rows.add(pageRow)
             }
             return button
@@ -193,12 +196,13 @@ class KYCParamHelper {
          * @return ButtonElement that can be customized with style, background, padding and margins
          */
         fun addButton(label: String, listener: KYCHelper.CustomListener,
-                      width: Int, height: Int, addNow: Boolean = false): ParamModel.ButtonElement {
-            val button = ParamModel.ButtonElement(label, listener, width, height)
-            getDataRepo().buttonElements.add(button)
+                      width: Int, height: Int, addNow: Boolean = false): ButtonWidget {
+            val button = ButtonWidget(label, width, height)
+            button.setOnClickListener(listener)
+            getDataRepo().buttonWidgets.add(button)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(button)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(button)
                 getLastPage().rows.add(pageRow)
             }
             return button
@@ -212,18 +216,18 @@ class KYCParamHelper {
          * @param height height of text
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
          * @param addNow if true, element is added immediately to page row
-         * @return DateElement that can be customized with style, background, padding and margins
+         * @return DateWidget that can be customized with style, background, padding and margins
          */
         fun addDate(label: String, width: Int, height: Int, key: String,
-                    isRequired: Boolean, addNow: Boolean = false): ParamModel.DateElement {
-            val dateElement = ParamModel.DateElement(label, width, height, key, isRequired)
-            getDataRepo().dateElements.add(dateElement)
+                    isRequired: Boolean, addNow: Boolean = false): DateWidget {
+            val dateWidget = DateWidget(label, width, height, key, isRequired)
+            getDataRepo().dateWidgets.add(dateWidget)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(dateElement)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(dateWidget)
                 getLastPage().rows.add(pageRow)
             }
-            return dateElement
+            return dateWidget
         }
 
         /**
@@ -236,18 +240,18 @@ class KYCParamHelper {
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
          * @param addNow if true, element is added immediately to page row
-         * @return DropdownElement that can be customized with style, background, padding and margins
+         * @return DropdownWidget that can be customized with style, background, padding and margins
          */
         fun addDropdown(label: String, choices: List<String>, width: Int, height: Int, key: String,
-                    isRequired: Boolean, addNow: Boolean = false): ParamModel.DropdownElement {
-            val dropdownElement = ParamModel.DropdownElement(label, choices, width, height, key, isRequired)
-            getDataRepo().dropdownElements.add(dropdownElement)
+                        isRequired: Boolean, addNow: Boolean = false): DropdownWidget {
+            val dropdownWidget = DropdownWidget(label, choices, width, height, key, isRequired)
+            getDataRepo().dropdownWidgets.add(dropdownWidget)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(dropdownElement)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(dropdownWidget)
                 getLastPage().rows.add(pageRow)
             }
-            return dropdownElement
+            return dropdownWidget
         }
 
         /**
@@ -260,18 +264,18 @@ class KYCParamHelper {
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
          * @param addNow if true, element is added immediately to page row
-         * @return DropdownElement that can be customized with style, background, padding and margins
+         * @return ListWidget that can be customized with style, background, padding and margins
          */
         fun addList(label: String, choices: List<String>, width: Int, height: Int, key: String,
-                        isRequired: Boolean, addNow: Boolean = false): ParamModel.ListElement {
-            val listElement = ParamModel.ListElement(label, choices, width, height, key, isRequired)
-            getDataRepo().listElements.add(listElement)
+                    isRequired: Boolean, addNow: Boolean = false): ListWidget {
+            val listWidget = ListWidget(label, choices, width, height, key, isRequired)
+            getDataRepo().listWidgets.add(listWidget)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(listElement)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(listWidget)
                 getLastPage().rows.add(pageRow)
             }
-            return listElement
+            return listWidget
         }
 
         /**
@@ -283,18 +287,18 @@ class KYCParamHelper {
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
          * @param addNow if true, element is added immediately to page row
-         * @return MediaElement that can be customized with style, background, padding and margins
+         * @return MediaWidget that can be customized with style, background, padding and margins
          */
         fun addMedia(label: String,  width: Int, height: Int, key: String, isRequired: Boolean,
-                     addNow: Boolean = false): ParamModel.MediaElement {
-            val mediaElement = ParamModel.MediaElement(label, width, height, key, isRequired)
-            getDataRepo().mediaElements.add(mediaElement)
+                     addNow: Boolean = false): MediaWidget {
+            val mediaWidget = MediaWidget(label, width, height, key, isRequired)
+            getDataRepo().mediaWidgets.add(mediaWidget)
             if (addNow) {
-                val pageRow = ParamModel.PageRow(mutableListOf())
-                pageRow.elements.add(mediaElement)
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(mediaWidget)
                 getLastPage().rows.add(pageRow)
             }
-            return mediaElement
+            return mediaWidget
         }
 
         /**
@@ -311,7 +315,7 @@ class KYCParamHelper {
          *
          * @return instance of KYCParamModel
          */
-        fun getPages(): MutableList<ParamModel.Page> {
+        fun getPages(): MutableList<Page> {
             return KYCParamDataRepository.instance.pages
         }
 
@@ -330,14 +334,14 @@ class KYCParamHelper {
         /**
          * Get Padding of KYC view
          */
-        fun getPadding(): UIElement.Padding {
+        fun getPadding(): Padding {
             return getDataRepo().layoutPadding
         }
 
         /**
          * Get Margins of KYC view
          */
-        fun getMargins(): UIElement.Margins {
+        fun getMargins(): Margins {
             return getDataRepo().layoutMargins
         }
 
@@ -350,7 +354,7 @@ class KYCParamHelper {
          * @param bottom bottom padding
          */
         fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-            getDataRepo().layoutPadding = UIElement.Padding(left, top, right, bottom)
+            getDataRepo().layoutPadding = Padding(left, top, right, bottom)
         }
 
         /**
@@ -362,7 +366,7 @@ class KYCParamHelper {
          * @param bottom bottom margins
          */
         fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
-            getDataRepo().layoutMargins = UIElement.Margins(left, top, right, bottom)
+            getDataRepo().layoutMargins = Margins(left, top, right, bottom)
         }
 
         /**

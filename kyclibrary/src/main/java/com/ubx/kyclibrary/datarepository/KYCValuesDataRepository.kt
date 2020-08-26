@@ -12,6 +12,6 @@ class KYCValuesDataRepository {
 
     companion object {
         private const val TAG = "KYCLibrary"
-        val instance: KYCValuesDataRepository by lazy { KYCValuesDataRepository.HOLDER.INSTANCE }
+        val instance: KYCValuesDataRepository by lazy { HOLDER.INSTANCE }
     }
 }

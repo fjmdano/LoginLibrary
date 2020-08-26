@@ -3,11 +3,10 @@ package com.ubx.loginlibrary
 import android.app.Activity
 import android.content.Intent
 import android.widget.LinearLayout
-import com.ubx.formslibrary.model.ParamModel
-import com.ubx.formslibrary.model.UIElement
 import com.ubx.formslibrary.model.User
-import com.ubx.loginlibrary.model.ForgotPasswordElement
-import com.ubx.loginlibrary.model.LoginParamModel
+import com.ubx.formslibrary.widget.*
+import com.ubx.loginlibrary.widget.ForgotPasswordWidget
+import com.ubx.loginlibrary.widget.LoginWidget
 
 interface LoginInterface {
 
@@ -64,7 +63,7 @@ interface LoginInterface {
      * @return ImageElement that can be customized with style, background, padding and margins
      */
     fun addImage(image: Int, width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
-                 height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.ImageElement
+                 height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ImageWidget
 
     /**
      * Add a text in the login view
@@ -76,7 +75,7 @@ interface LoginInterface {
      */
     fun addText(label: String,
                 width: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
-                height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.TextElement
+                height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): TextWidget
 
     /**
      * Add an input text in the login view
@@ -92,7 +91,7 @@ interface LoginInterface {
     fun addInput(hint: String, isPassword: Boolean, inputType: Int,
                  width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
                  height: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
-                 key: String): ParamModel.InputElement
+                 key: String): InputWidget
 
     /**
      * Add a button in the login view
@@ -104,7 +103,7 @@ interface LoginInterface {
      */
     fun addLoginButton(label: String,
                        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
-                       height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.CustomButtonElement
+                       height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ButtonWidget
 
     /**
      * Add a button (with intent to next activity) in the login view
@@ -117,7 +116,7 @@ interface LoginInterface {
      */
     fun addButton(label: String, listener: LoginHelper.CustomListener,
                   width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
-                  height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ParamModel.ButtonElement
+                  height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ButtonWidget
 
     /**
      * Add Sign in with Google
@@ -127,7 +126,7 @@ interface LoginInterface {
      * @return Google Sign In Button that can be customized with style, background, padding and margins
      */
     fun addGoogleSignIn(width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
-                        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): LoginParamModel.ThirdPartyGoogle
+                        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): GoogleLogin
 
     /**
      * Add Sign in with Facebook
@@ -137,7 +136,7 @@ interface LoginInterface {
      * @return Facebook Sign In Button that can be customized with style, background, padding and margins
      */
     fun addFacebookSignIn(width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
-                          height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): LoginParamModel.ThirdPartyFacebook
+                          height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): FacebookLogin
 
     /**
      * Add Forgot Password
@@ -153,7 +152,7 @@ interface LoginInterface {
                                    headerText: String,
                                    subheaderText: String,
                                    inputFieldHint: String = "E-mail",
-                                   buttonLabel: String = "Reset Password"): ForgotPasswordElement
+                                   buttonLabel: String = "Reset Password"): ForgotPasswordWidget
     /*********************[END] ADD UI ELEMENTS TO LOG_IN VIEW****************************/
 
     /*********************[START] THIRD PARTY RELATED************************************/

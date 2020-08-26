@@ -1,11 +1,10 @@
 package com.ubx.loginlibrary.helper
 
-import com.ubx.formslibrary.model.ParamModel
-import com.ubx.formslibrary.model.UIElement
+import com.ubx.formslibrary.widget.*
 import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.LoginParamDataRepository
-import com.ubx.loginlibrary.model.ForgotPasswordElement
-import com.ubx.loginlibrary.model.LoginParamModel
+import com.ubx.loginlibrary.widget.ForgotPasswordWidget
+import com.ubx.loginlibrary.widget.LoginWidget
 
 class LoginParamHelper {
 
@@ -18,7 +17,8 @@ class LoginParamHelper {
          * @param height height that the login view can consume
          */
         fun setLoginParam(appName: String, width: Int, height: Int) {
-            getDataRepo().loginParamModel = LoginParamModel(appName, width, height)
+            getDataRepo().loginWidget =
+                LoginWidget(appName, width, height)
         }
 
         /**
@@ -30,7 +30,7 @@ class LoginParamHelper {
          * @param bottom bottom padding
          */
         fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-            getLoginParam()?.padding = UIElement.Padding(left, top, right, bottom)
+            getLoginWidget()?.setPadding(left, top, right, bottom)
         }
 
         /**
@@ -42,7 +42,7 @@ class LoginParamHelper {
          * @param bottom bottom margins
          */
         fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
-            getLoginParam()?.margins = UIElement.Margins(left, top, right, bottom)
+            getLoginWidget()?.setMargins(left, top, right, bottom)
         }
 
         /**
@@ -51,7 +51,7 @@ class LoginParamHelper {
          * @param background background (i.e. R.drawable.*)
          */
         fun setBackground(background: Int) {
-            getLoginParam()?.background = background
+            getLoginWidget()?.background = background
         }
 
         /**
@@ -60,7 +60,7 @@ class LoginParamHelper {
          * @param style style (i.e. R.style.*)
          */
         fun setStyle(style: Int) {
-            getLoginParam()?.style = style
+            getLoginWidget()?.style = style
         }
 
         /**
@@ -87,11 +87,11 @@ class LoginParamHelper {
          * @param image image (i.e. R.drawable.*)
          * @param width width of image
          * @param height height of image
-         * @return ImageElement that can be customized with style, background, padding and margins
+         * @return ImageWidget that can be customized with style, background, padding and margins
          */
-        fun addImage(image: Int, width: Int, height: Int): ParamModel.ImageElement {
-            val imageElement = ParamModel.ImageElement(image, width, height)
-            getLoginParam()?.elements?.add(imageElement)
+        fun addImage(image: Int, width: Int, height: Int): ImageWidget {
+            val imageElement = ImageWidget(image, width, height)
+            getLoginWidget()?.elements?.add(imageElement)
             return imageElement
         }
 
@@ -101,11 +101,11 @@ class LoginParamHelper {
          * @param label text label
          * @param width width of text
          * @param height height of text
-         * @return TextElement that can be customized with style, background, padding and margins
+         * @return TextWidget that can be customized with style, background, padding and margins
          */
-        fun addText(label: String, width: Int, height: Int): ParamModel.TextElement {
-            val text = ParamModel.TextElement(label, width, height)
-            getLoginParam()?.elements?.add(text)
+        fun addText(label: String, width: Int, height: Int): TextWidget {
+            val text = TextWidget(label, width, height)
+            getLoginWidget()?.elements?.add(text)
             return text
         }
 
@@ -118,12 +118,12 @@ class LoginParamHelper {
          * @param width width of text
          * @param height height of text
          * @param key input key - to be used for retrieving the input value
-         * @return InputElement that can be customized with style, background, padding and margins
+         * @return InputWidget that can be customized with style, background, padding and margins
          */
         fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                     width: Int, height: Int, key: String): ParamModel.InputElement {
-            val input = ParamModel.InputElement(hint, isPassword, inputType, width, height, key, true)
-            getLoginParam()?.elements?.add(input)
+                     width: Int, height: Int, key: String): InputWidget {
+            val input = InputWidget(hint, isPassword, inputType, width, height, key, true)
+            getLoginWidget()?.elements?.add(input)
             addInputElement(input)
             return input
         }
@@ -134,11 +134,12 @@ class LoginParamHelper {
          * @param label button label
          * @param width width of text
          * @param height height of text
-         * @return ButtonElement that can be customized with style, background, padding and margins
+         * @return ButtonWidget that can be customized with style, background, padding and margins
          */
-        fun addLoginButton(label: String, width: Int, height: Int): ParamModel.CustomButtonElement {
-            val button = ParamModel.CustomButtonElement(label, width, height)
-            getLoginParam()?.elements?.add(button)
+        fun addLoginButton(label: String, width: Int, height: Int): ButtonWidget {
+            val button = ButtonWidget(label, width, height)
+            button.setAsCustom(true)
+            getLoginWidget()?.elements?.add(button)
             return button
         }
 
@@ -149,11 +150,12 @@ class LoginParamHelper {
          * @param listener button onclick listener
          * @param width width of text
          * @param height height of text
-         * @return ButtonElement that can be customized with style, background, padding and margins
+         * @return ButtonWidget that can be customized with style, background, padding and margins
          */
-        fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): ParamModel.ButtonElement {
-            val button = ParamModel.ButtonElement(label, listener, width, height)
-            getLoginParam()?.elements?.add(button)
+        fun addButton(label: String, listener: LoginHelper.CustomListener, width: Int, height: Int): ButtonWidget {
+            val button = ButtonWidget(label, width, height)
+            button.setOnClickListener(listener)
+            getLoginWidget()?.elements?.add(button)
             return button
         }
 
@@ -164,9 +166,9 @@ class LoginParamHelper {
          * @param height height of text
          * @return Google Sign In Button that can be customized with style, background, padding and margins
          */
-        fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle {
-            val button = LoginParamModel.ThirdPartyGoogle(width, height)
-            getLoginParam()?.elements?.add(button)
+        fun addGoogleSignIn(width: Int, height: Int): GoogleLogin {
+            val button = GoogleLogin(width, height)
+            getLoginWidget()?.elements?.add(button)
             return button
         }
 
@@ -177,9 +179,9 @@ class LoginParamHelper {
          * @param height height of text
          * @return Facebook Sign In Button that can be customized with style, background, padding and margins
          */
-        fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook {
-            val button = LoginParamModel.ThirdPartyFacebook(width, height)
-            getLoginParam()?.elements?.add(button)
+        fun addFacebookSignIn(width: Int, height: Int): FacebookLogin {
+            val button = FacebookLogin(width, height)
+            getLoginWidget()?.elements?.add(button)
             return button
         }
 
@@ -187,20 +189,23 @@ class LoginParamHelper {
                               headerText: String,
                               subheaderText: String,
                               inputFieldHint: String,
-                              buttonLabel: String): ForgotPasswordElement {
+                              buttonLabel: String): ForgotPasswordWidget {
 
-            val forgotPasswordElement = ForgotPasswordElement(label, imageDrawable,
-                headerText, subheaderText, inputFieldHint, buttonLabel)
-            getDataRepo().forgotPasswordElement = forgotPasswordElement
-            getLoginParam()?.elements?.add(forgotPasswordElement)
-            return forgotPasswordElement
+            val forgotPasswordWidget =
+                ForgotPasswordWidget(
+                    label, imageDrawable,
+                    headerText, subheaderText, inputFieldHint, buttonLabel
+                )
+            getDataRepo().forgotPasswordWidget = forgotPasswordWidget
+            getLoginWidget()?.elements?.add(forgotPasswordWidget)
+            return forgotPasswordWidget
         }
 
         /**
          * Store input elements to data array
          */
-        private fun addInputElement(element: ParamModel.InputElement) {
-            getDataRepo().inputElements.add(element)
+        private fun addInputElement(element: InputWidget) {
+            getDataRepo().inputWidgets.add(element)
         }
 
         /**
@@ -208,8 +213,8 @@ class LoginParamHelper {
          *
          * @return stored input elements
          */
-        fun getInputElements(): MutableList<ParamModel.InputElement> {
-            return getDataRepo().inputElements
+        fun getInputElements(): MutableList<InputWidget> {
+            return getDataRepo().inputWidgets
         }
 
         /**
@@ -217,8 +222,8 @@ class LoginParamHelper {
          *
          * @return instance of LoginParamModel
          */
-        fun getForgotPasswordElement(): ForgotPasswordElement? {
-            return getDataRepo().forgotPasswordElement
+        fun getForgotPasswordElement(): ForgotPasswordWidget? {
+            return getDataRepo().forgotPasswordWidget
         }
 
         /**
@@ -226,8 +231,8 @@ class LoginParamHelper {
          *
          * @return instance of LoginParamModel
          */
-        fun getLoginParam(): LoginParamModel? {
-            return getDataRepo().loginParamModel
+        fun getLoginWidget(): LoginWidget? {
+            return getDataRepo().loginWidget
         }
 
         private fun getDataRepo(): LoginParamDataRepository {

@@ -18,24 +18,26 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.model.User
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.util.BaseUIElementUtil
+import com.ubx.formslibrary.widget.ButtonWidget
+import com.ubx.formslibrary.widget.FacebookLogin
+import com.ubx.formslibrary.widget.GoogleLogin
+import com.ubx.formslibrary.widget.InputWidget
 import com.ubx.loginlibrary.LoginActivity
-import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.LoginValuesHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
 import com.ubx.loginlibrary.helper.UserHelper
-import com.ubx.loginlibrary.model.ForgotPasswordElement
-import com.ubx.loginlibrary.model.LoginParamModel
-import com.ubx.loginlibrary.util.UIElementUtil
+import com.ubx.loginlibrary.widget.ForgotPasswordWidget
+import com.ubx.loginlibrary.widget.LoginWidget
 
 class LoginViewModel: ViewModel() {
     private lateinit var callbackManager: CallbackManager
-    private val loginParameters = LoginParamHelper.getLoginParam()
+    private val loginParameters = LoginParamHelper.getLoginWidget()
     private val googleSignInClient = ThirdPartyConfigHelper.getGoogleSignInClient()
 
     val googleSignInIntent: MutableLiveData<Intent> by lazy {
@@ -122,75 +124,47 @@ class LoginViewModel: ViewModel() {
      */
     fun createLayoutPage(context: Context): LinearLayout {
         if (loginParameters == null) return LinearLayout(context)
-        val linearLayout = if (loginParameters.style != null) {
-            LinearLayout(ContextThemeWrapper(context, loginParameters.style!!), null, 0)
-        } else {
-            LinearLayout(context)
-        }
+        val linearLayout = loginParameters.createView(context) as LinearLayout
+
         val inputStyle = LoginParamHelper.getInputStyle()
-
-        linearLayout.orientation = LinearLayout.VERTICAL
-        DisplayUtil.customizeConstraintElement(context, linearLayout, loginParameters)
-
         loginParameters.elements.forEach {
             when(it) {
-                is ParamModel.TextElement -> {
-                    linearLayout.addView(
-                        BaseUIElementUtil.createTextElement(
-                            context, it))
-                }
-                is ParamModel.InputElement -> {
+                is InputWidget -> {
                     if (inputStyle != -1) it.style = inputStyle
-                    linearLayout.addView(
-                        BaseUIElementUtil.createInputElement(
-                            context, it))
+                    linearLayout.addView(it.createView(context))
                 }
-                is ParamModel.ImageElement -> {
-                    linearLayout.addView(
-                        BaseUIElementUtil.createImageElement(
-                            context, it))
-                }
-                is ParamModel.CustomButtonElement -> {
-                    val button = BaseUIElementUtil.createCustomButtonElement(
-                        context, it)
-                    button.setOnClickListener {
-                        onClickLoginButton()
+                is ButtonWidget -> {
+                    if (it.checkIfCustom()) {
+                        it.setOnClickListener(object: ViewListener{
+                            override fun onClick() {
+                                onClickLoginButton()
+                            }
+                        })
                     }
-                    linearLayout.addView(button)
+                    linearLayout.addView(it.createView(context))
                 }
-                is ParamModel.ButtonElement -> {
-                    linearLayout.addView(
-                        BaseUIElementUtil.createButtonElement(
-                            context, it))
-                }
-                is LoginParamModel.ThirdPartyFacebook -> {
-                    linearLayout.addView(
-                        UIElementUtil.createFacebookButton(
-                            context, it
-                        ))
-                }
-                is LoginParamModel.ThirdPartyGoogle -> {
+                is GoogleLogin -> {
                     if (googleSignInClient == null) {
                         println("Google not initialized!")
                     } else {
-                        val googleButton = UIElementUtil.createGoogleButton(
-                            context, it, googleSignInClient)
+                        val googleButton = it.createView(context)
                         googleButton.setOnClickListener {
                             googleSignInIntent.value = googleSignInClient.signInIntent
                         }
                         linearLayout.addView(googleButton)
                     }
                 }
-                is ForgotPasswordElement -> {
-                    val button = BaseUIElementUtil.createCustomButtonElement(
-                        context, it.button)
-                    button.setOnClickListener {
-                        isForgotPasswordButtonClicked.value = true
-                    }
-                    linearLayout.addView(button)
+                is ForgotPasswordWidget -> {
+                    it.button.setOnClickListener(object: ViewListener {
+                        override fun onClick() {
+                            isForgotPasswordButtonClicked.value = true
+                        }
+
+                    })
+                    linearLayout.addView(it.createView(context))
                 }
                 else -> {
-                    toastMessage.value = "Not defined type"
+                    linearLayout.addView(it.createView(context))
                 }
             }
         }
@@ -208,13 +182,13 @@ class LoginViewModel: ViewModel() {
         var noError = true
         var value: String
         LoginParamHelper.getInputElements().forEach {
-            value = it.editText.text.toString()
+            value = it.getValue()
             if (value.isBlank()) {
-                it.inputLayout.error = it.hint + " is required."
+                it.setError(it.hint + " is required.")
                 noError = false
             } else {
-                it.inputLayout.error = null
-                LoginValuesHelper.setValue(it.key, it.editText.text.toString())
+                it.setError(null)
+                LoginValuesHelper.setValue(it.key, value)
             }
         }
 

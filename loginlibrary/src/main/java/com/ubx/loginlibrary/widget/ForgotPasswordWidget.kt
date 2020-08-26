@@ -1,44 +1,48 @@
-package com.ubx.loginlibrary.model
+package com.ubx.loginlibrary.widget
 
+import android.content.Context
+import android.os.Build
 import android.text.InputType
+import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
-import com.ubx.formslibrary.model.ParamModel
-import com.ubx.formslibrary.model.UIElement
+import androidx.appcompat.view.ContextThemeWrapper
+import com.ubx.formslibrary.widget.*
 
-class ForgotPasswordElement(
-    label: String,
+class ForgotPasswordWidget(
+    val label: String,
     imageDrawable: Int?,
     headerText: String,
     subheaderText: String,
     inputFieldHint: String,
     buttonLabel: String
-): UIElement(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) {
-    var button: ParamModel.CustomButtonElement = ParamModel.CustomButtonElement(label,
+): BaseWidget(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) {
+    var button: ButtonWidget = ButtonWidget(label,
         LinearLayout.LayoutParams.WRAP_CONTENT,
         LinearLayout.LayoutParams.WRAP_CONTENT)
 
-    var image: ParamModel.ImageElement? = if (imageDrawable != null) {
-        ParamModel.ImageElement(imageDrawable, LinearLayout.LayoutParams.MATCH_PARENT,
+    var image: ImageWidget? = if (imageDrawable != null) {
+        ImageWidget(imageDrawable, LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
     } else {
         null
     }
 
-    var header: ParamModel.TextElement? = if (!headerText.isBlank()) {
-        ParamModel.TextElement(headerText, LinearLayout.LayoutParams.WRAP_CONTENT,
+    var header: TextWidget? = if (!headerText.isBlank()) {
+        TextWidget(headerText, LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
     } else {
         null
     }
 
-    var subheader: ParamModel.TextElement? = if (!subheaderText.isBlank()) {
-        ParamModel.TextElement(subheaderText, LinearLayout.LayoutParams.WRAP_CONTENT,
+    var subheader: TextWidget? = if (!subheaderText.isBlank()) {
+        TextWidget(subheaderText, LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
     } else {
         null
     }
 
-    var inputField = ParamModel.InputElement(
+    var inputField = InputWidget(
         if (inputFieldHint.isBlank()) "E-mail" else inputFieldHint,
         false,
         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
@@ -48,7 +52,7 @@ class ForgotPasswordElement(
         true
     )
 
-    var resetButton = ParamModel.CustomButtonElement(
+    var resetButton = ButtonWidget(
         if (buttonLabel.isBlank()) "Reset Password" else buttonLabel,
         LinearLayout.LayoutParams.MATCH_PARENT,
         LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -61,5 +65,17 @@ class ForgotPasswordElement(
     fun setImageDimensions(width: Int, height: Int) {
         image?.width = width
         image?.height = height
+    }
+
+    override fun getValue(): String {
+        return ""
+    }
+
+    override fun setError(message: String?) {
+        //Do nothing
+    }
+
+    override fun createView(context: Context, isSharingRow: Boolean): View {
+        return button.createView(context, isSharingRow)
     }
 }

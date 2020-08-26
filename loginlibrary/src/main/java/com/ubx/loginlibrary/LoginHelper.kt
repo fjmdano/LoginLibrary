@@ -5,16 +5,15 @@ import android.content.Context
 import android.content.Intent
 import com.ubx.formslibrary.listener.LoginHandler
 import com.ubx.formslibrary.listener.ViewListener
-import com.ubx.formslibrary.model.ParamModel
-import com.ubx.formslibrary.model.UIElement
 import com.ubx.formslibrary.model.User
 import com.ubx.formslibrary.util.DisplayUtil
-import com.ubx.loginlibrary.model.LoginParamModel
+import com.ubx.formslibrary.widget.*
+import com.ubx.loginlibrary.widget.LoginWidget
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.LoginValuesHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
 import com.ubx.loginlibrary.helper.UserHelper
-import com.ubx.loginlibrary.model.ForgotPasswordElement
+import com.ubx.loginlibrary.widget.ForgotPasswordWidget
 
 class LoginHelper(val context: Context, appName: String,
                   width: Int, height: Int): LoginInterface {
@@ -83,7 +82,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of image
      * @return ImageElement that can be customized with style, background, padding and margins
      */
-    override fun addImage(image: Int, width: Int, height: Int): ParamModel.ImageElement {
+    override fun addImage(image: Int, width: Int, height: Int): ImageWidget {
         return LoginParamHelper.addImage(image, width, height)
     }
 
@@ -95,7 +94,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return TextElement that can be customized with style, background, padding and margins
      */
-    override fun addText(label: String, width: Int, height: Int): ParamModel.TextElement {
+    override fun addText(label: String, width: Int, height: Int): TextWidget {
         return LoginParamHelper.addText(label, width, height)
     }
 
@@ -111,7 +110,7 @@ class LoginHelper(val context: Context, appName: String,
      * @return InputElement that can be customized with style, background, padding and margins
      */
     override fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                width: Int, height: Int, key: String): ParamModel.InputElement {
+                width: Int, height: Int, key: String): InputWidget {
         return LoginParamHelper.addInput(hint, isPassword, inputType, width, height, key)
     }
 
@@ -123,7 +122,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    override fun addLoginButton(label: String, width: Int, height: Int): ParamModel.CustomButtonElement {
+    override fun addLoginButton(label: String, width: Int, height: Int): ButtonWidget {
         return LoginParamHelper.addLoginButton(label, width, height)
     }
 
@@ -136,7 +135,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return ButtonElement that can be customized with style, background, padding and margins
      */
-    override fun addButton(label: String, listener: CustomListener, width: Int, height: Int): ParamModel.ButtonElement {
+    override fun addButton(label: String, listener: CustomListener, width: Int, height: Int): ButtonWidget {
         return LoginParamHelper.addButton(label, listener, width, height)
     }
 
@@ -147,7 +146,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return Google Sign In Button that can be customized with style, background, padding and margins
      */
-    override fun addGoogleSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyGoogle {
+    override fun addGoogleSignIn(width: Int, height: Int): GoogleLogin {
         return LoginParamHelper.addGoogleSignIn(width, height)
     }
 
@@ -158,7 +157,7 @@ class LoginHelper(val context: Context, appName: String,
      * @param height height of text
      * @return Facebook Sign In Button that can be customized with style, background, padding and margins
      */
-    override fun addFacebookSignIn(width: Int, height: Int): LoginParamModel.ThirdPartyFacebook {
+    override fun addFacebookSignIn(width: Int, height: Int): FacebookLogin {
         return LoginParamHelper.addFacebookSignIn(width, height)
     }
 
@@ -176,7 +175,7 @@ class LoginHelper(val context: Context, appName: String,
                                    headerText: String,
                                    subheaderText: String,
                                    inputFieldHint: String,
-                                   buttonLabel: String): ForgotPasswordElement {
+                                   buttonLabel: String): ForgotPasswordWidget {
         return LoginParamHelper.addForgotPassword(label, imageDrawable, headerText, subheaderText,
             inputFieldHint, buttonLabel)
     }

@@ -12,7 +12,6 @@ import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.ubx.formslibrary.model.UIElement
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
@@ -118,12 +117,12 @@ class MainActivity : AppCompatActivity() {
             loginHelper.sizeInDP(150)
         )
         iconImage.layoutGravity = Gravity.CENTER_HORIZONTAL
-        iconImage.margins = UIElement.Margins(0, loginHelper.sizeInDP(20), 0, 0)
+        iconImage.setMargins(0, loginHelper.sizeInDP(20), 0, 0)
 
         val textLogin = loginHelper.addText("Log in")
         textLogin.style = R.style.TitleText
         textLogin.layoutGravity = Gravity.CENTER_HORIZONTAL
-        textLogin.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
+        textLogin.setMargins(0, loginHelper.sizeInDP(5),
             0, loginHelper.sizeInDP(5))
 
         loginHelper.addInput("Username",
@@ -149,18 +148,18 @@ class MainActivity : AppCompatActivity() {
         forgotPassword.setImageDimensions(loginHelper.sizeInDP(150), loginHelper.sizeInDP(150))
         forgotPassword.button.style = R.style.Button_RightLink
         forgotPassword.button.layoutGravity = Gravity.END
-        forgotPassword.image?.margins = UIElement.Margins(0, loginHelper.sizeInDP(20), 0, 0)
+        forgotPassword.image?.setMargins(0, loginHelper.sizeInDP(20), 0, 0)
         forgotPassword.header?.style = R.style.TitleText
-        forgotPassword.header?.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
+        forgotPassword.header?.setMargins(0, loginHelper.sizeInDP(5),
             0, loginHelper.sizeInDP(5))
-        forgotPassword.subheader?.margins = UIElement.Margins(0, 0,
+        forgotPassword.subheader?.setMargins(0, 0,
             0, loginHelper.sizeInDP(3))
 
         val buttonLogin = loginHelper.addLoginButton("Log-in")
-        buttonLogin.margins = UIElement.Margins(0, loginHelper.sizeInDP(5), 0, 0)
+        buttonLogin.setMargins(0, loginHelper.sizeInDP(5), 0, 0)
 
         val textOthers = loginHelper.addText("------- or -------")
-        textOthers.margins = UIElement.Margins(0, loginHelper.sizeInDP(5),
+        textOthers.setMargins(0, loginHelper.sizeInDP(5),
             0, loginHelper.sizeInDP(5))
         textOthers.style = R.style.LabelText
         textOthers.layoutGravity = Gravity.CENTER_HORIZONTAL
@@ -178,7 +177,7 @@ class MainActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         buttonRegister.style = R.style.Button_DefaultAlpha
-        buttonRegister.margins = UIElement.Margins(0, loginHelper.sizeInDP(10), 0, 0)
+        buttonRegister.setMargins(0, loginHelper.sizeInDP(10), 0, 0)
     }
 
     private fun createKYCContent(){
@@ -219,15 +218,22 @@ class MainActivity : AppCompatActivity() {
 
         kycHelper.addPage("Personal Details", "Back", "Submit")
 
-        val usernameInput = kycHelper.addInput("Full Name", false,
-            InputType.TYPE_CLASS_TEXT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "fullname",
-            true
-        )
-        usernameInput.minimumLength = 8
-        usernameInput.maximumLength = 15
+        kycHelper.addPageRow(mutableListOf(
+            kycHelper.addInputInRow("First Name", false,
+                InputType.TYPE_CLASS_TEXT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                "firstname",
+                true
+            ),
+            kycHelper.addInputInRow("Last Name", false,
+                InputType.TYPE_CLASS_TEXT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                "lastname",
+                true
+            )
+        ))
 
         kycHelper.addList("Province",
             listOf("Metro Manila", "Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province", "Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan", "Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Batangas", "Cavite", "Laguna", "Quezon", "Rizal", "Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon", "Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon", "Aklan", "Antique", "Capiz", "Guimaras", "Iloilo", "Negros Occidental", "Bohol", "Cebu", "Negros Oriental", "Siquijor", "Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte", "Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay", "Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental", "Compostela Valley", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental", "Cotabato", "Sarangani", "South Cotabato", "Sultan Kudarat", "Agusan del Norte", "Agusan del Sur", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur", "Basilan", "Lanao del Sur", "Maguindanao", "Sulu", "Tawi-tawi"),

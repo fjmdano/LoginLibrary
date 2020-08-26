@@ -5,30 +5,26 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
+import android.util.Log
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.ubx.formslibrary.model.ParamModel
+import com.ubx.formslibrary.listener.ViewListener
+import com.ubx.formslibrary.model.Page
 import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.util.BaseUIElementUtil
-import com.ubx.kyclibrary.adapter.ListAdapter
+import com.ubx.formslibrary.widget.*
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
 import java.io.ByteArrayOutputStream
 
 class KYCViewModel: ViewModel() {
     var pageNumber = -1
-    lateinit var page: ParamModel.Page
-    var selectedMediaElement: ParamModel.MediaElement? = null
+    lateinit var page: Page
+    var selectedMediaWidget: MediaWidget? = null
     val pageTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -38,8 +34,8 @@ class KYCViewModel: ViewModel() {
     val rightContent: MutableLiveData<Any?> by lazy {
         MutableLiveData<Any?>()
     }
-    val pageForLinearLayout: MutableLiveData<ParamModel.Page> by lazy {
-        MutableLiveData<ParamModel.Page>()
+    val pageForLinearLayout: MutableLiveData<Page> by lazy {
+        MutableLiveData<Page>()
     }
     val linearLayoutToDisplay: MutableLiveData<LinearLayout> by lazy {
         MutableLiveData<LinearLayout>()
@@ -47,8 +43,8 @@ class KYCViewModel: ViewModel() {
     val toastMessage: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val selectedListElement: MutableLiveData<ParamModel.ListElement> by lazy {
-        MutableLiveData<ParamModel.ListElement>()
+    val selectedListWidget: MutableLiveData<ListWidget> by lazy {
+        MutableLiveData<ListWidget>()
     }
     val isMediaSelected: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
@@ -105,8 +101,7 @@ class KYCViewModel: ViewModel() {
         val picturePath = cursor.getString(columnIndex)
 
         val bitmap = BitmapFactory.decodeFile(picturePath)
-        selectedMediaElement?.bitmap = bitmap
-        selectedMediaElement?.imageView?.setImageBitmap(bitmap)
+        selectedMediaWidget?.setBitmap(bitmap)
     }
 
     /**
@@ -119,14 +114,13 @@ class KYCViewModel: ViewModel() {
         val bitmap = Bitmap.createScaledBitmap(rawBitmap, 300, 500, true)
         bitmap.compress(Bitmap.CompressFormat.PNG, 70, stream)
 
-        selectedMediaElement?.bitmap = bitmap
-        selectedMediaElement?.imageView?.setImageBitmap(bitmap)
+        selectedMediaWidget?.setBitmap(bitmap)
     }
 
     /**
      * Set Toolbar Contents
      */
-    private fun setToolbar(page: ParamModel.Page) {
+    private fun setToolbar(page: Page) {
         pageTitle.value = page.pageTitle
         leftContent.value = page.leftContent
         rightContent.value = page.rightContent
@@ -171,7 +165,7 @@ class KYCViewModel: ViewModel() {
      * @param page containing the pageRows containing the UI elements
      * @param context application context
      */
-    fun createLayoutPage(page: ParamModel.Page, context: Context): LinearLayout {
+    fun createLayoutPage(page: Page, context: Context): LinearLayout {
         val linearLayout = LinearLayout(context)
         linearLayout.orientation = LinearLayout.VERTICAL
         DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
@@ -180,7 +174,7 @@ class KYCViewModel: ViewModel() {
 
         page.rows.forEach {
             isSharingRow = false
-            val layoutToUse = if (it.elements.size > 1) {
+            val layoutToUse = if (it.widgets.size > 1) {
                 isSharingRow = true
                 //Add another linear layout
                 val innerLinearLayout = LinearLayout(context)
@@ -194,51 +188,39 @@ class KYCViewModel: ViewModel() {
             } else {
                 linearLayout
             }
-            it.elements.forEach{ element ->
-                when (element) {
-                    is ParamModel.TextElement -> {
-                        layoutToUse.addView(BaseUIElementUtil.createTextElement(context, element))
-                    }
-                    is ParamModel.InputElement -> {
-                        layoutToUse.addView(BaseUIElementUtil.createInputElement(context, element))
-                    }
-                    is ParamModel.ImageElement -> {
-                        layoutToUse.addView(BaseUIElementUtil.createImageElement(context, element))
-                    }
-                    is ParamModel.CustomButtonElement -> {
-                        val button = BaseUIElementUtil.createCustomButtonElement(context, element)
-                        button.setOnClickListener {
-                            getNextPage()
+            it.widgets.forEach{ widget ->
+                layoutToUse.addView(widget.createView(context, isSharingRow))
+                when (widget) {
+                    is ButtonWidget -> {
+                        if (widget.checkIfCustom()) {
+                            widget.setOnClickListener(object: ViewListener {
+                                override fun onClick() {
+                                    getNextPage()
+                                }
+                            })
                         }
-                        layoutToUse.addView(button)
                     }
-                    is ParamModel.DateElement -> {
-                        layoutToUse.addView(BaseUIElementUtil.createDateElement(context, element, isSharingRow))
+                    is ListWidget -> {
+                        widget.setOnClickListener(object: ViewListener {
+                            override fun onClick() {
+                                selectedListWidget.value = widget
+                            }
+                        })
                     }
-                    is ParamModel.DropdownElement -> {
-                        layoutToUse.addView(BaseUIElementUtil.createDropdownElement(context, element, isSharingRow))
-                    }
-                    is ParamModel.ListElement -> {
-                        val listElement = BaseUIElementUtil.createListElement(context, element)
-                        element.editText.setOnClickListener {
-                            selectedListElement.value = element
-                        }
-                        layoutToUse.addView(listElement)
-                    }
-                    is ParamModel.MediaElement -> {
-                        val mediaElement = BaseUIElementUtil.createMediaElement(context, element)
-                        mediaElement.setOnClickListener {
-                            selectedMediaElement = element
-                            isMediaSelected.value = true
-                        }
-                        layoutToUse.addView(mediaElement)
+                    is MediaWidget -> {
+                        widget.setOnClickListener(object: ViewListener {
+                            override fun onClick() {
+                                selectedMediaWidget = widget
+                                isMediaSelected.value = true
+                            }
+                        })
                     }
                     else -> {
-                        Toast.makeText(context, "Not yet supported (for now)", Toast.LENGTH_SHORT).show()
+                        //Do nothing
                     }
                 }
             }
-            if (it.elements.size > 1) {
+            if (it.widgets.size > 1) {
                 linearLayout.addView(layoutToUse)
             }
         }
@@ -249,55 +231,14 @@ class KYCViewModel: ViewModel() {
         return linearLayout
     }
 
-    /*
-    fun displayList(context: Context, listElement: ParamModel.ListElement): LinearLayout {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.VERTICAL
-        DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
-        DisplayUtil.setMargins(context, linearLayout, KYCParamHelper.getMargins())
 
-        val element = ParamModel.InputElement("Search",
-            false,
-            InputType.TYPE_CLASS_TEXT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "search",
-            false)
-        val textInput = BaseUIElementUtil.createInputElement(context, element)
-
-        val currentRecyclerView = RecyclerView(context)
-        currentRecyclerView.layoutManager = LinearLayoutManager(context)
-        val listAdapter = ListAdapter(listElement.choices, context,
-            object: ListAdapter.Listener {
-                override fun onClickRecyclerViewListElement(selected: String) {
-                    KYCValueHelper.setValue(listElement.key, selected)
-                    listElement.editText.setText(selected)
-                    toRemoveRecycleLayout.value = true
-                }
-            })
-
-        element.editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) { }
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-                val filteredList = listElement.choices.filter { it.contains(s, true) }
-                listAdapter.setItemList(filteredList)
-                //userEmail = s.toString()
-            }
-        })
-        currentRecyclerView.adapter = listAdapter
-        linearLayout.addView(textInput)
-        linearLayout.addView(currentRecyclerView)
-        return linearLayout
-    }
-    */
-
+    /**
+     * Store key-value pair
+     * @param key item key
+     * @param value item value
+     *
+     * @return true if errors are encountered
+     */
     fun setValue(key: String, value: String) {
         KYCValueHelper.setValue(key, value)
     }
@@ -311,30 +252,32 @@ class KYCViewModel: ViewModel() {
         if (!this::page.isInitialized) return false
         var isOK = true
         page.rows.forEach {
-            it.elements.forEach{element ->
-                if (element is ParamModel.InputElement) {
-                    val text = element.editText!!.text
-                    KYCValueHelper.setValue(element.key, text.toString())
-                    if (text.isBlank()) {
-                        element.inputLayout.error = element.hint + " is required."
-                        isOK = false
-                    } else if (text.length < element.minimumLength) {
-                        element.inputLayout.error = element.hint + " should be have at least " + element.minimumLength + " characters."
-                        isOK = false
-                    } else if (!BaseUIElementUtil.isValidInput(text.toString(), element.regexPositiveValidation, element.regexNegativeValidation)) {
-                        element.inputLayout.error = element.hint + " is not valid."
-                        isOK = false
-                    } else {
-                        element.inputLayout.error = null
+            it.widgets.forEach{ widget ->
+                if (widget.isValid()) {
+                    when (widget) {
+                        is InputWidget -> {
+                            if (widget.getValue().isNotBlank()) {
+                                KYCValueHelper.setValue(widget.key, widget.getValue())
+                            }
+                        }
+                        is DateWidget -> {
+                            if (widget.getValue().isNotBlank()) {
+                                KYCValueHelper.setValue(widget.key, widget.getValue())
+                            }
+                        }
+                        is DropdownWidget -> {
+                            if (widget.getValue().isNotBlank()) {
+                                KYCValueHelper.setValue(widget.key, widget.getValue())
+                            }
+                        }
+                        is MediaWidget -> {
+                            widget.getBitmap()?.let { bitmap ->
+                                KYCValueHelper.setBitmap(widget.key, bitmap)
+                            }
+                        }
                     }
-                } else if (element is ParamModel.DateElement) {
-                    KYCValueHelper.setValue(element.key, element.editText!!.text.toString())
-                } else if (element is ParamModel.DropdownElement) {
-                    KYCValueHelper.setValue(element.key, element.spinner.selectedItem.toString())
-                } else if (element is ParamModel.MediaElement) {
-                    element.bitmap?.let {bitmap ->
-                        KYCValueHelper.setBitmap(element.key, bitmap)
-                    }
+                } else {
+                    isOK = false
                 }
             }
         }

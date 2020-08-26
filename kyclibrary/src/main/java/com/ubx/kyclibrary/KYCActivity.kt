@@ -23,8 +23,8 @@ import androidx.lifecycle.Observer
 import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.ubx.formslibrary.model.ParamModel
 import com.ubx.formslibrary.model.SignInCredentials
+import com.ubx.formslibrary.widget.ListWidget
 import com.ubx.kyclibrary.viewmodel.KYCViewModel
 
 
@@ -33,7 +33,6 @@ class KYCActivity: AppCompatActivity() {
 
     private lateinit var parentLayout: NestedScrollView
     private var currentLinearLayout: LinearLayout? = null
-    private var recyclerViewLayout: LinearLayout? = null
 
     private lateinit var toolbarTitle: TextView
     private lateinit var toolbarLeftContainer: ConstraintLayout
@@ -43,7 +42,7 @@ class KYCActivity: AppCompatActivity() {
     private lateinit var toolbarRightImage: ImageView
     private lateinit var toolbarRightText: TextView
 
-    private var selectedList: ParamModel.ListElement? = null
+    private var selectedList: ListWidget? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +110,7 @@ class KYCActivity: AppCompatActivity() {
                 val selected = data.getStringExtra(ARGS_SELECTED)
                 if (!selected.isNullOrEmpty()) {
                     selectedList?.let {
-                        it.editText.setText(selected)
+                        it.setSelected(selected)
                         viewModel.setValue(it.key, selected)
                     }
                 }
@@ -147,7 +146,7 @@ class KYCActivity: AppCompatActivity() {
         viewModel.linearLayoutToDisplay.observe(this, Observer {
             displayLayout(it)
         })
-        viewModel.selectedListElement.observe(this, Observer {
+        viewModel.selectedListWidget.observe(this, Observer {
             displayList(it)
         })
         viewModel.isMediaSelected.observe(this, Observer {
@@ -278,10 +277,10 @@ class KYCActivity: AppCompatActivity() {
      * Display list in new view
      * This will be called when ListElement is clicked
      */
-    private fun displayList(element: ParamModel.ListElement) {
-        selectedList = element
+    private fun displayList(widget: ListWidget) {
+        selectedList = widget
         startActivityForResult(
-            SelectListActivity.getIntent(applicationContext, ArrayList(element.choices)),
+            SelectListActivity.getIntent(applicationContext, ArrayList(widget.choices)),
             REQUEST_SELECT_LIST
         )
     }

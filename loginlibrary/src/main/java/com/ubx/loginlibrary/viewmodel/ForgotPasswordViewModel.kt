@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.util.BaseUIElementUtil
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.loginlibrary.helper.LoginParamHelper
@@ -22,7 +23,6 @@ class ForgotPasswordViewModel: ViewModel() {
     val isSendSuccess: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
-    private var userEmail: String = ""
     private val forgotPasswordElement = LoginParamHelper.getForgotPasswordElement()
 
     /**
@@ -34,65 +34,35 @@ class ForgotPasswordViewModel: ViewModel() {
      */
     fun createLayoutPage(context: Context): LinearLayout {
         if (forgotPasswordElement == null) return LinearLayout(context)
-        val loginParameters = LoginParamHelper.getLoginParam()?:return LinearLayout(context)
+        val loginWidget = LoginParamHelper.getLoginWidget()?:return LinearLayout(context)
 
         val inputStyle = LoginParamHelper.getInputStyle()
-        val linearLayout = if (loginParameters.style != null) {
-            LinearLayout(ContextThemeWrapper(context, loginParameters.style!!), null, 0)
-        } else {
-            LinearLayout(context)
-        }
-        linearLayout.orientation = LinearLayout.VERTICAL
-        DisplayUtil.customizeConstraintElement(context, linearLayout, loginParameters)
+        val linearLayout = loginWidget.createView(context) as LinearLayout
 
         //Add image
         forgotPasswordElement.image?.let {
-            linearLayout.addView(
-                BaseUIElementUtil.createImageElement(
-                    context, it))
+            linearLayout.addView(it.createView(context))
         }
         //Add header
         forgotPasswordElement.header?.let {
-            linearLayout.addView(
-                BaseUIElementUtil.createTextElement(
-                    context, it))
+            linearLayout.addView(it.createView(context))
         }
         //Add header
         forgotPasswordElement.subheader?.let {
-            linearLayout.addView(
-                BaseUIElementUtil.createTextElement(
-                    context, it))
+            linearLayout.addView(it.createView(context))
         }
 
         //Add input field
         if (inputStyle != -1) forgotPasswordElement.inputField.style = inputStyle
-        val inputField = BaseUIElementUtil.createInputElement(context, forgotPasswordElement.inputField)
-        forgotPasswordElement.inputField.editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) { }
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-                userEmail = s.toString()
-            }
-        })
-        linearLayout.addView(inputField)
+        linearLayout.addView(forgotPasswordElement.inputField.createView(context, false))
 
         //Add submit button
-        val button = BaseUIElementUtil.createCustomButtonElement(context,
-            forgotPasswordElement.resetButton)
-        button.setOnClickListener {
-            sendPasswordReset()
-        }
-        linearLayout.addView(button)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            linearLayout.id = View.generateViewId()
-        }
+        forgotPasswordElement.resetButton.setOnClickListener(object: ViewListener {
+            override fun onClick() {
+                sendPasswordReset()
+            }
+        })
+        linearLayout.addView(forgotPasswordElement.resetButton.createView(context))
         return linearLayout
     }
 
@@ -101,8 +71,9 @@ class ForgotPasswordViewModel: ViewModel() {
      * Current assumption: Project is using Firebase
      */
     private fun sendPasswordReset() {
-        if (isValidEmail()) {
-            ThirdPartyConfigHelper.getFirebaseAuth().sendPasswordResetEmail(userEmail)
+        val userEmail = forgotPasswordElement?.inputField?.getValue()
+        if (isValidEmail(userEmail)) {
+            ThirdPartyConfigHelper.getFirebaseAuth().sendPasswordResetEmail(userEmail!!)
                 .addOnSuccessListener {
                     toastMessage.value = "E-mail sent. Please check your email."
                     isSendSuccess.value = true
@@ -116,16 +87,16 @@ class ForgotPasswordViewModel: ViewModel() {
     /**
      * Check if input email is valid
      */
-    private fun isValidEmail(): Boolean {
+    private fun isValidEmail(userEmail: String?): Boolean {
         var isValid = true
-        if (userEmail.isBlank()) {
+        if (userEmail.isNullOrBlank()) {
             isValid = false
-            forgotPasswordElement?.inputField?.inputLayout?.error = "This field is required"
+            forgotPasswordElement?.inputField?.setError("This field is required")
         } else if (!BaseUIElementUtil.isValidEmail(userEmail)) {
             isValid = false
-            forgotPasswordElement?.inputField?.inputLayout?.error = "Please enter valid email"
+            forgotPasswordElement?.inputField?.setError("Please enter valid email")
         } else {
-            forgotPasswordElement?.inputField?.inputLayout?.error = null
+            forgotPasswordElement?.inputField?.setError(null)
         }
         return isValid
     }
