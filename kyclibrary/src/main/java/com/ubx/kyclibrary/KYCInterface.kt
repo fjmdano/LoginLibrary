@@ -2,6 +2,7 @@ package com.ubx.kyclibrary
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.LinearLayout
 import com.ubx.formslibrary.widget.*
 
 interface KYCInterface {
@@ -55,9 +56,11 @@ interface KYCInterface {
      * @param label text label
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return TextWidget that can be customized with style, background, padding and margins
      */
-    fun addText(label: String, width: Int, height: Int): TextWidget
+    fun addText(label: String,
+                width: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
+                height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): TextWidget
 
     /**
      * Add an text in the view
@@ -67,9 +70,11 @@ interface KYCInterface {
      * @param label text label
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return TextWidget that can be customized with style, background, padding and margins
      */
-    fun addTextInRow(label: String, width: Int, height: Int): TextWidget
+    fun addTextInRow(label: String,
+                     width: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
+                     height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): TextWidget
 
     /**
      * Add an input text in the view
@@ -78,12 +83,18 @@ interface KYCInterface {
      * @param hint input hint
      * @param isPassword true if input text is password, else false
      * @param inputType input type
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return InputElement that can be customized with style, background, padding and margins
+     * @return InputWidget that can be customized with style, background, padding and margins
      */
-    fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int, height: Int, key: String, isRequired: Boolean): InputWidget
+    fun addInput(
+        hint: String, isPassword: Boolean, inputType: Int,
+        key: String, isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): InputWidget
 
     /**
      * Add an input text in the view
@@ -93,12 +104,18 @@ interface KYCInterface {
      * @param hint input hint
      * @param isPassword true if input text is password, else false
      * @param inputType input type
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return InputElement that can be customized with style, background, padding and margins
+     * @return InputWidget that can be customized with style, background, padding and margins
      */
-    fun addInputInRow(hint: String, isPassword: Boolean, inputType: Int,
-                      width: Int, height: Int, key: String, isRequired: Boolean): InputWidget
+    fun addInputInRow(
+        hint: String, isPassword: Boolean, inputType: Int,
+        key: String, isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): InputWidget
 
     /**
      * Add a button in the view
@@ -108,9 +125,11 @@ interface KYCInterface {
      * @param label text label
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
-    fun addNextButton(label: String, width: Int, height: Int): ButtonWidget
+    fun addNextButton(label: String,
+                      width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                      height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ButtonWidget
 
     /**
      * Add a button in the view
@@ -121,9 +140,11 @@ interface KYCInterface {
      * @param label text label
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
-    fun addNextButtonInRow(label: String, width: Int, height: Int): ButtonWidget
+    fun addNextButtonInRow(label: String,
+                           width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                           height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ButtonWidget
 
     /**
      * Add a button in the view
@@ -134,10 +155,11 @@ interface KYCInterface {
      * @param listener custom button listener
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
     fun addButton(label: String, listener: KYCHelper.CustomListener,
-                  width: Int, height: Int): ButtonWidget
+                  width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                  height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ButtonWidget
 
     /**
      * Add a button in the view
@@ -149,21 +171,30 @@ interface KYCInterface {
      * @param listener custom button listener
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
     fun addButtonInRow(label: String, listener: KYCHelper.CustomListener,
-                       width: Int, height: Int): ButtonWidget
+                       width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+                       height: Int = LinearLayout.LayoutParams.WRAP_CONTENT): ButtonWidget
 
     /**
      * Add an edittext with date picker in the view
      * This will consume one row in view
      *
      * @param label text label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DateWidget that can be customized with style, background, padding and margins
      */
-    fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): DateWidget
+    fun addDate(
+        label: String,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): DateWidget
 
     /**
      * Add an edittext with date picker in the view
@@ -171,36 +202,62 @@ interface KYCInterface {
      * Should be called inside addPageRow()
      *
      * @param label text label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DateWidget that can be customized with style, background, padding and margins
      */
-    fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): DateWidget
+    fun addDateInRow(
+        label: String,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): DateWidget
 
     /**
-     * Add a dropdown with date picker in the view
+     * Add a dropdown in the view
      * This will consume one row in view
      *
      * @param label text label
+     * @param options dropdown options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DropdownWidget that can be customized with style, background, padding and margins
      */
-    fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
-                    key: String, isRequired: Boolean): DropdownWidget
+    fun addDropdown(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): DropdownWidget
 
     /**
-     * Add a dropdown with date picker in the view
+     * Add a dropdown in the view
      * This may share the row with other elements (e.g. input, button etc)
      * Should be called inside addPageRow()
      *
      * @param label text label
+     * @param options dropdown options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DropdownWidget that can be customized with style, background, padding and margins
      */
-    fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
-                         key: String, isRequired: Boolean): DropdownWidget
+    fun addDropdownInRow(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): DropdownWidget
 
 
     /**
@@ -208,12 +265,21 @@ interface KYCInterface {
      * This will consume one row in view
      *
      * @param label text label
+     * @param options list options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ListWidget that can be customized with style, background, padding and margins
      */
-    fun addList(label: String, choices: List<String>, width: Int, height: Int,
-                key: String, isRequired: Boolean): ListWidget
+    fun addList(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): ListWidget
 
     /**
      * Add an edittext with choices viewed in separate view
@@ -221,12 +287,21 @@ interface KYCInterface {
      * Should be called inside addPageRow()
      *
      * @param label text label
+     * @param options list options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ListWidget that can be customized with style, background, padding and margins
      */
-    fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
-                     key: String, isRequired: Boolean): ListWidget
+    fun addListInRow(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): ListWidget
 
     /**
      * Add an imageview button that when clicked, user can set an existing
@@ -234,14 +309,17 @@ interface KYCInterface {
      * This will consume one row in view
      *
      * @param label media label
-     * @param width width of image
-     * @param height height of image
      * @param key key in getting the item value
      * @param isRequired should prompt an error before proceeding if user did not fill up this field
-     * @return MediaElement that can be customized with style, background, padding and margins
+     * @param width width of image
+     * @param height height of image
+     * @return MediaWidget that can be customized with style, background, padding and margins
      */
-    fun addMedia(label: String,  width: Int, height: Int, key: String,
-                 isRequired: Boolean): MediaWidget
+    fun addMedia(
+        label: String, key: String, isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): MediaWidget
 
     /**
      * Add an imageview button that when clicked, user can set an existing
@@ -250,14 +328,95 @@ interface KYCInterface {
      * Should be called inside addPageRow()
      *
      * @param label media label
-     * @param width width of image
-     * @param height height of image
      * @param key key in getting the item value
      * @param isRequired should prompt an error before proceeding if user did not fill up this field
-     * @return MediaElement that can be customized with style, background, padding and margins
+     * @param width width of image
+     * @param height height of image
+     * @return MediaWidget that can be customized with style, background, padding and margins
      */
-    fun addMediaInRow(label: String,  width: Int, height: Int, key: String,
-                      isRequired: Boolean): MediaWidget
+    fun addMediaInRow(
+        label: String, key: String, isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): MediaWidget
+
+    /**
+     * Add a checklist in the view
+     * This will consume one row in view
+     *
+     * @param label checklist header
+     * @param options checklist options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return ChecklistWidget that can be customized with style, background, padding and margins
+     */
+    fun addChecklist(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): ChecklistWidget
+
+    /**
+     * Add a checklist in the view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label checklist header
+     * @param options checklist options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return SwitchWidget that can be customized with style, background, padding and margins
+     */
+    fun addChecklistInRow(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): ChecklistWidget
+
+    /**
+     * Add a switch in the view
+     * This will consume one row in view
+     *
+     * @param label switch label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return SwitchWidget that can be customized with style, background, padding and margins
+     */
+    fun addSwitch(
+        label: String, key: String, isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): SwitchWidget
+
+    /**
+     * Add a switch in the view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label switch label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return SwitchWidget that can be customized with style, background, padding and margins
+     */
+    fun addSwitchInRow(
+        label: String, key: String, isRequired: Boolean,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): SwitchWidget
     /***********************[END] ADD PAGES AND UI ELEMENTS TO KYC VIEW**************************/
 
     /***********************[START] INTENT RELATED***************************************/

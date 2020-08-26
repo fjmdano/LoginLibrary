@@ -143,17 +143,19 @@ class KYCParamHelper {
          * @param hint input hint
          * @param isPassword true if input text is password, else false
          * @param inputType input type
-         * @param width width of text
-         * @param height height of text
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param width width of text
+         * @param height height of text
          * @param addNow if true, element is added immediately to page row
          * @return InputElement that can be customized with style, background, padding and margins
          */
-        fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                     width: Int, height: Int, key: String, isRequired: Boolean,
-                     addNow: Boolean = false): InputWidget {
-            val input = InputWidget(hint, isPassword, inputType, width, height, key, isRequired)
+        fun addInput(
+            hint: String, isPassword: Boolean, inputType: Int,
+            key: String, isRequired: Boolean, width: Int, height: Int,
+            addNow: Boolean = false
+        ): InputWidget {
+            val input = InputWidget(hint, isPassword, inputType, key, isRequired, width, height)
             getDataRepo().inputWidgets.add(input)
             if (addNow) {
                 val pageRow = PageRow(mutableListOf())
@@ -212,15 +214,18 @@ class KYCParamHelper {
          * Add an edit text with date picker in the kyc view
          *
          * @param label button label
+         * @param key key in getting the item value
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
          * @param width width of text
          * @param height height of text
-         * @param isRequired should prompt an error before proceeding if user did not fill up this field
          * @param addNow if true, element is added immediately to page row
          * @return DateWidget that can be customized with style, background, padding and margins
          */
-        fun addDate(label: String, width: Int, height: Int, key: String,
-                    isRequired: Boolean, addNow: Boolean = false): DateWidget {
-            val dateWidget = DateWidget(label, width, height, key, isRequired)
+        fun addDate(
+            label: String, key: String, isRequired: Boolean, width: Int,
+            height: Int, addNow: Boolean = false
+        ): DateWidget {
+            val dateWidget = DateWidget(label, key, isRequired, width, height)
             getDataRepo().dateWidgets.add(dateWidget)
             if (addNow) {
                 val pageRow = PageRow(mutableListOf())
@@ -234,17 +239,24 @@ class KYCParamHelper {
          * Add a dropdown in the kyc view
          *
          * @param label button label
-         * @param choices dropdown choices
-         * @param width width of text
-         * @param height height of text
+         * @param options dropdown options
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param width width of text
+         * @param height height of text
          * @param addNow if true, element is added immediately to page row
          * @return DropdownWidget that can be customized with style, background, padding and margins
          */
-        fun addDropdown(label: String, choices: List<String>, width: Int, height: Int, key: String,
-                        isRequired: Boolean, addNow: Boolean = false): DropdownWidget {
-            val dropdownWidget = DropdownWidget(label, choices, width, height, key, isRequired)
+        fun addDropdown(
+            label: String,
+            options: List<String>,
+            key: String,
+            isRequired: Boolean,
+            width: Int,
+            height: Int,
+            addNow: Boolean = false
+        ): DropdownWidget {
+            val dropdownWidget = DropdownWidget(label, options, key, isRequired, width, height)
             getDataRepo().dropdownWidgets.add(dropdownWidget)
             if (addNow) {
                 val pageRow = PageRow(mutableListOf())
@@ -259,16 +271,23 @@ class KYCParamHelper {
          *
          * @param label button label
          * @param choices list choices
-         * @param width width of text
-         * @param height height of text
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param width width of text
+         * @param height height of text
          * @param addNow if true, element is added immediately to page row
          * @return ListWidget that can be customized with style, background, padding and margins
          */
-        fun addList(label: String, choices: List<String>, width: Int, height: Int, key: String,
-                    isRequired: Boolean, addNow: Boolean = false): ListWidget {
-            val listWidget = ListWidget(label, choices, width, height, key, isRequired)
+        fun addList(
+            label: String,
+            choices: List<String>,
+            key: String,
+            isRequired: Boolean,
+            width: Int,
+            height: Int,
+            addNow: Boolean = false
+        ): ListWidget {
+            val listWidget = ListWidget(label, choices, key, isRequired, width, height)
             getDataRepo().listWidgets.add(listWidget)
             if (addNow) {
                 val pageRow = PageRow(mutableListOf())
@@ -282,16 +301,22 @@ class KYCParamHelper {
          * Add a imageview button in the kyc view
          *
          * @param label media label
-         * @param width width of image
-         * @param height height of image
          * @param key key in getting the item value
          * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param width width of image
+         * @param height height of image
          * @param addNow if true, element is added immediately to page row
          * @return MediaWidget that can be customized with style, background, padding and margins
          */
-        fun addMedia(label: String,  width: Int, height: Int, key: String, isRequired: Boolean,
-                     addNow: Boolean = false): MediaWidget {
-            val mediaWidget = MediaWidget(label, width, height, key, isRequired)
+        fun addMedia(
+            label: String,
+            key: String,
+            isRequired: Boolean,
+            width: Int,
+            height: Int,
+            addNow: Boolean = false
+        ): MediaWidget {
+            val mediaWidget = MediaWidget(label, key, isRequired, width, height)
             getDataRepo().mediaWidgets.add(mediaWidget)
             if (addNow) {
                 val pageRow = PageRow(mutableListOf())
@@ -299,6 +324,64 @@ class KYCParamHelper {
                 getLastPage().rows.add(pageRow)
             }
             return mediaWidget
+        }
+
+        /**
+         * Add a checklist in the kyc view
+         *
+         * @param label checklist header
+         * @param options checklist options
+         * @param key key in getting the item value
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param width width of view
+         * @param height height of view
+         * @param addNow if true, element is added immediately to page row
+         * @return ChecklistWidget that can be customized with style, background, padding and margins
+         */
+        fun addChecklist(
+            label: String,
+            options: List<String>,
+            key: String,
+            isRequired: Boolean,
+            width: Int,
+            height: Int,
+            addNow: Boolean = false
+        ): ChecklistWidget {
+            val checklistWidget = ChecklistWidget(label, options, key, isRequired, width, height)
+            if (addNow) {
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(checklistWidget)
+                getLastPage().rows.add(pageRow)
+            }
+            return checklistWidget
+        }
+
+        /**
+         * Add a switch in the kyc view
+         *
+         * @param label media label
+         * @param key key in getting the item value
+         * @param isRequired should prompt an error before proceeding if user did not fill up this field
+         * @param width width of view
+         * @param height height of view
+         * @param addNow if true, element is added immediately to page row
+         * @return ChecklistWidget that can be customized with style, background, padding and margins
+         */
+        fun addSwitch(
+            label: String,
+            key: String,
+            isRequired: Boolean,
+            width: Int,
+            height: Int,
+            addNow: Boolean = false
+        ): SwitchWidget {
+            val switchWidget = SwitchWidget(label, key, isRequired, width, height)
+            if (addNow) {
+                val pageRow = PageRow(mutableListOf())
+                pageRow.widgets.add(switchWidget)
+                getLastPage().rows.add(pageRow)
+            }
+            return switchWidget
         }
 
         /**

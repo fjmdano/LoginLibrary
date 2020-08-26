@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
-import com.facebook.login.widget.LoginButton
 import com.google.android.gms.common.SignInButton
 
 class GoogleLogin(override var width: Int,

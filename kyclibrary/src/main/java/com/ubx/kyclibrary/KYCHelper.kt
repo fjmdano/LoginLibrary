@@ -91,14 +91,20 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * @param hint input hint
      * @param isPassword true if input text is password, else false
      * @param inputType input type
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return InputElement that can be customized with style, background, padding and margins
+     * @return InputWidget that can be customized with style, background, padding and margins
      */
-    override fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                          width: Int, height: Int, key: String, isRequired: Boolean): InputWidget {
-        return KYCParamHelper.addInput(hint, isPassword, inputType,
-            width, height,key, isRequired, true)
+    override fun addInput(
+        hint: String, isPassword: Boolean, inputType: Int,
+        key: String, isRequired: Boolean, width: Int, height: Int
+    ): InputWidget {
+        return KYCParamHelper.addInput(
+            hint, isPassword, inputType,
+            key, isRequired, width, height, true
+        )
     }
 
     /**
@@ -109,14 +115,20 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * @param hint input hint
      * @param isPassword true if input text is password, else false
      * @param inputType input type
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return InputElement that can be customized with style, background, padding and margins
+     * @return InputWidget that can be customized with style, background, padding and margins
      */
-    override fun addInputInRow(hint: String, isPassword: Boolean, inputType: Int,
-                               width: Int, height: Int, key: String, isRequired: Boolean): InputWidget {
-        return KYCParamHelper.addInput(hint, isPassword, inputType,
-            width, height, key, isRequired, false)
+    override fun addInputInRow(
+        hint: String, isPassword: Boolean, inputType: Int,
+        key: String, isRequired: Boolean, width: Int, height: Int
+    ): InputWidget {
+        return KYCParamHelper.addInput(
+            hint, isPassword, inputType,
+            key, isRequired, width, height, false
+        )
     }
 
     /**
@@ -127,7 +139,7 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * @param label text label
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
     override fun addNextButton(label: String, width: Int, height: Int): ButtonWidget {
         return KYCParamHelper.addNextButton(label, width, height, true)
@@ -142,7 +154,7 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * @param label text label
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
     override fun addNextButtonInRow(label: String, width: Int, height: Int): ButtonWidget {
         return KYCParamHelper.addNextButton(label, width, height, false)
@@ -157,7 +169,7 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * @param listener custom button listener
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
     override fun addButton(label: String, listener: CustomListener,
                            width: Int, height: Int): ButtonWidget {
@@ -174,7 +186,7 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * @param listener custom button listener
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ButtonWidget that can be customized with style, background, padding and margins
      */
     override fun addButtonInRow(label: String, listener: CustomListener,
                                 width: Int, height: Int): ButtonWidget {
@@ -186,12 +198,20 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * This will consume one row in view
      *
      * @param label text label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DateWidget that can be customized with style, background, padding and margins
      */
-    override fun addDate(label: String, width: Int, height: Int, key: String, isRequired: Boolean): DateWidget {
-        return KYCParamHelper.addDate(label, width, height, key, isRequired, true)
+    override fun addDate(
+        label: String,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): DateWidget {
+        return KYCParamHelper.addDate(label, key, isRequired, width, height, true)
     }
 
     /**
@@ -200,41 +220,67 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * Should be called inside addPageRow()
      *
      * @param label text label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DateWidget that can be customized with style, background, padding and margins
      */
-    override fun addDateInRow(label: String, width: Int, height: Int, key: String, isRequired: Boolean): DateWidget {
-        return KYCParamHelper.addDate(label, width, height, key, isRequired, false)
+    override fun addDateInRow(
+        label: String,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): DateWidget {
+        return KYCParamHelper.addDate(label, key, isRequired, width, height, false)
     }
 
     /**
-     * Add a dropdown with date picker in the view
+     * Add a dropdown in the view
      * This will consume one row in view
      *
      * @param label text label
+     * @param options dropdown options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DropdownWidget that can be customized with style, background, padding and margins
      */
-    override fun addDropdown(label: String, choices: List<String>, width: Int, height: Int,
-                             key: String, isRequired: Boolean): DropdownWidget {
-        return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, true)
+    override fun addDropdown(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): DropdownWidget {
+        return KYCParamHelper.addDropdown(label, options, key, isRequired, width, height, true)
     }
 
     /**
-     * Add a dropdown with date picker in the view
+     * Add a dropdown in the view
      * This may share the row with other elements (e.g. input, button etc)
      * Should be called inside addPageRow()
      *
      * @param label text label
+     * @param options dropdown options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return DropdownWidget that can be customized with style, background, padding and margins
      */
-    override fun addDropdownInRow(label: String, choices: List<String>, width: Int, height: Int,
-                                  key: String, isRequired: Boolean): DropdownWidget {
-        return KYCParamHelper.addDropdown(label, choices, width, height, key, isRequired, false)
+    override fun addDropdownInRow(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): DropdownWidget {
+        return KYCParamHelper.addDropdown(label, options, key, isRequired, width, height, false)
     }
 
     /**
@@ -242,13 +288,22 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * This will consume one row in view
      *
      * @param label text label
+     * @param options list options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ListWidget that can be customized with style, background, padding and margins
      */
-    override fun addList(label: String, choices: List<String>, width: Int, height: Int,
-                         key: String, isRequired: Boolean): ListWidget {
-        return KYCParamHelper.addList(label, choices, width, height, key, isRequired, true)
+    override fun addList(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): ListWidget {
+        return KYCParamHelper.addList(label, options, key, isRequired, width, height, true)
     }
 
     /**
@@ -257,13 +312,22 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * Should be called inside addPageRow()
      *
      * @param label text label
+     * @param options list options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
      * @param width width of text
      * @param height height of text
-     * @return TextElement that can be customized with style, background, padding and margins
+     * @return ListWidget that can be customized with style, background, padding and margins
      */
-    override fun addListInRow(label: String, choices: List<String>, width: Int, height: Int,
-                              key: String, isRequired: Boolean): ListWidget {
-        return KYCParamHelper.addList(label, choices, width, height, key, isRequired, false)
+    override fun addListInRow(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): ListWidget {
+        return KYCParamHelper.addList(label, options, key, isRequired, width, height, false)
     }
 
     /**
@@ -272,15 +336,17 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * This will consume one row in view
      *
      * @param label media label
-     * @param width width of image
-     * @param height height of image
      * @param key key in getting the item value
      * @param isRequired should prompt an error before proceeding if user did not fill up this field
-     * @return MediaElement that can be customized with style, background, padding and margins
+     * @param width width of image
+     * @param height height of image
+     * @return MediaWidget that can be customized with style, background, padding and margins
      */
-    override fun addMedia(label: String,  width: Int, height: Int, key: String,
-                          isRequired: Boolean): MediaWidget {
-        return KYCParamHelper.addMedia(label, width, height, key, isRequired, true)
+    override fun addMedia(
+        label: String, key: String, isRequired: Boolean,
+        width: Int, height: Int
+    ): MediaWidget {
+        return KYCParamHelper.addMedia(label, key, isRequired, width, height, true)
     }
 
     /**
@@ -290,15 +356,101 @@ class KYCHelper(private val context: Context, appName: String): KYCInterface {
      * Should be called inside addPageRow()
      *
      * @param label media label
-     * @param width width of image
-     * @param height height of image
      * @param key key in getting the item value
      * @param isRequired should prompt an error before proceeding if user did not fill up this field
-     * @return MediaElement that can be customized with style, background, padding and margins
+     * @param width width of image
+     * @param height height of image
+     * @return MediaWidget that can be customized with style, background, padding and margins
      */
-    override fun addMediaInRow(label: String,  width: Int, height: Int, key: String,
-                               isRequired: Boolean): MediaWidget {
-        return KYCParamHelper.addMedia(label, width, height, key, isRequired, false)
+    override fun addMediaInRow(
+        label: String, key: String, isRequired: Boolean,
+        width: Int, height: Int
+    ): MediaWidget {
+        return KYCParamHelper.addMedia(label, key, isRequired, width, height, false)
+    }
+
+    /**
+     * Add a checklist in the view
+     * This will consume one row in view
+     *
+     * @param label checklist header
+     * @param options checklist options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return ChecklistWidget that can be customized with style, background, padding and margins
+     */
+    override fun addChecklist(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): ChecklistWidget {
+        return KYCParamHelper.addChecklist(label, options, key, isRequired, width, height, true)
+    }
+
+    /**
+     * Add a checklist in the view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label checklist header
+     * @param options checklist options
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return SwitchWidget that can be customized with style, background, padding and margins
+     */
+    override fun addChecklistInRow(
+        label: String,
+        options: List<String>,
+        key: String,
+        isRequired: Boolean,
+        width: Int,
+        height: Int
+    ): ChecklistWidget {
+        return KYCParamHelper.addChecklist(label, options, key, isRequired, width, height, false)
+    }
+
+    /**
+     * Add a switch in the view
+     * This will consume one row in view
+     *
+     * @param label switch label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return SwitchWidget that can be customized with style, background, padding and margins
+     */
+    override fun addSwitch(
+        label: String, key: String, isRequired: Boolean,
+        width: Int, height: Int
+    ): SwitchWidget {
+        return KYCParamHelper.addSwitch(label, key, isRequired, width, height, true)
+    }
+
+    /**
+     * Add a switch in the view
+     * This may share the row with other elements (e.g. input, button etc)
+     * Should be called inside addPageRow()
+     *
+     * @param label switch label
+     * @param key key in getting the item value
+     * @param isRequired should prompt an error before proceeding if user did not fill up this field
+     * @param width width of view
+     * @param height height of view
+     * @return SwitchWidget that can be customized with style, background, padding and margins
+     */
+    override fun addSwitchInRow(
+        label: String, key: String, isRequired: Boolean,
+        width: Int, height: Int
+    ): SwitchWidget {
+        return KYCParamHelper.addSwitch(label, key, isRequired, width, height, false)
     }
 
     /**

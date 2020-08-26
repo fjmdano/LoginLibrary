@@ -8,7 +8,6 @@ import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.model.User
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.widget.*
-import com.ubx.loginlibrary.widget.LoginWidget
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.LoginValuesHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
@@ -104,14 +103,16 @@ class LoginHelper(val context: Context, appName: String,
      * @param hint input hint
      * @param isPassword true if input text is password, else false
      * @param inputType input type
+     * @param key input key - to be used for retrieving the input value
      * @param width width of text
      * @param height height of text
-     * @param key input key - to be used for retrieving the input value
      * @return InputElement that can be customized with style, background, padding and margins
      */
-    override fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                width: Int, height: Int, key: String): InputWidget {
-        return LoginParamHelper.addInput(hint, isPassword, inputType, width, height, key)
+    override fun addInput(
+        hint: String, isPassword: Boolean, inputType: Int,
+        key: String, width: Int, height: Int
+    ): InputWidget {
+        return LoginParamHelper.addInput(hint, isPassword, inputType, key, width, height)
     }
 
     /**

@@ -1,12 +1,9 @@
 package com.ubx.loginlibrary.widget
 
 import android.content.Context
-import android.os.Build
 import android.text.InputType
 import android.view.View
-import android.widget.Button
 import android.widget.LinearLayout
-import androidx.appcompat.view.ContextThemeWrapper
 import com.ubx.formslibrary.widget.*
 
 class ForgotPasswordWidget(
@@ -46,10 +43,10 @@ class ForgotPasswordWidget(
         if (inputFieldHint.isBlank()) "E-mail" else inputFieldHint,
         false,
         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
-        LinearLayout.LayoutParams.MATCH_PARENT,
-        LinearLayout.LayoutParams.WRAP_CONTENT,
         "email",
-        true
+        true,
+        LinearLayout.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams.WRAP_CONTENT
     )
 
     var resetButton = ButtonWidget(

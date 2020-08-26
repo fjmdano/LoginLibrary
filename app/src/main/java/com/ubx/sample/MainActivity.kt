@@ -125,20 +125,22 @@ class MainActivity : AppCompatActivity() {
         textLogin.setMargins(0, loginHelper.sizeInDP(5),
             0, loginHelper.sizeInDP(5))
 
-        loginHelper.addInput("Username",
+        loginHelper.addInput(
+            "Username",
             false,
             InputType.TYPE_CLASS_TEXT,
+            "email",
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "email"
+            LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        loginHelper.addInput("Password",
+        loginHelper.addInput(
+            "Password",
             true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            "password",
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            "password"
+            LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
         val forgotPassword = loginHelper.addForgotPassword("Forgot password?",
@@ -183,91 +185,80 @@ class MainActivity : AppCompatActivity() {
     private fun createKYCContent(){
         kycHelper.setPadding(kycHelper.sizeInDP(5), kycHelper.sizeInDP(5), kycHelper.sizeInDP(5), 0)
         kycHelper.addPage("Terms and Agreement", null, null)
-        kycHelper.addText(applicationContext.getString(R.string.terms_and_agreement),
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+        kycHelper.addText(applicationContext.getString(R.string.terms_and_agreement))
+
+        val switch = kycHelper.addSwitch("Are you healthy?",
+        "isHealthy",
+        true)
+        switch.textOn = "Yes"
+        switch.textOff = "No"
+
+        kycHelper.addChecklist("Random label",
+            listOf("I have read the Terms and Agreement",
+            "Not read aww"),
+            "terms",
+            true
         )
-        kycHelper.addNextButton("I agree to the Terms and Agreement",
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        kycHelper.addNextButton("I agree to the Terms and Agreement")
 
         kycHelper.addPage("Registration", null, "Next")
-        kycHelper.addInput("E-mail", false,
+        kycHelper.addInput(
+            "E-mail", false,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
             "email",
-            true
-        )
-        val passwordInput = kycHelper.addInput("Password", true,
+            true)
+        val passwordInput = kycHelper.addInput(
+            "Password", true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
             "password",
-            true
-        )
+            true)
         passwordInput.minimumLength = 8
         passwordInput.maximumLength = 15
         passwordInput.regexPositiveValidation.add(".*[a-zA-Z]+.*")
         passwordInput.regexPositiveValidation.add(".*\\d.*")
         passwordInput.regexNegativeValidation.add("[a-zA-Z0-9]*")
-        kycHelper.addText("Password should contain 8-20 characters, with at least 1 letter, 1 number and 1 special character",
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        kycHelper.addText("Password should contain 8-20 characters, with at least 1 letter, 1 number and 1 special character")
 
         kycHelper.addPage("Personal Details", "Back", "Submit")
 
         kycHelper.addPageRow(mutableListOf(
-            kycHelper.addInputInRow("First Name", false,
+            kycHelper.addInputInRow(
+                "First Name", false,
                 InputType.TYPE_CLASS_TEXT,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
                 "firstname",
-                true
-            ),
-            kycHelper.addInputInRow("Last Name", false,
+                true),
+            kycHelper.addInputInRow(
+                "Last Name", false,
                 InputType.TYPE_CLASS_TEXT,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
                 "lastname",
-                true
-            )
+                true)
         ))
 
-        kycHelper.addList("Province",
+        kycHelper.addList(
+            "Province",
             listOf("Metro Manila", "Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province", "Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan", "Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Batangas", "Cavite", "Laguna", "Quezon", "Rizal", "Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon", "Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon", "Aklan", "Antique", "Capiz", "Guimaras", "Iloilo", "Negros Occidental", "Bohol", "Cebu", "Negros Oriental", "Siquijor", "Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte", "Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay", "Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental", "Compostela Valley", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental", "Cotabato", "Sarangani", "South Cotabato", "Sultan Kudarat", "Agusan del Norte", "Agusan del Sur", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur", "Basilan", "Lanao del Sur", "Maguindanao", "Sulu", "Tawi-tawi"),
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
             "province",
-            true
-        )
-        kycHelper.addInput("Address", false,
+            true)
+        kycHelper.addInput(
+            "Address", false,
             InputType.TYPE_CLASS_TEXT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
             "address",
-            true
-        )
-        kycHelper.addInput("Phone", false,
+            true)
+        kycHelper.addInput(
+            "Phone", false,
             InputType.TYPE_CLASS_PHONE,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
             "phone",
-            true
-        )
+            true)
 
         kycHelper.addPageRow(mutableListOf(
-            kycHelper.addDateInRow("Birthday",
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+            kycHelper.addDateInRow(
+                "Birthday",
                 "birthday",
-                true
-            ),
-            kycHelper.addDropdownInRow("Gender",
+                true),
+            kycHelper.addDropdownInRow(
+                "Gender",
                 listOf("Female", "Male", "Non-binary"),
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
                 "gender",
                 true)
         ))

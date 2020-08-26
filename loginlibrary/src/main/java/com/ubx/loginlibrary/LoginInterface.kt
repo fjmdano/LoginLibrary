@@ -6,7 +6,6 @@ import android.widget.LinearLayout
 import com.ubx.formslibrary.model.User
 import com.ubx.formslibrary.widget.*
 import com.ubx.loginlibrary.widget.ForgotPasswordWidget
-import com.ubx.loginlibrary.widget.LoginWidget
 
 interface LoginInterface {
 
@@ -83,15 +82,17 @@ interface LoginInterface {
      * @param hint input hint
      * @param isPassword true if input text is password, else false
      * @param inputType input type
+     * @param key input key - to be used for retrieving the input value
      * @param width width of text
      * @param height height of text
-     * @param key input key - to be used for retrieving the input value
      * @return InputElement that can be customized with style, background, padding and margins
      */
-    fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                 width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
-                 height: Int = LinearLayout.LayoutParams.WRAP_CONTENT,
-                 key: String): InputWidget
+    fun addInput(
+        hint: String, isPassword: Boolean, inputType: Int,
+        key: String,
+        width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
+        height: Int = LinearLayout.LayoutParams.WRAP_CONTENT
+    ): InputWidget
 
     /**
      * Add a button in the login view

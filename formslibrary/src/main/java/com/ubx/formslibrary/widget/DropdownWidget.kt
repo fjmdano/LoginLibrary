@@ -12,10 +12,10 @@ import androidx.appcompat.view.ContextThemeWrapper
 
 class DropdownWidget(val hint: String,
                      val choices: List<String>,
-                     override var width: Int,
-                     override var height: Int,
                      val key: String,
-                     val isRequired: Boolean)
+                     val isRequired: Boolean,
+                     override var width: Int,
+                     override var height: Int)
     : BaseWidget(width, height) {
 
     private lateinit var spinner: Spinner
@@ -29,6 +29,7 @@ class DropdownWidget(val hint: String,
     }
 
     override fun setError(message: String?) {
+        Log.d(TAG, "[$key] $message")
         TODO("Not yet implemented")
     }
 

@@ -5,7 +5,6 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +14,6 @@ import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.model.Page
 import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.util.DisplayUtil
-import com.ubx.formslibrary.util.BaseUIElementUtil
 import com.ubx.formslibrary.widget.*
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper

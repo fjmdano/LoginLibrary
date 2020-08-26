@@ -15,10 +15,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DateWidget(val hint: String,
-                 override var width: Int,
-                 override var height: Int,
                  val key: String,
-                 val isRequired: Boolean)
+                 val isRequired: Boolean,
+                 override var width: Int,
+                 override var height: Int)
     : BaseWidget(width, height) {
 
     private lateinit var textInputLayout: TextInputLayout
@@ -33,6 +33,7 @@ class DateWidget(val hint: String,
     }
 
     override fun setError(message: String?) {
+        Log.d(TAG, "[$key] $message")
         if (::textInputLayout.isInitialized) {
             textInputLayout.error = message
         }

@@ -11,10 +11,10 @@ import com.ubx.formslibrary.R
 import com.ubx.formslibrary.listener.ViewListener
 
 class MediaWidget(val hint: String,
-                  override var width: Int,
-                  override var height: Int,
                   val key: String,
-                  val isRequired: Boolean)
+                  val isRequired: Boolean,
+                  override var width: Int,
+                  override var height: Int)
     : BaseWidget(width, height) {
 
     private lateinit var imageView: ImageView

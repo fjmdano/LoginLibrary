@@ -14,10 +14,10 @@ import com.ubx.formslibrary.listener.ViewListener
 
 class ListWidget(val hint: String,
                  val choices: List<String>,
-                 override var width: Int,
-                 override var height: Int,
                  val key: String,
-                 private val isRequired: Boolean)
+                 private val isRequired: Boolean,
+                 override var width: Int,
+                 override var height: Int)
     : BaseWidget(width, height) {
 
     private lateinit var textInputLayout: TextInputLayout

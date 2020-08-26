@@ -6,7 +6,6 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.facebook.AccessToken
@@ -21,10 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.model.User
-import com.ubx.formslibrary.util.DisplayUtil
-import com.ubx.formslibrary.util.BaseUIElementUtil
 import com.ubx.formslibrary.widget.ButtonWidget
-import com.ubx.formslibrary.widget.FacebookLogin
 import com.ubx.formslibrary.widget.GoogleLogin
 import com.ubx.formslibrary.widget.InputWidget
 import com.ubx.loginlibrary.LoginActivity
@@ -33,7 +29,6 @@ import com.ubx.loginlibrary.helper.LoginValuesHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
 import com.ubx.loginlibrary.helper.UserHelper
 import com.ubx.loginlibrary.widget.ForgotPasswordWidget
-import com.ubx.loginlibrary.widget.LoginWidget
 
 class LoginViewModel: ViewModel() {
     private lateinit var callbackManager: CallbackManager
@@ -145,7 +140,7 @@ class LoginViewModel: ViewModel() {
                 }
                 is GoogleLogin -> {
                     if (googleSignInClient == null) {
-                        println("Google not initialized!")
+                        Log.d(TAG, "Google not initialized!")
                     } else {
                         val googleButton = it.createView(context)
                         googleButton.setOnClickListener {

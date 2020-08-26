@@ -115,14 +115,16 @@ class LoginParamHelper {
          * @param hint input hint
          * @param isPassword true if input text is password, else false
          * @param inputType input type
+         * @param key input key - to be used for retrieving the input value
          * @param width width of text
          * @param height height of text
-         * @param key input key - to be used for retrieving the input value
          * @return InputWidget that can be customized with style, background, padding and margins
          */
-        fun addInput(hint: String, isPassword: Boolean, inputType: Int,
-                     width: Int, height: Int, key: String): InputWidget {
-            val input = InputWidget(hint, isPassword, inputType, width, height, key, true)
+        fun addInput(
+            hint: String, isPassword: Boolean, inputType: Int,
+            key: String, width: Int, height: Int
+        ): InputWidget {
+            val input = InputWidget(hint, isPassword, inputType, key, true, width, height)
             getLoginWidget()?.elements?.add(input)
             addInputElement(input)
             return input

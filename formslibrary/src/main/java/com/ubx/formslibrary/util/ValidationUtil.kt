@@ -4,7 +4,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
 
-class BaseUIElementUtil {
+class ValidationUtil {
     companion object {
         private const val TAG = "Util"
 

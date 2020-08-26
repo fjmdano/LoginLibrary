@@ -1,17 +1,11 @@
 package com.ubx.loginlibrary.viewmodel
 
 import android.content.Context
-import android.os.Build
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ubx.formslibrary.listener.ViewListener
-import com.ubx.formslibrary.util.BaseUIElementUtil
-import com.ubx.formslibrary.util.DisplayUtil
+import com.ubx.formslibrary.util.ValidationUtil
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper
 
@@ -92,7 +86,7 @@ class ForgotPasswordViewModel: ViewModel() {
         if (userEmail.isNullOrBlank()) {
             isValid = false
             forgotPasswordElement?.inputField?.setError("This field is required")
-        } else if (!BaseUIElementUtil.isValidEmail(userEmail)) {
+        } else if (!ValidationUtil.isValidEmail(userEmail)) {
             isValid = false
             forgotPasswordElement?.inputField?.setError("Please enter valid email")
         } else {
