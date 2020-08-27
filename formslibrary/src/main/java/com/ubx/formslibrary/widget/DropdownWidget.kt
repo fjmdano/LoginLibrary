@@ -1,6 +1,7 @@
 package com.ubx.formslibrary.widget
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.content.ContextCompat
 
 class DropdownWidget(val hint: String,
                      val choices: List<String>,
@@ -19,6 +21,10 @@ class DropdownWidget(val hint: String,
     : BaseWidget(width, height) {
 
     private lateinit var spinner: Spinner
+    private lateinit var hintTextView: TextView
+    private lateinit var errorTextView: TextView
+    private var hintColor = Color.GRAY
+    private var errorColor = Color.rgb(255, 87, 34)
 
     override fun getValue(): String {
         return if (::spinner.isInitialized) {
@@ -29,10 +35,17 @@ class DropdownWidget(val hint: String,
     }
 
     override fun setError(message: String?) {
-        message?.let {
-            Log.d(TAG, "[$key] $it")
+        if (message != null) {
+            Log.d(TAG, "[$key] $message")
+            hintTextView.setTextColor(errorColor)
+        } else {
+            if (::hintTextView.isInitialized) {
+                hintTextView.setTextColor(hintColor)
+            }
         }
-        TODO("Not yet implemented")
+        if (::errorTextView.isInitialized) {
+            errorTextView.text = message?:""
+        }
     }
 
     override fun isValid(): Boolean {
@@ -60,14 +73,15 @@ class DropdownWidget(val hint: String,
                 LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
-        val textView = if (style != null) {
+        hintTextView = if (style != null) {
             TextView(ContextThemeWrapper(context, style!!), null, 0)
         } else {
             TextView(context)
         }
-        textView.text = hint
-        textView.textSize = 11F
-        dropdownLinearLayout.addView(textView)
+        hintTextView.text = "$hint${if (isRequired) " *" else ""}"
+        hintTextView.textSize = 11.5F
+        hintColor = hintTextView.currentTextColor
+        dropdownLinearLayout.addView(hintTextView)
 
         spinner = Spinner(context)
         ArrayAdapter(context, android.R.layout.simple_list_item_1, choices)
@@ -75,13 +89,20 @@ class DropdownWidget(val hint: String,
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner.adapter = adapter
             }
+        dropdownLinearLayout.addView(spinner)
+
+        errorTextView = TextView(context)
+        errorTextView.setTextColor(errorColor)
+
+        errorTextView.text = ""
+        errorTextView.textSize = 11.5F
+        dropdownLinearLayout.addView(errorTextView)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            textView.id = View.generateViewId()
+            hintTextView.id = View.generateViewId()
             spinner.id = View.generateViewId()
             dropdownLinearLayout.id = View.generateViewId()
         }
-        dropdownLinearLayout.addView(spinner)
 
         return dropdownLinearLayout
     }

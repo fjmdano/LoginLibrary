@@ -17,6 +17,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.formslibrary.R
@@ -265,18 +266,23 @@ class InputWidget(val hint: String,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         okColorFilter = PorterDuffColorFilter(
-            context.resources.getColor(R.color.lime_alpha),
+            ContextCompat.getColor(context, R.color.lime_alpha),
             PorterDuff.Mode.MULTIPLY)
         ngColorFilter = PorterDuffColorFilter(
-            context.resources.getColor(R.color.gray_alpha),
+            ContextCompat.getColor(context, R.color.gray_alpha),
             PorterDuff.Mode.MULTIPLY)
 
         validationRules.forEach {
             rulesLinearLayout.addView(createAValidationRule(context, it.label))
         }
 
-        DisplayUtil.setMargins(context, rulesLinearLayout,
-            Margins(0, DisplayUtil.sizeInDP(context, RULE_SPACING), 0, 0))
+        if (isValidationBarsDisplayed) {
+            DisplayUtil.setMargins(context, rulesLinearLayout,
+                Margins(0, DisplayUtil.sizeInDP(context, 2*RULE_SPACING), 0, 0))
+        } else {
+            DisplayUtil.setMargins(context, rulesLinearLayout,
+                Margins(0, DisplayUtil.sizeInDP(context, RULE_SPACING), 0, 0))
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             rulesLinearLayout.id = View.generateViewId()

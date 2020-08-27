@@ -31,7 +31,7 @@ class SwitchWidget(val label: String,
         message?.let {
             Log.d(TAG, "[$key] $it")
         }
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun createView(context: Context, isSharingRow: Boolean): View {

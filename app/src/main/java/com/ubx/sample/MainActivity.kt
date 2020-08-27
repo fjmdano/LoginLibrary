@@ -248,12 +248,6 @@ class MainActivity : AppCompatActivity() {
             InputType.TYPE_CLASS_TEXT,
             "address",
             true)
-        kycHelper.addInput(
-            "Phone", false,
-            InputType.TYPE_CLASS_PHONE,
-            "phone",
-            true)
-
         kycHelper.addPageRow(mutableListOf(
             kycHelper.addDateInRow(
                 "Birthday",
@@ -261,10 +255,15 @@ class MainActivity : AppCompatActivity() {
                 true),
             kycHelper.addDropdownInRow(
                 "Gender",
-                listOf("Female", "Male", "Non-binary"),
+                listOf("","Female", "Male", "Non-binary"),
                 "gender",
                 true)
         ))
+        kycHelper.addInput(
+            "Phone", false,
+            InputType.TYPE_CLASS_PHONE,
+            "phone",
+            true)
     }
 
     companion object {

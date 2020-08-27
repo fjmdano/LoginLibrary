@@ -34,7 +34,7 @@ class ChecklistWidget(val label: String,
         message?.let {
             Log.d(TAG, "[$key] $it")
         }
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun isValid(): Boolean {
