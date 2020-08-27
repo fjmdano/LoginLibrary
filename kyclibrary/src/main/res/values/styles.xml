@@ -4,6 +4,9 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@android:color/holo_purple</item>
         <item name="colorAccent">@android:color/darker_gray</item>
+
+        <item name="colorControlActivated">#3f49cc</item>
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
     </style>
 
     <style name="textTitleToolbar">

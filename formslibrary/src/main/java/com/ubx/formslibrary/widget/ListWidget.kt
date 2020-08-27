@@ -33,6 +33,9 @@ class ListWidget(val hint: String,
     }
 
     override fun setError(message: String?) {
+        message?.let {
+            Log.d(TAG, "[$key] $it")
+        }
         if (::textInputLayout.isInitialized) {
             textInputLayout.error = message
         }
@@ -40,7 +43,6 @@ class ListWidget(val hint: String,
 
     override fun isValid(): Boolean {
         return if (isRequired && getValue().isBlank()) {
-            Log.d(TAG, "$hint is required.")
             setError("$hint is required.")
             false
         } else {

@@ -26,12 +26,13 @@ class MediaWidget(val hint: String,
     }
 
     override fun setError(message: String?) {
-        //Do nothing
+        message?.let {
+            Log.d(TAG, "[$key] $it")
+        }
     }
 
     override fun isValid(): Boolean {
         return if (isRequired && bitmap == null) {
-            Log.d(TAG, "$hint is required.")
             setError("$hint is required.")
             false
         } else {

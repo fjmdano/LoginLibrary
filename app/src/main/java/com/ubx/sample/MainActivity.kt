@@ -187,11 +187,9 @@ class MainActivity : AppCompatActivity() {
         kycHelper.addPage("Terms and Agreement", null, null)
         kycHelper.addText(applicationContext.getString(R.string.terms_and_agreement))
 
-        val switch = kycHelper.addSwitch("Are you healthy?",
+        kycHelper.addSwitch("Are you healthy?",
         "isHealthy",
         true)
-        switch.textOn = "Yes"
-        switch.textOff = "No"
 
         kycHelper.addChecklist("Random label",
             listOf("I have read the Terms and Agreement",
@@ -213,13 +211,18 @@ class MainActivity : AppCompatActivity() {
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             "password",
             true)
-        passwordInput.minimumLength = 8
-        passwordInput.maximumLength = 15
-        passwordInput.regexPositiveValidation.add(".*[a-zA-Z]+.*")
-        passwordInput.regexPositiveValidation.add(".*\\d.*")
-        passwordInput.regexNegativeValidation.add("[a-zA-Z0-9]*")
-        kycHelper.addText("Password should contain 8-20 characters, with at least 1 letter, 1 number and 1 special character")
-
+        passwordInput.setCharacterLength("", 8, 15)
+        passwordInput.addRegexRule(
+            "Password should contain an alphabetical character",
+            ".*[a-zA-Z]+.*")
+        passwordInput.addRegexRule(
+            "Password should contain a numeric character",
+            ".*\\d.*")
+        passwordInput.addRegexRule(
+            "Password should contain a symbol character (!@#\$%^)",
+            "[a-zA-Z0-9]*", false)
+        passwordInput.displayValidationBars()
+        passwordInput.displayValidationRules()
         kycHelper.addPage("Personal Details", "Back", "Submit")
 
         kycHelper.addPageRow(mutableListOf(

@@ -19,7 +19,7 @@ abstract class BaseWidget(open var width: Int, open var height: Int) {
     var padding: Padding? = null
     var margins: Margins? = null
 
-    abstract fun getValue(): String
+    abstract fun getValue(): Any
     abstract fun setError(message: String?)
     abstract fun createView(context: Context, isSharingRow: Boolean = false): View
 

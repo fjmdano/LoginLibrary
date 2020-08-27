@@ -4,7 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import android.view.View
-import android.widget.Switch
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.SwitchCompat
 
 class SwitchWidget(val label: String,
                    val key: String,
@@ -16,37 +17,39 @@ class SwitchWidget(val label: String,
     var defaultCheck = false
     var textOn = ""
     var textOff = ""
-    private lateinit var switch: Switch
+    private lateinit var switch: SwitchCompat
 
-    override fun getValue(): String {
-        return if (getBooleanValue()) {
-            if (textOn.isBlank()) {
-                DEFAULT_TEXT_TRUE
-            } else {
-                textOn
-            }
+    override fun getValue(): Boolean {
+        return if (::switch.isInitialized) {
+            switch.isChecked
         } else {
-            if (textOff.isBlank()) {
-                DEFAULT_TEXT_FALSE
-            } else {
-                textOff
-            }
+            false
         }
     }
 
     override fun setError(message: String?) {
-        Log.d(TAG, "[$key] $message")
+        message?.let {
+            Log.d(TAG, "[$key] $it")
+        }
         TODO("Not yet implemented")
     }
 
     override fun createView(context: Context, isSharingRow: Boolean): View {
-        switch = Switch(context)
+        switch = if (style != null) {
+            SwitchCompat(ContextThemeWrapper(context, style!!), null, 0)
+        } else {
+            SwitchCompat(context)
+        }
+        customizeLinearElement(context, switch)
+
         switch.text = label
         switch.isChecked = defaultCheck
         if (textOn.isNotBlank()) {
+            switch.showText = true
             switch.textOn = textOn
         }
         if (textOff.isNotBlank()) {
+            switch.showText = true
             switch.textOff = textOff
         }
 
@@ -56,16 +59,4 @@ class SwitchWidget(val label: String,
         return switch
     }
 
-    fun getBooleanValue(): Boolean {
-        return if (::switch.isInitialized) {
-            switch.isChecked
-        } else {
-            false
-        }
-    }
-
-    companion object {
-        private const val DEFAULT_TEXT_TRUE = "TRUE"
-        private const val DEFAULT_TEXT_FALSE = "FALSE"
-    }
 }

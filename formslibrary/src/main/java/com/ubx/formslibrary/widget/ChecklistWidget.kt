@@ -22,12 +22,18 @@ class ChecklistWidget(val label: String,
     private var checkBoxes: MutableList<CheckBox> = mutableListOf()
     private var selectedIndices: MutableList<Int> = mutableListOf()
 
-    override fun getValue(): String {
-        return ""
+    override fun getValue(): List<String> {
+        val selectedOptions: MutableList<String> = mutableListOf()
+        selectedIndices.forEach {
+            selectedOptions.add(options[it])
+        }
+        return selectedOptions
     }
 
     override fun setError(message: String?) {
-        Log.d(TAG, "[$key] $message")
+        message?.let {
+            Log.d(TAG, "[$key] $it")
+        }
         TODO("Not yet implemented")
     }
 
@@ -44,6 +50,8 @@ class ChecklistWidget(val label: String,
             } else {
                 TextView(context)
             }
+            labelTextView.text = label
+            customizeLinearElement(context, labelTextView)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 labelTextView.id = View.generateViewId()
             }
@@ -70,13 +78,5 @@ class ChecklistWidget(val label: String,
             linearLayout.id = View.generateViewId()
         }
         return linearLayout
-    }
-
-    fun getSelectedOptions(): List<String> {
-        val selectedOptions: MutableList<String> = mutableListOf()
-        selectedIndices.forEach {
-            selectedOptions.add(options[it])
-        }
-        return selectedOptions
     }
 }

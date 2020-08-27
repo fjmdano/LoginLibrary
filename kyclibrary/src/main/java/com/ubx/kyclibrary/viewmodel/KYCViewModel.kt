@@ -147,7 +147,7 @@ class KYCViewModel: ViewModel() {
             saveDataToDB()
         } else {
             // Need to register first before saving data
-            signInCredentialsToRegister.value = SignInCredentials(KYCValueHelper.getValue("email"), KYCValueHelper.getValue("password"))
+            signInCredentialsToRegister.value = SignInCredentials(KYCValueHelper.getString("email"), KYCValueHelper.getString("password"))
         }
     }
 
@@ -238,7 +238,7 @@ class KYCViewModel: ViewModel() {
      * @return true if errors are encountered
      */
     fun setValue(key: String, value: String) {
-        KYCValueHelper.setValue(key, value)
+        KYCValueHelper.setString(key, value)
     }
 
     /**
@@ -255,22 +255,22 @@ class KYCViewModel: ViewModel() {
                     when (widget) {
                         is InputWidget -> {
                             if (widget.getValue().isNotBlank()) {
-                                KYCValueHelper.setValue(widget.key, widget.getValue())
+                                KYCValueHelper.setString(widget.key, widget.getValue())
                             }
                         }
                         is DateWidget -> {
                             if (widget.getValue().isNotBlank()) {
-                                KYCValueHelper.setValue(widget.key, widget.getValue())
+                                KYCValueHelper.setString(widget.key, widget.getValue())
                             }
                         }
                         is DropdownWidget -> {
                             if (widget.getValue().isNotBlank()) {
-                                KYCValueHelper.setValue(widget.key, widget.getValue())
+                                KYCValueHelper.setString(widget.key, widget.getValue())
                             }
                         }
                         is MediaWidget -> {
                             widget.getBitmap()?.let { bitmap ->
-                                KYCValueHelper.setBitmap(widget.key, bitmap)
+                                KYCValueHelper.setImage(widget.key, bitmap)
                             }
                         }
                     }

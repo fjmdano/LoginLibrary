@@ -11,13 +11,24 @@ import java.io.ByteArrayOutputStream
 
 class KYCValueHelper {
     companion object {
+
+        /**
+         * Clear currently stored values
+         */
+        fun clearValues() {
+            getDataRepo().stringValues.clear()
+            getDataRepo().imageValues.clear()
+            getDataRepo().booleanValues.clear()
+            getDataRepo().listValues.clear()
+        }
+
         /**
          * Store value
          * @param key item key
          * @param value item value
          */
-        fun setValue(key: String, value: String){
-            getDataRepo().values[key] = value
+        fun setString(key: String, value: String){
+            getDataRepo().stringValues[key] = value
         }
 
         /**
@@ -25,8 +36,8 @@ class KYCValueHelper {
          * @param key item key
          * @return empty string if key not found; else item value
          */
-        fun getValue(key: String): String {
-            return getDataRepo().values[key] ?: ""
+        fun getString(key: String): String {
+            return getDataRepo().stringValues[key] ?: ""
         }
 
         /**
@@ -34,8 +45,8 @@ class KYCValueHelper {
          * @param key item key
          * @param value item value (in Bitmap)
          */
-        fun setBitmap(key: String, value: Bitmap){
-            getDataRepo().images[key] = value
+        fun setImage(key: String, value: Bitmap){
+            getDataRepo().imageValues[key] = value
         }
 
         /**
@@ -43,8 +54,44 @@ class KYCValueHelper {
          * @param key item key
          * @return null if key not found; else item value (in Bitmap)
          */
-        fun getBitmap(key: String): Bitmap? {
-            return getDataRepo().images[key]
+        fun getImage(key: String): Bitmap? {
+            return getDataRepo().imageValues[key]
+        }
+
+        /**
+         * Store value
+         * @param key item key
+         * @param value item value
+         */
+        fun setBoolean(key: String, value: Boolean){
+            getDataRepo().booleanValues[key] = value
+        }
+
+        /**
+         * Retrieve stored value
+         * @param key item key
+         * @return empty string if key not found; else item value
+         */
+        fun getBoolean(key: String): Boolean {
+            return getDataRepo().booleanValues[key] ?: false
+        }
+
+        /**
+         * Store value
+         * @param key item key
+         * @param value item value
+         */
+        fun setList(key: String, value: List<String>){
+            getDataRepo().listValues[key] = value
+        }
+
+        /**
+         * Retrieve stored value
+         * @param key item key
+         * @return empty string if key not found; else item value
+         */
+        fun getList(key: String): List<String> {
+            return getDataRepo().listValues[key] ?: mutableListOf()
         }
 
         /**
@@ -58,7 +105,7 @@ class KYCValueHelper {
             try {
                 val database = Firebase.database.getReference("users")
                     .child(firebaseUser.uid).child("profile")
-                getDataRepo().values.forEach {
+                getDataRepo().stringValues.forEach {
                     if (it.key != "email" && it.key != "password") {
                         database.child(it.key).setValue(it.value)
                     }
@@ -66,7 +113,7 @@ class KYCValueHelper {
 
                 val storage = Firebase.storage.getReference("users")
                     .child(firebaseUser.uid).child("profile")
-                getDataRepo().images.forEach {
+                getDataRepo().imageValues.forEach {
                     Log.d("FirebaseDB", "Saving $it.key")
                     val path = storage.child(it.key + ".png")
                     it.value.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
