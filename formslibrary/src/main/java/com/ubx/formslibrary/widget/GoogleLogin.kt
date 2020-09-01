@@ -18,7 +18,7 @@ class GoogleLogin(override var width: Int,
         //Do nothing
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): SignInButton {
         signInButton = if (style != null) {
             SignInButton(ContextThemeWrapper(context, style!!), null, 0)
         } else {
@@ -30,5 +30,9 @@ class GoogleLogin(override var width: Int,
             signInButton.id = View.generateViewId()
         }
         return signInButton
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): SignInButton {
+        return createView(context, isSharingRow)
     }
 }

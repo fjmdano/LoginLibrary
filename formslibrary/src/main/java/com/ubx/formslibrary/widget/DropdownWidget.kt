@@ -11,6 +11,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
+import com.google.android.material.textfield.TextInputLayout
 
 class DropdownWidget(val hint: String,
                      val choices: List<String>,
@@ -25,13 +26,19 @@ class DropdownWidget(val hint: String,
     private lateinit var errorTextView: TextView
     private var hintColor = Color.GRAY
     private var errorColor = Color.rgb(255, 87, 34)
+    private var value: String = ""
 
     override fun getValue(): String {
-        return if (::spinner.isInitialized) {
+        value = if (::spinner.isInitialized) {
             spinner.selectedItem.toString()
         } else {
             ""
         }
+        return value
+    }
+
+    override fun getKeyValue(): Map<String, String> {
+        return mapOf(key to getValue())
     }
 
     override fun setError(message: String?) {
@@ -58,7 +65,7 @@ class DropdownWidget(val hint: String,
         }
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): LinearLayout {
         val dropdownLinearLayout = LinearLayout(context)
         dropdownLinearLayout.orientation = LinearLayout.VERTICAL
 
@@ -105,5 +112,17 @@ class DropdownWidget(val hint: String,
         }
 
         return dropdownLinearLayout
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
+        val textInputLayout = createTextInputLayout(context, isSharingRow)
+        val textInputEditText = createFixedEditText(context, hint, value)
+        textInputLayout.addView(textInputEditText)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            textInputLayout.id = View.generateViewId()
+            textInputEditText.id = View.generateViewId()
+        }
+        return textInputLayout
     }
 }

@@ -56,6 +56,10 @@ class LoginViewModel: ViewModel() {
         MutableLiveData<Boolean>()
     }
 
+    val showLoadingAnimation: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
     /**
      * Setup Callback for Facebook LoginManager
      */
@@ -174,6 +178,7 @@ class LoginViewModel: ViewModel() {
      *
      */
     private fun onClickLoginButton() {
+        showLoadingAnimation.value = true
         var noError = true
         var value: String
         LoginParamHelper.getInputElements().forEach {

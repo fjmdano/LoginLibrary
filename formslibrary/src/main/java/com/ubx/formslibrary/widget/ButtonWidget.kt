@@ -20,11 +20,15 @@ class ButtonWidget(val text: String,
         return ""
     }
 
+    override fun getKeyValue(): Map<String, String> {
+        return emptyMap()
+    }
+
     override fun setError(message: String?) {
         //Do nothing
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): Button {
         button = if (style != null) {
             Button(ContextThemeWrapper(context, style!!), null, 0)
         } else {
@@ -46,6 +50,10 @@ class ButtonWidget(val text: String,
             button.id = View.generateViewId()
         }
         return button
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): Button {
+        return createView(context, isSharingRow)
     }
 
     fun setOnClickListener(listener: ViewListener) {

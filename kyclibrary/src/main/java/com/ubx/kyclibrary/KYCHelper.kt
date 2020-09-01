@@ -7,8 +7,14 @@ import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.widget.*
 import com.ubx.kyclibrary.helper.KYCParamHelper
+import com.ubx.kyclibrary.helper.KYCValueHelper
 
 class KYCHelper(private val context: Context, appName: String): KYCInterface {
+
+    init {
+        KYCParamHelper.clearPages()
+        KYCValueHelper.clearValues()
+    }
 
     /**
      * Set Padding of login view

@@ -18,11 +18,19 @@ class MediaWidget(val hint: String,
     : BaseWidget(width, height) {
 
     private lateinit var imageView: ImageView
+    private lateinit var fixedImageView: ImageView
     private var bitmap: Bitmap? = null
     private var listener: ViewListener? = null
 
     override fun getValue(): String {
         return ""
+    }
+
+    override fun getKeyValue(): Map<String, Bitmap> {
+        getBitmap()?.let {
+            return mapOf(key to it)
+        }
+        return emptyMap()
     }
 
     override fun setError(message: String?) {
@@ -41,7 +49,7 @@ class MediaWidget(val hint: String,
         }
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): ImageView {
         imageView = if (style != null) {
             ImageView(ContextThemeWrapper(context, style!!), null, 0)
         } else {
@@ -55,6 +63,21 @@ class MediaWidget(val hint: String,
                 it.onClick()
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            imageView.id = View.generateViewId()
+        }
+        return imageView
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): ImageView {
+        imageView = if (style != null) {
+            ImageView(ContextThemeWrapper(context, style!!), null, 0)
+        } else {
+            ImageView(context)
+        }
+        customizeLinearElement(context, imageView)
+        imageView.setBackgroundResource(R.drawable.dotted_border)
+        imageView.setImageBitmap(bitmap)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             imageView.id = View.generateViewId()
         }

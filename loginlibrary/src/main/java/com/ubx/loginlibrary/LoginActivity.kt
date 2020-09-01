@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -21,11 +22,13 @@ import com.ubx.loginlibrary.viewmodel.LoginViewModel
 class LoginActivity: AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels()
     private var isSignedIn = false
+    private lateinit var loadingView: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
+        loadingView = findViewById(R.id.rl_loading)
 
         observeViewModelData()
         viewModel.setupFacebook()
@@ -69,6 +72,13 @@ class LoginActivity: AppCompatActivity() {
         })
         viewModel.isForgotPasswordButtonClicked.observe(this, Observer {
             startActivity(ForgotPasswordActivity.getIntent(this))
+        })
+        viewModel.showLoadingAnimation.observe(this, Observer {
+            if (it) {
+                showLoadingAnimation()
+            } else {
+                hideLoadingAnimation()
+            }
         })
 
     }
@@ -122,11 +132,13 @@ class LoginActivity: AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "firebaseAuthWithEmail:success")
                     setUserAndReturn(viewModel.getFirebaseAuth().currentUser)
+                    hideLoadingAnimation()
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "firebaseAuthWithEmail:failure", task.exception)
                     Log.w(TAG, "firebaseAuthWithEmail:trying to use custom sign in function", task.exception)
                     viewModel.customSignIn()
+                    hideLoadingAnimation()
                 }
         }
     }
@@ -165,6 +177,20 @@ class LoginActivity: AppCompatActivity() {
      */
     private fun showToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Display Loading Animation
+     */
+    private fun showLoadingAnimation() {
+        loadingView.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hide Loading Animation
+     */
+    private fun hideLoadingAnimation() {
+        loadingView.visibility = View.INVISIBLE
     }
 
     /**

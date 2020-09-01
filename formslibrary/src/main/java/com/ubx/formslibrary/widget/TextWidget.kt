@@ -22,7 +22,7 @@ class TextWidget(val text: String,
         //Do nothing
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): TextView {
         textView = if (style != null) {
             TextView(ContextThemeWrapper(context, style!!), null, 0)
         } else {
@@ -42,6 +42,10 @@ class TextWidget(val text: String,
             textView.id = View.generateViewId()
         }
         return textView
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): TextView {
+        return createView(context, isSharingRow)
     }
 
     fun setOnClickListener(listener: ViewListener) {

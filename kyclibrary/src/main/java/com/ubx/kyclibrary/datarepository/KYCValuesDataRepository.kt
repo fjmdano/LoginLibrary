@@ -3,6 +3,7 @@ package com.ubx.kyclibrary.datarepository
 import android.graphics.Bitmap
 
 class KYCValuesDataRepository {
+    var values: MutableMap<String, Any> = mutableMapOf()
     var stringValues: MutableMap<String, String> = mutableMapOf()
     var imageValues: MutableMap<String, Bitmap> = mutableMapOf()
     var booleanValues: MutableMap<String, Boolean> = mutableMapOf()

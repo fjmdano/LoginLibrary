@@ -1,12 +1,12 @@
 package com.ubx.sample
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.loginlibrary.LoginHelper
@@ -17,8 +17,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
     lateinit var kycHelper: KYCHelper
 
-    lateinit var loginIntent: Intent
-    lateinit var kycIntent: Intent
     private val model: MainActivityViewModel by viewModels()
     val activity = this
 
@@ -33,8 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         createLoginContent()
         createKYCContent()
-
-        createIntents()
 
         setSignOutHandler()
     }
@@ -66,6 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         loginHelper.setCustomSignInHandler(object: LoginHelper.CustomLoginHandler {
             override fun login(): Any? {
+                Toast.makeText(applicationContext, "Error logging in", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "Custom signing in")
                 Log.d(TAG, "email: ${loginHelper.getValue("email")}")
                 Log.d(TAG, "password: ${loginHelper.getValue("password")}")
@@ -89,20 +86,8 @@ class MainActivity : AppCompatActivity() {
             "915758123947-4vhnf7vbjk7p6c0njqp5lben0ede1o9v.apps.googleusercontent.com")
     }
 
-    /**
-     * Create log-in and kyc intent
-     */
-    private fun createIntents() {
-        if (!this::loginIntent.isInitialized) {
-            loginIntent = loginHelper.getIntent(this)
-        }
-        if (!this::kycIntent.isInitialized) {
-            kycIntent = kycHelper.getIntent(this)
-        }
-    }
-
     private fun showLogin() {
-        startActivity(loginIntent)
+        startActivity(loginHelper.getIntent(this))
     }
 
 

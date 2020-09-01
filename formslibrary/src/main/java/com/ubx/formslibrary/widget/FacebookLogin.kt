@@ -18,7 +18,7 @@ class FacebookLogin(override var width: Int,
         //Do nothing
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): LoginButton {
         facebookButton = if (style != null) {
             LoginButton(ContextThemeWrapper(context, style!!), null, 0)
         } else {
@@ -33,5 +33,9 @@ class FacebookLogin(override var width: Int,
             facebookButton.id = View.generateViewId()
         }
         return facebookButton
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): LoginButton {
+        return createView(context, isSharingRow)
     }
 }

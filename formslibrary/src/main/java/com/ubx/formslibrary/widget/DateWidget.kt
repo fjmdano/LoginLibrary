@@ -23,13 +23,19 @@ class DateWidget(val hint: String,
 
     private lateinit var textInputLayout: TextInputLayout
     private lateinit var textInputEditText: EditText
+    private var value: String = ""
 
     override fun getValue(): String {
-        return if (::textInputEditText.isInitialized) {
+        value = if (::textInputEditText.isInitialized) {
             textInputEditText.text.toString()
         } else {
             ""
         }
+        return value
+    }
+
+    override fun getKeyValue(): Map<String, String> {
+        return mapOf(key to getValue())
     }
 
     override fun setError(message: String?) {
@@ -51,16 +57,8 @@ class DateWidget(val hint: String,
         }
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
-        textInputLayout = TextInputLayout(context)
-        customizeLinearElement(context, textInputLayout)
-        if (isSharingRow) {
-            textInputLayout.layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1F)
-        }
-        textInputLayout.isErrorEnabled = true
+    override fun createView(context: Context, isSharingRow: Boolean): TextInputLayout {
+        textInputLayout = createTextInputLayout(context, isSharingRow)
 
         textInputEditText = if (style != null) {
             TextInputEditText(ContextThemeWrapper(context, style!!), null, 0)
@@ -87,6 +85,17 @@ class DateWidget(val hint: String,
         return textInputLayout
     }
 
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
+        textInputLayout = createTextInputLayout(context, isSharingRow)
+        textInputEditText = createFixedEditText(context, hint, value)
+        textInputLayout.addView(textInputEditText)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            textInputLayout.id = View.generateViewId()
+            textInputEditText.id = View.generateViewId()
+        }
+        return textInputLayout
+    }
 
     private fun showDatePicker(context: Context, editText: EditText) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {

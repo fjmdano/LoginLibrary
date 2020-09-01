@@ -3,6 +3,7 @@ package com.ubx.loginlibrary.widget
 import android.content.Context
 import android.text.InputType
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import com.ubx.formslibrary.widget.*
 
@@ -72,7 +73,11 @@ class ForgotPasswordWidget(
         //Do nothing
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): Button {
         return button.createView(context, isSharingRow)
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): Button {
+        return button.createUneditableView(context, isSharingRow)
     }
 }

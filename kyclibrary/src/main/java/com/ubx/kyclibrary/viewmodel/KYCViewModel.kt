@@ -10,10 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.ubx.formslibrary.listener.ViewListener
-import com.ubx.formslibrary.model.Page
 import com.ubx.formslibrary.model.SignInCredentials
-import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.widget.*
 import com.ubx.kyclibrary.helper.KYCParamHelper
 import com.ubx.kyclibrary.helper.KYCValueHelper
@@ -21,7 +18,7 @@ import java.io.ByteArrayOutputStream
 
 class KYCViewModel: ViewModel() {
     var pageNumber = -1
-    lateinit var page: Page
+    lateinit var pageWidget: PageWidget
     var selectedMediaWidget: MediaWidget? = null
     val pageTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
@@ -32,8 +29,8 @@ class KYCViewModel: ViewModel() {
     val rightContent: MutableLiveData<Any?> by lazy {
         MutableLiveData<Any?>()
     }
-    val pageForLinearLayout: MutableLiveData<Page> by lazy {
-        MutableLiveData<Page>()
+    val pageForLinearLayout: MutableLiveData<PageWidget> by lazy {
+        MutableLiveData<PageWidget>()
     }
     val linearLayoutToDisplay: MutableLiveData<LinearLayout> by lazy {
         MutableLiveData<LinearLayout>()
@@ -118,22 +115,22 @@ class KYCViewModel: ViewModel() {
     /**
      * Set Toolbar Contents
      */
-    private fun setToolbar(page: Page) {
-        pageTitle.value = page.pageTitle
-        leftContent.value = page.leftContent
-        rightContent.value = page.rightContent
+    private fun setToolbar(pageWidget: PageWidget) {
+        pageTitle.value = pageWidget.pageTitle
+        leftContent.value = pageWidget.leftContent
+        rightContent.value = pageWidget.rightContent
     }
 
     /**
      * Set Page to be displayed
      */
     private fun setUIPage(pageNumber: Int) {
-        page = KYCParamHelper.getPage(pageNumber)!!
-        setToolbar(page)
-        val linearLayout = KYCParamHelper.getLayoutPage(pageNumber)
+        pageWidget = KYCParamHelper.getPage(pageNumber)!!
+        setToolbar(pageWidget)
+        val linearLayout = pageWidget.getLinearLayout()
         if (linearLayout == null) {
             // set page to pageForLinearLayout
-            pageForLinearLayout.value = page
+            pageForLinearLayout.value = pageWidget
         } else {
             linearLayoutToDisplay.value = linearLayout
         }
@@ -163,70 +160,35 @@ class KYCViewModel: ViewModel() {
      * @param page containing the pageRows containing the UI elements
      * @param context application context
      */
-    fun createLayoutPage(page: Page, context: Context): LinearLayout {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.VERTICAL
-        DisplayUtil.setPadding(context, linearLayout, KYCParamHelper.getPadding())
-        DisplayUtil.setMargins(context, linearLayout, KYCParamHelper.getMargins())
-        var isSharingRow: Boolean
-
-        page.rows.forEach {
-            isSharingRow = false
-            val layoutToUse = if (it.widgets.size > 1) {
-                isSharingRow = true
-                //Add another linear layout
-                val innerLinearLayout = LinearLayout(context)
-                innerLinearLayout.orientation = LinearLayout.HORIZONTAL
-
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT)
-                innerLinearLayout.layoutParams = layoutParams
-                innerLinearLayout
-            } else {
-                linearLayout
+    fun createLayoutPage(pageWidget: PageWidget, context: Context): LinearLayout {
+        pageWidget.padding = KYCParamHelper.getPadding()
+        pageWidget.margins = KYCParamHelper.getMargins()
+        pageWidget.setListener(object: PageWidget.Listener{
+            override fun selectMedia(widget: MediaWidget) {
+                setMediaWidget(widget)
             }
-            it.widgets.forEach{ widget ->
-                layoutToUse.addView(widget.createView(context, isSharingRow))
-                when (widget) {
-                    is ButtonWidget -> {
-                        if (widget.checkIfCustom()) {
-                            widget.setOnClickListener(object: ViewListener {
-                                override fun onClick() {
-                                    getNextPage()
-                                }
-                            })
-                        }
-                    }
-                    is ListWidget -> {
-                        widget.setOnClickListener(object: ViewListener {
-                            override fun onClick() {
-                                selectedListWidget.value = widget
-                            }
-                        })
-                    }
-                    is MediaWidget -> {
-                        widget.setOnClickListener(object: ViewListener {
-                            override fun onClick() {
-                                selectedMediaWidget = widget
-                                isMediaSelected.value = true
-                            }
-                        })
-                    }
-                    else -> {
-                        //Do nothing
-                    }
-                }
-            }
-            if (it.widgets.size > 1) {
-                linearLayout.addView(layoutToUse)
-            }
-        }
 
-        KYCParamHelper.addLayoutPage(linearLayout)
+            override fun selectItemFromList(widget: ListWidget) {
+                setListWidget(widget)
+            }
 
+            override fun handleCustomButtonClickListener() {
+                getNextPage()
+            }
+        })
+        val linearLayout = pageWidget.createView(context)
         linearLayoutToDisplay.value = linearLayout
         return linearLayout
+    }
+
+    fun setListWidget(widget: ListWidget) {
+        toastMessage.value = "List selected"
+        selectedListWidget.value = widget
+    }
+
+    fun setMediaWidget(widget: MediaWidget) {
+        selectedMediaWidget = widget
+        isMediaSelected.value = true
     }
 
 
@@ -247,35 +209,15 @@ class KYCViewModel: ViewModel() {
      * @return true if errors are encountered
      */
     private fun verifyInputs(): Boolean {
-        if (!this::page.isInitialized) return false
-        var isOK = true
-        page.rows.forEach {
-            it.widgets.forEach{ widget ->
-                if (widget.isValid()) {
-                    when (widget) {
-                        is InputWidget -> {
-                            if (widget.getValue().isNotBlank()) {
-                                KYCValueHelper.setString(widget.key, widget.getValue())
-                            }
-                        }
-                        is DateWidget -> {
-                            if (widget.getValue().isNotBlank()) {
-                                KYCValueHelper.setString(widget.key, widget.getValue())
-                            }
-                        }
-                        is DropdownWidget -> {
-                            if (widget.getValue().isNotBlank()) {
-                                KYCValueHelper.setString(widget.key, widget.getValue())
-                            }
-                        }
-                        is MediaWidget -> {
-                            widget.getBitmap()?.let { bitmap ->
-                                KYCValueHelper.setImage(widget.key, bitmap)
-                            }
-                        }
-                    }
-                } else {
-                    isOK = false
+        if (!this::pageWidget.isInitialized) return false
+        val isOK = pageWidget.isValid()
+        if (isOK) {
+            pageWidget.getKeyValue().forEach { (key, value) ->
+                when (value) {
+                    is String -> KYCValueHelper.setString(key, value)
+                    is List<*> -> KYCValueHelper.setList(key, value as List<String>)
+                    is Boolean -> KYCValueHelper.setBoolean(key, value)
+                    is Bitmap -> KYCValueHelper.setImage(key, value)
                 }
             }
         }

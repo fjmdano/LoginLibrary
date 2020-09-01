@@ -1,11 +1,8 @@
 package com.ubx.kyclibrary.helper
 
 import android.app.Activity
-import android.widget.LinearLayout
 import com.ubx.formslibrary.model.Margins
 import com.ubx.formslibrary.model.Padding
-import com.ubx.formslibrary.model.Page
-import com.ubx.formslibrary.model.PageRow
 import com.ubx.formslibrary.widget.*
 import com.ubx.kyclibrary.KYCHelper
 import com.ubx.kyclibrary.datarepository.KYCParamDataRepository
@@ -16,27 +13,24 @@ class KYCParamHelper {
          * Reset store data of layout list
          */
         fun resetLayoutPages() {
-            getDataRepo().layoutPages.clear()
-        }
-
-        /**
-         * Get Stored Linear Layout
-         * @param pageNumber index of linear layout in the list
-         */
-        fun getLayoutPage(pageNumber: Int): LinearLayout? {
-            val layoutPages = getDataRepo().layoutPages
-            return if (pageNumber < 0 || pageNumber > layoutPages.size-1) {
-                null
-            } else {
-                layoutPages[pageNumber]
+            getDataRepo().pages.forEach {
+                it.clearLayout()
             }
         }
+        /**
+         * Remove stored data of layout list
+         */
+        fun clearPages() {
+            resetLayoutPages()
+            getDataRepo().pages.clear()
+        }
+
 
         /**
          * Get raw Page
          * @param pageNumber index of page in the list
          */
-        fun getPage(pageNumber: Int): Page? {
+        fun getPage(pageNumber: Int): PageWidget? {
             val pages = getDataRepo().pages
             return if (pageNumber < 0 || pageNumber > pages.size-1) {
                 null
@@ -46,32 +40,13 @@ class KYCParamHelper {
         }
 
         /**
-         * Get last linear layout stored in the list
-         *
-         * @return last linear layout
-         */
-        fun getLastLayoutPage(): LinearLayout {
-            val layoutPages = getDataRepo().layoutPages
-            return layoutPages.last()
-        }
-
-        /**
          * Get last raw page stored in the list
          *
          * @return last raw page
          */
-        fun getLastPage(): Page {
+        fun getLastPage(): PageWidget {
             val pages = getDataRepo().pages
             return pages.last()
-        }
-
-        /**
-         * Add linear layout to the list
-         *
-         * @param linearLayout created linear layout
-         */
-        fun addLayoutPage(linearLayout: LinearLayout){
-            getDataRepo().layoutPages.add(linearLayout)
         }
 
         /**
@@ -81,20 +56,17 @@ class KYCParamHelper {
          * @param rightContent can be string, image or null
          */
         fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
-            getDataRepo().pages.add(Page(pageTitle, leftContent,
-                rightContent, mutableListOf()))
+            getDataRepo().pages.add(
+                PageWidget(pageTitle, leftContent, rightContent)
+            )
         }
 
         /**
          * Add page row
-         * @param uiElements UI elements that will be displayed in one row
+         * @param widgets UI elements that will be displayed in one row
          */
-        fun addRow(uiElements: MutableList<BaseWidget>) {
-            val pageRow = PageRow(mutableListOf())
-            uiElements.forEach {
-                pageRow.widgets.add(it)
-            }
-            getLastPage().rows.add(pageRow)
+        fun addRow(widgets: MutableList<BaseWidget>) {
+            getLastPage().addPageRow(widgets)
         }
 
         /**
@@ -110,9 +82,7 @@ class KYCParamHelper {
             val imageWidget = ImageWidget(image, width, height)
             getDataRepo().imageWidgets.add(imageWidget)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(imageWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(imageWidget)
             }
             return imageWidget
         }
@@ -130,9 +100,7 @@ class KYCParamHelper {
             val text = TextWidget(label, width, height)
             getDataRepo().textWidgets.add(text)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(text)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(text)
             }
             return text
         }
@@ -158,9 +126,7 @@ class KYCParamHelper {
             val input = InputWidget(hint, isPassword, inputType, key, isRequired, width, height)
             getDataRepo().inputWidgets.add(input)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(input)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(input)
             }
             return input
         }
@@ -180,9 +146,7 @@ class KYCParamHelper {
             button.setAsCustom(true)
             getDataRepo().nextButtonWidgets.add(button)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(button)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(button)
             }
             return button
         }
@@ -203,9 +167,7 @@ class KYCParamHelper {
             button.setOnClickListener(listener)
             getDataRepo().buttonWidgets.add(button)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(button)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(button)
             }
             return button
         }
@@ -228,9 +190,7 @@ class KYCParamHelper {
             val dateWidget = DateWidget(label, key, isRequired, width, height)
             getDataRepo().dateWidgets.add(dateWidget)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(dateWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(dateWidget)
             }
             return dateWidget
         }
@@ -259,9 +219,7 @@ class KYCParamHelper {
             val dropdownWidget = DropdownWidget(label, options, key, isRequired, width, height)
             getDataRepo().dropdownWidgets.add(dropdownWidget)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(dropdownWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(dropdownWidget)
             }
             return dropdownWidget
         }
@@ -290,9 +248,7 @@ class KYCParamHelper {
             val listWidget = ListWidget(label, choices, key, isRequired, width, height)
             getDataRepo().listWidgets.add(listWidget)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(listWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(listWidget)
             }
             return listWidget
         }
@@ -319,9 +275,7 @@ class KYCParamHelper {
             val mediaWidget = MediaWidget(label, key, isRequired, width, height)
             getDataRepo().mediaWidgets.add(mediaWidget)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(mediaWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(mediaWidget)
             }
             return mediaWidget
         }
@@ -349,9 +303,7 @@ class KYCParamHelper {
         ): ChecklistWidget {
             val checklistWidget = ChecklistWidget(label, options, key, isRequired, width, height)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(checklistWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(checklistWidget)
             }
             return checklistWidget
         }
@@ -377,9 +329,7 @@ class KYCParamHelper {
         ): SwitchWidget {
             val switchWidget = SwitchWidget(label, key, isRequired, width, height)
             if (addNow) {
-                val pageRow = PageRow(mutableListOf())
-                pageRow.widgets.add(switchWidget)
-                getLastPage().rows.add(pageRow)
+                getLastPage().addPageRow(switchWidget)
             }
             return switchWidget
         }
@@ -398,8 +348,8 @@ class KYCParamHelper {
          *
          * @return instance of KYCParamModel
          */
-        fun getPages(): MutableList<Page> {
-            return KYCParamDataRepository.instance.pages
+        fun getPages(): MutableList<PageWidget> {
+            return getDataRepo().pages
         }
 
         fun setMainActivity(activity: Activity) {

@@ -50,13 +50,19 @@ class InputWidget(val hint: String,
     private var isValidationBarsDisplayed = false
     private var isValidationRulesDisplayed = false
     private var maximumLength: Int = 0
+    private var value: String = ""
 
     override fun getValue(): String {
-        return if (::textInputEditText.isInitialized) {
+        value = if (::textInputEditText.isInitialized) {
             textInputEditText.text.toString()
         } else {
             ""
         }
+        return value
+    }
+
+    override fun getKeyValue(): Map<String, String> {
+        return mapOf(key to getValue())
     }
 
     override fun setError(message: String?) {
@@ -90,18 +96,10 @@ class InputWidget(val hint: String,
     }
 
     override fun createView(context: Context, isSharingRow: Boolean): View {
-        textInputLayout = TextInputLayout(context)
-        customizeLinearElement(context, textInputLayout)
-        if (isSharingRow) {
-            textInputLayout.layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1F)
-        }
+        textInputLayout = createTextInputLayout(context, isSharingRow)
 
         @Suppress("DEPRECATION")
         textInputLayout.isPasswordVisibilityToggleEnabled = isPassword
-        textInputLayout.isErrorEnabled = true
 
         textInputEditText = if (style != null) {
             TextInputEditText(ContextThemeWrapper(context, style!!), null, 0)
@@ -136,6 +134,18 @@ class InputWidget(val hint: String,
             })
             createValidationBarsAndRules(context, textInputLayout)
         }
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
+        val textInputLayout = createTextInputLayout(context, isSharingRow)
+        val textInputEditText = createFixedEditText(context, hint, value)
+        textInputLayout.addView(textInputEditText)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            textInputLayout.id = View.generateViewId()
+            textInputEditText.id = View.generateViewId()
+        }
+        return textInputLayout
     }
 
     /**

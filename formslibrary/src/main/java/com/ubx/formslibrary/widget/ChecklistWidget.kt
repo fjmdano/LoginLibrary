@@ -30,6 +30,10 @@ class ChecklistWidget(val label: String,
         return selectedOptions
     }
 
+    override fun getKeyValue(): Map<String, List<String>> {
+        return mapOf(key to getValue())
+    }
+
     override fun setError(message: String?) {
         message?.let {
             Log.d(TAG, "[$key] $it")
@@ -42,21 +46,7 @@ class ChecklistWidget(val label: String,
     }
 
     override fun createView(context: Context, isSharingRow: Boolean): View {
-        linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.VERTICAL
-        if (label.isNotBlank()) {
-            labelTextView = if (style != null) {
-                TextView(ContextThemeWrapper(context, style!!), null, 0)
-            } else {
-                TextView(context)
-            }
-            labelTextView.text = label
-            customizeLinearElement(context, labelTextView)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                labelTextView.id = View.generateViewId()
-            }
-            linearLayout.addView(labelTextView)
-        }
+        linearLayout = createLayoutAndLabel(context)
         options.forEachIndexed { index, string ->
             val checkBox = CheckBox(context)
             checkBox.text = string
@@ -76,6 +66,46 @@ class ChecklistWidget(val label: String,
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             linearLayout.id = View.generateViewId()
+        }
+        return linearLayout
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): View {
+        linearLayout = createLayoutAndLabel(context)
+
+        options.forEachIndexed { index, string ->
+            val checkBox = CheckBox(context)
+            checkBox.text = string
+            checkBox.isChecked = (index in selectedIndices)
+            checkBox.isEnabled = false
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                checkBox.id = View.generateViewId()
+            }
+            linearLayout.addView(checkBox)
+            checkBoxes.add(checkBox)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            linearLayout.id = View.generateViewId()
+        }
+        return linearLayout
+    }
+
+    private fun createLayoutAndLabel(context: Context): LinearLayout {
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.VERTICAL
+        if (label.isNotBlank()) {
+            labelTextView = if (style != null) {
+                TextView(ContextThemeWrapper(context, style!!), null, 0)
+            } else {
+                TextView(context)
+            }
+            labelTextView.text = label
+            customizeLinearElement(context, labelTextView)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                labelTextView.id = View.generateViewId()
+            }
+            linearLayout.addView(labelTextView)
         }
         return linearLayout
     }

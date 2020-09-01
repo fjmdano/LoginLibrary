@@ -37,4 +37,8 @@ class LoginWidget(var appName: String,
         }
         return linearLayout
     }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): View {
+        return createView(context, isSharingRow)
+    }
 }

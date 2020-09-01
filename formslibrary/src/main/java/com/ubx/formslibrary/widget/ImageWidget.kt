@@ -22,7 +22,7 @@ class ImageWidget(val image: Int,
         //Do nothing
     }
 
-    override fun createView(context: Context, isSharingRow: Boolean): View {
+    override fun createView(context: Context, isSharingRow: Boolean): ImageView {
         imageView = if (style != null) {
             ImageView(ContextThemeWrapper(context, style!!), null, 0)
         } else {
@@ -39,6 +39,10 @@ class ImageWidget(val image: Int,
             imageView.id = View.generateViewId()
         }
         return imageView
+    }
+
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): ImageView {
+        return createView(context, isSharingRow)
     }
 
     fun setOnClickListener(listener: ViewListener) {

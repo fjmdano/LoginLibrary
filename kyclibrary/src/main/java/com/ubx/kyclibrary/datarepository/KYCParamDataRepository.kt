@@ -1,17 +1,15 @@
 package com.ubx.kyclibrary.datarepository
 
 import android.app.Activity
-import android.widget.LinearLayout
 import com.ubx.formslibrary.model.Margins
 import com.ubx.formslibrary.model.Padding
-import com.ubx.formslibrary.model.Page
 import com.ubx.formslibrary.widget.*
 
 class KYCParamDataRepository {
     var layoutPadding: Padding = Padding(0, 0,0,0)
     var layoutMargins: Margins = Margins(0, 0,0,0)
-    var layoutPages: MutableList<LinearLayout> = mutableListOf()
-    var pages: MutableList<Page> = mutableListOf()
+
+    var pages: MutableList<PageWidget> = mutableListOf()
     var imageWidgets: MutableList<ImageWidget> = mutableListOf()
     var textWidgets: MutableList<TextWidget> = mutableListOf()
     var inputWidgets: MutableList<InputWidget> = mutableListOf()
@@ -32,36 +30,6 @@ class KYCParamDataRepository {
     var buttonStyle: Int? = null
 
     var mainActivity: Activity? = null
-
-    fun setImageStyle(style: Int) {
-        imageWidgets.forEach {
-            it.style = style
-        }
-    }
-
-    fun setTextStyle(style: Int) {
-        textWidgets.forEach {
-            it.style = style
-        }
-    }
-
-    fun setInputStyle(style: Int) {
-        inputWidgets.forEach {
-            it.style = style
-        }
-    }
-
-    fun setDropdownStyle(style: Int) {
-        dropdownWidgets.forEach {
-            it.style = style
-        }
-    }
-
-    fun setListStyle(style: Int) {
-        listWidgets.forEach {
-            it.style = style
-        }
-    }
 
     private object HOLDER {
         val INSTANCE = KYCParamDataRepository()
