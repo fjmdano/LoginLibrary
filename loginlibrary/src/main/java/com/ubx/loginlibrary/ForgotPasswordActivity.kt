@@ -3,6 +3,8 @@ package com.ubx.loginlibrary
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +15,12 @@ import com.ubx.loginlibrary.viewmodel.ForgotPasswordViewModel
 
 class ForgotPasswordActivity: AppCompatActivity() {
     private val viewModel: ForgotPasswordViewModel by viewModels()
+    private lateinit var loadingView: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
+        loadingView = findViewById(R.id.rl_loading)
         supportActionBar?.hide()
 
         observeViewModelData()
@@ -33,6 +37,13 @@ class ForgotPasswordActivity: AppCompatActivity() {
         viewModel.isSendSuccess.observe(this, Observer {
             if (it) finish()
         })
+        viewModel.showLoadingAnimation.observe(this, Observer {
+            if (it) {
+                showLoadingAnimation()
+            } else {
+                hideLoadingAnimation()
+            }
+        })
     }
 
     /**
@@ -40,6 +51,20 @@ class ForgotPasswordActivity: AppCompatActivity() {
      */
     private fun showToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Display Loading Animation
+     */
+    private fun showLoadingAnimation() {
+        loadingView.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hide Loading Animation
+     */
+    private fun hideLoadingAnimation() {
+        loadingView.visibility = View.INVISIBLE
     }
 
     /**

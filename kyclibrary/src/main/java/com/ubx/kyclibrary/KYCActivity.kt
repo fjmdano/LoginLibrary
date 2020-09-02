@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -41,6 +38,7 @@ class KYCActivity: AppCompatActivity() {
     private lateinit var toolbarRightContainer: ConstraintLayout
     private lateinit var toolbarRightImage: ImageView
     private lateinit var toolbarRightText: TextView
+    private lateinit var loadingView: RelativeLayout
 
     private var selectedList: ListWidget? = null
 
@@ -49,7 +47,8 @@ class KYCActivity: AppCompatActivity() {
         setContentView(R.layout.activity_kyc)
         supportActionBar?.hide()
 
-        parentLayout = findViewById(R.id.sv_container)
+        parentLayout = findViewById(R.id.cl_container)
+        loadingView = findViewById(R.id.rl_loading)
         observeViewModelData()
         setActionHandler()
         viewModel.getNextPage()
@@ -119,8 +118,12 @@ class KYCActivity: AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        viewModel.dismiss()
         finish()
+    }
+
+    override fun finish() {
+        viewModel.dismiss()
+        super.finish()
     }
 
     /**
@@ -163,6 +166,13 @@ class KYCActivity: AppCompatActivity() {
                 finish()
             } else {
                 showToast("Error occurred when saving data.")
+            }
+        })
+        viewModel.showLoadingAnimation.observe(this, Observer {
+            if (it) {
+                showLoadingAnimation()
+            } else {
+                hideLoadingAnimation()
             }
         })
     }
@@ -262,6 +272,20 @@ class KYCActivity: AppCompatActivity() {
     }
 
     /**
+     * Display Loading Animation
+     */
+    private fun showLoadingAnimation() {
+        loadingView.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hide Loading Animation
+     */
+    private fun hideLoadingAnimation() {
+        loadingView.visibility = View.INVISIBLE
+    }
+
+    /**
      * Display created layout
      */
     private fun displayLayout(layout: LinearLayout) {
@@ -340,10 +364,12 @@ class KYCActivity: AppCompatActivity() {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
                         showToast("Authentication failed.")
+                        hideLoadingAnimation()
                     }
                 }
         } catch (e: Exception) {
             Log.w(TAG, "registerUser: error", e)
+            hideLoadingAnimation()
         }
     }
 

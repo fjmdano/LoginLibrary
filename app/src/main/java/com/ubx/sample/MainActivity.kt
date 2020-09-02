@@ -1,17 +1,20 @@
 package com.ubx.sample
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.Gravity
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.ubx.kyclibrary.KYCHelper
-import com.ubx.loginlibrary.LoginHelper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.auth.FirebaseUser
+import com.ubx.kyclibrary.KYCHelper
+import com.ubx.loginlibrary.LoginHelper
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
@@ -25,7 +28,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        //Create Login Parameters
+        setupViews()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        var user = loginHelper.getUser()
+        if (user == null) {
+            showLogin()
+        } else {
+            val details = user.details
+            if (details is FirebaseUser) {
+                findViewById<TextView>(R.id.tv_name).text = details.displayName
+            }
+        }
+    }
+
+    /**
+     * Setup login and kyc views
+     */
+    private fun setupViews() {
         createHelpers()
         useThirdParties()
 
@@ -35,18 +57,25 @@ class MainActivity : AppCompatActivity() {
         setSignOutHandler()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (loginHelper.getUser() == null) {
-            showLogin()
-        }
-    }
-
+    /**
+     * Set handler on Sign out
+     */
     private fun setSignOutHandler() {
-        val btnSignOut = findViewById<Button>(R.id.btn_logout)
+        val btnSettings = findViewById<ImageView>(R.id.iv_settings)
+        btnSettings.setOnClickListener{
+            startActivity(ProfileActivity.getIntent(this))
+        }
+        val btnSignOut = findViewById<ImageView>(R.id.iv_logout)
         btnSignOut.setOnClickListener {
-            loginHelper.signOutUser()
-            showLogin()
+            AlertDialog.Builder(this)
+                .setTitle("Hold on!")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton(android.R.string.yes) { _, _ ->
+                    loginHelper.signOutUser()
+                    showLogin()
+                }
+                .setNegativeButton(android.R.string.no, null)
+                .show()
         }
     }
 
@@ -228,14 +257,16 @@ class MainActivity : AppCompatActivity() {
             listOf("Metro Manila", "Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province", "Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan", "Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Batangas", "Cavite", "Laguna", "Quezon", "Rizal", "Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon", "Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon", "Aklan", "Antique", "Capiz", "Guimaras", "Iloilo", "Negros Occidental", "Bohol", "Cebu", "Negros Oriental", "Siquijor", "Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte", "Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay", "Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental", "Compostela Valley", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental", "Cotabato", "Sarangani", "South Cotabato", "Sultan Kudarat", "Agusan del Norte", "Agusan del Sur", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur", "Basilan", "Lanao del Sur", "Maguindanao", "Sulu", "Tawi-tawi"),
             "province",
             true)
+
         kycHelper.addInput(
             "Address", false,
             InputType.TYPE_CLASS_TEXT,
             "address",
             true)
+
         kycHelper.addPageRow(mutableListOf(
             kycHelper.addDateInRow(
-                "Birthday",
+                "Date of Birth",
                 "birthday",
                 true),
             kycHelper.addDropdownInRow(
@@ -245,7 +276,7 @@ class MainActivity : AppCompatActivity() {
                 true)
         ))
         kycHelper.addInput(
-            "Phone", false,
+            "Contact Number", false,
             InputType.TYPE_CLASS_PHONE,
             "phone",
             true)

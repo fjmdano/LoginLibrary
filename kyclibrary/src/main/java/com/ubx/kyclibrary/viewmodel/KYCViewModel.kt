@@ -51,18 +51,22 @@ class KYCViewModel: ViewModel() {
         MutableLiveData<Boolean>()
     }
 
+    val showLoadingAnimation: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
     /**
      * Get previous UI page
      * Currently, page is expected to be saved in layout list
      */
     fun getPreviousPage() {
         //Decrement page number
-        pageNumber = if (pageNumber <= 0) {
-            0
+        if (pageNumber <= 0) {
+            isSaved.value = true
         } else {
-            pageNumber - 1
+            pageNumber -= 1
+            setUIPage(pageNumber)
         }
-        setUIPage(pageNumber)
     }
 
     /**
@@ -140,6 +144,7 @@ class KYCViewModel: ViewModel() {
      * Submit KYC form
      */
     private fun submit() {
+        showLoadingAnimation.value = true
         if (Firebase.auth.currentUser != null) {
             saveDataToDB()
         } else {
@@ -153,6 +158,7 @@ class KYCViewModel: ViewModel() {
      */
     fun saveDataToDB() {
         isSaved.value = KYCValueHelper.storeInDB()
+        showLoadingAnimation.value = false
     }
 
     /**

@@ -196,6 +196,8 @@ class LoginViewModel: ViewModel() {
             emailCredentials.value = SignInCredentials(
                 LoginValuesHelper.getValue(KEY_EMAIL),
                 LoginValuesHelper.getValue(KEY_PASSWORD))
+        } else {
+            showLoadingAnimation.value = false
         }
     }
 

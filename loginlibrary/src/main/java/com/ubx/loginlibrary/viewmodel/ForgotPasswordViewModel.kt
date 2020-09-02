@@ -17,6 +17,10 @@ class ForgotPasswordViewModel: ViewModel() {
     val isSendSuccess: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
+
+    val showLoadingAnimation: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
     private val forgotPasswordElement = LoginParamHelper.getForgotPasswordElement()
 
     /**
@@ -66,15 +70,20 @@ class ForgotPasswordViewModel: ViewModel() {
      */
     private fun sendPasswordReset() {
         val userEmail = forgotPasswordElement?.inputField?.getValue()
+        showLoadingAnimation.value = true
         if (isValidEmail(userEmail)) {
             ThirdPartyConfigHelper.getFirebaseAuth().sendPasswordResetEmail(userEmail!!)
                 .addOnSuccessListener {
                     toastMessage.value = "E-mail sent. Please check your email."
                     isSendSuccess.value = true
+                    showLoadingAnimation.value = false
                 }
                 .addOnFailureListener {
                     toastMessage.value = it.localizedMessage
+                    showLoadingAnimation.value = false
                 }
+        } else {
+            showLoadingAnimation.value = false
         }
     }
 
