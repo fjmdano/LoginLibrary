@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
     lateinit var kycHelper: KYCHelper
 
-    private val model: MainActivityViewModel by viewModels()
     val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
