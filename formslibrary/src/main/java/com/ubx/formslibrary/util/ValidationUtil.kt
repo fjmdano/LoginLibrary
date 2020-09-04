@@ -15,25 +15,5 @@ class ValidationUtil {
             return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target)
                 .matches()
         }
-
-        /**
-         * Input Text Validator
-         */
-        fun isValidInput(input: String, regexPositiveStrings: MutableList<String>, regexNegativeStrings: MutableList<String>): Boolean {
-            regexPositiveStrings.forEach {
-                if (!input.matches(it.toRegex())) {
-                    Log.w(TAG, "[INVALID INPUT] Error for this regex: " + it.toRegex())
-                    return false
-                }
-            }
-            regexNegativeStrings.forEach {
-                if (input.matches(it.toRegex())) {
-                    Log.w(TAG, "[INVALID INPUT] Error for this regex: " + it.toRegex())
-                    return false
-                }
-            }
-            return true
-        }
-
     }
 }

@@ -2,4 +2,7 @@
 <resources>
     <color name="gray_alpha">#99727272</color>
     <color name="lime_alpha">#A0E562</color>
+
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
 </resources>

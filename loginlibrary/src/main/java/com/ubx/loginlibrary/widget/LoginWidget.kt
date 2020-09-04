@@ -5,7 +5,7 @@ import android.os.Build
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.view.ContextThemeWrapper
-import com.ubx.formslibrary.widget.BaseWidget
+import com.ubx.formslibrary.view.widget.BaseWidget
 
 class LoginWidget(var appName: String,
                   override var width: Int,

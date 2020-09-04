@@ -1,3 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryVariant">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#2962FF</item>
+        <item name="colorSecondaryVariant">#0039CB</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorError">#F44336</item>
+        <item name="colorOnError">#FFFFFF</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#212121</item>
+
+        <item name="colorControlActivated">#3f49cc</item>
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
+    </style>
+
+    <style name="textTitleToolbar">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_14</item>
+    </style>
+
+    <style name="EditText.Default" parent="android:Widget.EditText">
+        <item name="android:textSize">@dimen/text_12</item>
+        <item name="android:background">@drawable/edittext_default</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="EditText.DefaultAlpha" parent="android:Widget.EditText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">@dimen/small_125</item>
+        <item name="android:paddingRight">@dimen/normal_100</item>
+    </style>
+
+    <style name="AutoCompleteDefaultAlpha">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">@dimen/small_125</item>
+        <item name="android:paddingRight">@dimen/small_125</item>
+    </style>
+
+    <style name="DefaultRecycleViewText">
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:padding">@dimen/normal_100</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

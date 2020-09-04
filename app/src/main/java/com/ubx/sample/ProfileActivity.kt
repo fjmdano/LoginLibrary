@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.ubx.kyclibrary.KYCHelper
+import com.ubx.formslibrary.FormHelper
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -21,7 +21,7 @@ class ProfileActivity : AppCompatActivity() {
         setButtonActions()
     }
 
-    fun setButtonActions() {
+    private fun setButtonActions() {
         val cvPersonalInformation = findViewById<CardView>(R.id.cv_personal_info)
         cvPersonalInformation.setOnClickListener {
             createPersonalInformationForm()
@@ -30,7 +30,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun createPersonalInformationForm() {
         Log.d("PERSONAL INFO", "START")
-        val helperPersonalInformationForm = KYCHelper(applicationContext, "LoginHelper")
+        val helperPersonalInformationForm = FormHelper(applicationContext, "LoginHelper")
         helperPersonalInformationForm.addPage("Personal Information", "Back", "Submit")
 
         helperPersonalInformationForm.addDropdown(
@@ -122,7 +122,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun createDonorHistory() {
-        val helperDonationHistory = KYCHelper(applicationContext, "LoginHelper")
+        val helperDonationHistory = FormHelper(applicationContext, "LoginHelper")
 
     }
 

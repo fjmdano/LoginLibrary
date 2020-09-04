@@ -9,16 +9,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseUser
-import com.ubx.kyclibrary.KYCHelper
+import com.ubx.formslibrary.FormHelper
 import com.ubx.loginlibrary.LoginHelper
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
-    lateinit var kycHelper: KYCHelper
+    lateinit var formHelper: FormHelper
 
     val activity = this
 
@@ -79,14 +78,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Initialize LoginHelper and KYCHelper
+     * Initialize LoginHelper and FormHelper
      */
     private fun createHelpers() {
         loginHelper = LoginHelper(applicationContext, "name",
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT)
 
-        kycHelper = KYCHelper(applicationContext, "LoginHelper")
+        formHelper = FormHelper(applicationContext, "LoginHelper")
 
         loginHelper.setCustomSignInHandler(object: LoginHelper.CustomLoginHandler {
             override fun login(): Any? {
@@ -185,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         val buttonRegister = loginHelper.addButton("No account yet? Register now!",
             object: LoginHelper.CustomListener {
                 override fun onClick() {
-                    startActivity(kycHelper.getIntent(activity))
+                    startActivity(formHelper.getIntent(activity))
                 }
             },
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -195,31 +194,31 @@ class MainActivity : AppCompatActivity() {
         buttonRegister.setMargins(0, loginHelper.sizeInDP(10), 0, 0)
     }
 
-    private fun createKYCContent(){
-        kycHelper.setPadding(kycHelper.sizeInDP(5), kycHelper.sizeInDP(5), kycHelper.sizeInDP(5), 0)
-        kycHelper.addPage("Terms and Agreement", null, null)
-        kycHelper.addText(applicationContext.getString(R.string.terms_and_agreement))
+    private fun createKYCContent() {
+        formHelper.setPadding(formHelper.sizeInDP(5), formHelper.sizeInDP(5), formHelper.sizeInDP(5), 0)
+        formHelper.addPage("Terms and Agreement", null, null)
+        formHelper.addText(applicationContext.getString(R.string.terms_and_agreement))
 
-        kycHelper.addSwitch("Are you healthy?",
+        formHelper.addSwitch("Are you healthy?",
         "isHealthy",
         true)
 
-        kycHelper.addChecklist("Random label",
+        formHelper.addChecklist("Random label",
             listOf("I have read the Terms and Agreement",
             "Not read aww"),
             "terms",
             true
         )
 
-        kycHelper.addNextButton("I agree to the Terms and Agreement")
+        formHelper.addNextButton("I agree to the Terms and Agreement")
 
-        kycHelper.addPage("Registration", null, "Next")
-        kycHelper.addInput(
+        formHelper.addPage("Registration", null, "Next")
+        formHelper.addInput(
             "E-mail", false,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
             "email",
             true)
-        val passwordInput = kycHelper.addInput(
+        val passwordInput = formHelper.addInput(
             "Password", true,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
             "password",
@@ -236,45 +235,45 @@ class MainActivity : AppCompatActivity() {
             "[a-zA-Z0-9]*", false)
         passwordInput.displayValidationBars()
         passwordInput.displayValidationRules()
-        kycHelper.addPage("Personal Details", "Back", "Submit")
+        formHelper.addPage("Personal Details", "Back", "Submit")
 
-        kycHelper.addPageRow(mutableListOf(
-            kycHelper.addInputInRow(
+        formHelper.addPageRow(mutableListOf(
+            formHelper.addInputInRow(
                 "First Name", false,
                 InputType.TYPE_CLASS_TEXT,
                 "firstname",
                 true),
-            kycHelper.addInputInRow(
+            formHelper.addInputInRow(
                 "Last Name", false,
                 InputType.TYPE_CLASS_TEXT,
                 "lastname",
                 true)
         ))
 
-        kycHelper.addList(
+        formHelper.addList(
             "Province",
             listOf("Metro Manila", "Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province", "Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan", "Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Batangas", "Cavite", "Laguna", "Quezon", "Rizal", "Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon", "Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon", "Aklan", "Antique", "Capiz", "Guimaras", "Iloilo", "Negros Occidental", "Bohol", "Cebu", "Negros Oriental", "Siquijor", "Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte", "Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay", "Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental", "Compostela Valley", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental", "Cotabato", "Sarangani", "South Cotabato", "Sultan Kudarat", "Agusan del Norte", "Agusan del Sur", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur", "Basilan", "Lanao del Sur", "Maguindanao", "Sulu", "Tawi-tawi"),
             "province",
             true)
 
-        kycHelper.addInput(
+        formHelper.addInput(
             "Address", false,
             InputType.TYPE_CLASS_TEXT,
             "address",
             true)
 
-        kycHelper.addPageRow(mutableListOf(
-            kycHelper.addDateInRow(
+        formHelper.addPageRow(mutableListOf(
+            formHelper.addDateInRow(
                 "Date of Birth",
                 "birthday",
                 true),
-            kycHelper.addDropdownInRow(
+            formHelper.addDropdownInRow(
                 "Gender",
-                listOf("","Female", "Male", "Non-binary"),
+                listOf("Female", "Male", "Non-binary"),
                 "gender",
                 true)
         ))
-        kycHelper.addInput(
+        formHelper.addInput(
             "Contact Number", false,
             InputType.TYPE_CLASS_PHONE,
             "phone",

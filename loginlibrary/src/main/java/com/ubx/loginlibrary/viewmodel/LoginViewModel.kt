@@ -20,9 +20,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.model.User
-import com.ubx.formslibrary.widget.ButtonWidget
-import com.ubx.formslibrary.widget.GoogleLogin
-import com.ubx.formslibrary.widget.InputWidget
+import com.ubx.formslibrary.view.widget.ButtonWidget
+import com.ubx.formslibrary.view.widget.GoogleLogin
+import com.ubx.formslibrary.view.widget.InputWidget
 import com.ubx.loginlibrary.LoginActivity
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.LoginValuesHelper

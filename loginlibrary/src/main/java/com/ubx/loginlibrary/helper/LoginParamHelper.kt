@@ -1,6 +1,6 @@
 package com.ubx.loginlibrary.helper
 
-import com.ubx.formslibrary.widget.*
+import com.ubx.formslibrary.view.widget.*
 import com.ubx.loginlibrary.LoginHelper
 import com.ubx.loginlibrary.datarepository.LoginParamDataRepository
 import com.ubx.loginlibrary.widget.ForgotPasswordWidget

@@ -7,7 +7,7 @@ import com.ubx.formslibrary.listener.LoginHandler
 import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.model.User
 import com.ubx.formslibrary.util.DisplayUtil
-import com.ubx.formslibrary.widget.*
+import com.ubx.formslibrary.view.widget.*
 import com.ubx.loginlibrary.helper.LoginParamHelper
 import com.ubx.loginlibrary.helper.LoginValuesHelper
 import com.ubx.loginlibrary.helper.ThirdPartyConfigHelper

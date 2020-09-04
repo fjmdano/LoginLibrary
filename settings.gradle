@@ -1,5 +1,4 @@
 rootProject.name='LoginHelper'
 include ':app'
 include ':loginlibrary'
-include ':kyclibrary'
 include ':formslibrary'

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.widget.LinearLayout
 import com.ubx.formslibrary.model.User
-import com.ubx.formslibrary.widget.*
+import com.ubx.formslibrary.view.widget.*
 import com.ubx.loginlibrary.widget.ForgotPasswordWidget
 
 interface LoginInterface {

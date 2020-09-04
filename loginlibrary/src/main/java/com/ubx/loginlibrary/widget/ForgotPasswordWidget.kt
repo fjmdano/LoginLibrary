@@ -2,10 +2,9 @@ package com.ubx.loginlibrary.widget
 
 import android.content.Context
 import android.text.InputType
-import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import com.ubx.formslibrary.widget.*
+import com.ubx.formslibrary.view.widget.*
 
 class ForgotPasswordWidget(
     val label: String,

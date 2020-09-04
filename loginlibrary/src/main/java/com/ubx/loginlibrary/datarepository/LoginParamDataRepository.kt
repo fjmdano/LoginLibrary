@@ -1,7 +1,7 @@
 package com.ubx.loginlibrary.datarepository
 
 import android.util.Log
-import com.ubx.formslibrary.widget.InputWidget
+import com.ubx.formslibrary.view.widget.InputWidget
 import com.ubx.loginlibrary.widget.ForgotPasswordWidget
 import com.ubx.loginlibrary.widget.LoginWidget
 
