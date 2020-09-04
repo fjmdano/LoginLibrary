@@ -46,11 +46,11 @@ class UpdateFormActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_kyc)
+        setContentView(R.layout.activity_update_form)
         supportActionBar?.hide()
 
-        parentLayout = findViewById(R.id.cl_container)
-        loadingView = findViewById(R.id.rl_loading)
+        parentLayout = findViewById(R.id.cl_uf_container)
+        loadingView = findViewById(R.id.rl_uf_loading)
         observeViewModelData()
         setActionHandler()
         viewModel.getNextPage()
@@ -263,7 +263,7 @@ class UpdateFormActivity: AppCompatActivity() {
      * Show Toolbar
      */
     private fun showToolbar() {
-        val toolbar = findViewById<AppBarLayout>(R.id.inc_toolbar)
+        val toolbar = findViewById<AppBarLayout>(R.id.inc_uf_toolbar)
         toolbar.visibility = View.VISIBLE
     }
 
@@ -271,7 +271,7 @@ class UpdateFormActivity: AppCompatActivity() {
      * Hide Toolbar
      */
     private fun hideToolbar() {
-        val toolbar = findViewById<AppBarLayout>(R.id.inc_toolbar)
+        val toolbar = findViewById<AppBarLayout>(R.id.inc_uf_toolbar)
         toolbar.visibility = View.VISIBLE
     }
 
@@ -388,7 +388,7 @@ class UpdateFormActivity: AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "FormsLibrary: UpdateFormActivity"
+        private const val TAG = "UpdateFormActivity"
         private const val REQUEST_IMAGE_SHOT_FROM_CAMERA = 1
         private const val REQUEST_IMAGE_LOAD_FROM_GALLERY = 2
         private const val REQUEST_SELECT_LIST = 3

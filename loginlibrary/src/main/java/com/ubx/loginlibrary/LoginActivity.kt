@@ -2,7 +2,6 @@ package com.ubx.loginlibrary
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,8 +10,6 @@ import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.Observer
 import com.facebook.AccessToken
 import com.google.firebase.auth.FacebookAuthProvider
@@ -28,7 +25,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
-        loadingView = findViewById(R.id.rl_loading)
+        loadingView = findViewById(R.id.rl_uf_loading)
 
         observeViewModelData()
         viewModel.setupFacebook()

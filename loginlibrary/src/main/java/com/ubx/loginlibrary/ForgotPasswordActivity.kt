@@ -20,7 +20,7 @@ class ForgotPasswordActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
-        loadingView = findViewById(R.id.rl_loading)
+        loadingView = findViewById(R.id.rl_uf_loading)
         supportActionBar?.hide()
 
         observeViewModelData()

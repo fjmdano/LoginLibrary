@@ -11,12 +11,12 @@
         android:background="@android:color/transparent"
         app:elevation="0dp">
         <include
-            android:id="@+id/inc_toolbar"
+            android:id="@+id/inc_uf_toolbar"
             layout="@layout/include_toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_loading"
+        android:id="@+id/rl_uf_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -31,7 +31,7 @@
 
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/cl_container"
+        android:id="@+id/cl_uf_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
