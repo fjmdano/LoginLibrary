@@ -16,10 +16,10 @@ import com.ubx.formslibrary.helper.FormParamHelper
 import com.ubx.formslibrary.helper.FormValueHelper
 import java.io.ByteArrayOutputStream
 
-class FormViewModel: ViewModel() {
-    var pageNumber = -1
-    lateinit var pageWidget: PageWidget
-    var selectedMediaWidget: MediaWidget? = null
+class UpdateFormViewModel: ViewModel() {
+    private var pageNumber = -1
+    private lateinit var pageWidget: PageWidget
+    private var selectedMediaWidget: MediaWidget? = null
     val pageTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -131,7 +131,7 @@ class FormViewModel: ViewModel() {
     private fun setUIPage(pageNumber: Int) {
         pageWidget = FormParamHelper.getPage(pageNumber)!!
         setToolbar(pageWidget)
-        val linearLayout = pageWidget.getLinearLayout()
+        val linearLayout = pageWidget.getUpdateLinearLayout()
         if (linearLayout == null) {
             // set page to pageForLinearLayout
             pageForLinearLayout.value = pageWidget

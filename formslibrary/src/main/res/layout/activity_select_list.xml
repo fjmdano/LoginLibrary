@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+
+
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <variable
+            name="toolbarContent"
+            type="com.ubx.formslibrary.model.ToolbarContent" />
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -11,8 +22,9 @@
         android:background="@android:color/transparent"
         app:elevation="0dp">
         <include
-            android:id="@+id/inc_uf_toolbar"
-            layout="@layout/include_toolbar" />
+            android:id="@+id/inc_sl_toolbar"
+            layout="@layout/include_form_toolbar"
+            bind:content="@{toolbarContent}" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -52,3 +64,4 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

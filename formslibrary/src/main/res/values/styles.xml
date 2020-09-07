@@ -34,7 +34,6 @@
         <item name="android:textSize">@dimen/text_14</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">@dimen/small_125</item>
-        <item name="android:paddingRight">@dimen/normal_100</item>
     </style>
 
     <style name="AutoCompleteDefaultAlpha">

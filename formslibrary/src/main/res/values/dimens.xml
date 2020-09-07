@@ -4,6 +4,7 @@
 
     <dimen name="normal_100">16dp</dimen>
 
+
     <dimen name="text_12">12sp</dimen>
     <dimen name="text_14">14sp</dimen>
 </resources>

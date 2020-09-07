@@ -2,12 +2,14 @@ package com.ubx.formslibrary.view.widget
 
 import android.content.Context
 import android.os.Build
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.formslibrary.R
 import com.ubx.formslibrary.listener.ViewListener
+import com.ubx.formslibrary.util.DisplayUtil
 
 class ListWidget(val hint: String,
                  val choices: List<String>,
@@ -56,13 +58,17 @@ class ListWidget(val hint: String,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             textInputEditText.focusable = View.NOT_FOCUSABLE
         }
+        //textInputEditText.compoundDrawablePadding = DisplayUtil.sizeInDP(context, 20)
+        /*
         textInputEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-            R.drawable.ic_arrow_down_2, 0)
-
+            R.drawable.ic_triangle_down, 0)*/
+        textInputLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
+        textInputLayout.endIconDrawable = context.resources.getDrawable(R.drawable.ic_triangle_down)
         textInputLayout.hint = hint + (if (isRequired) " *" else "")
         textInputLayout.addView(textInputEditText)
 
         listener?.let {
+            textInputEditText.inputType = InputType.TYPE_NULL
             textInputEditText.setOnClickListener { _ ->
                 it.onClick()
             }
@@ -86,6 +92,7 @@ class ListWidget(val hint: String,
     fun setOnClickListener(listener: ViewListener) {
         this.listener = listener
         if (::textInputEditText.isInitialized) {
+            textInputEditText.inputType = InputType.TYPE_NULL
             textInputEditText.setOnClickListener {
                 listener.onClick()
             }

@@ -98,6 +98,9 @@ class InputWidget(val hint: String,
         textInputEditText = createTextInputEditText(context)
 
         textInputLayout.hint = hint + (if (isRequired) " *" else "")
+        if (isPassword) {
+            textInputLayout.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+        }
         @Suppress("DEPRECATION")
         textInputLayout.isPasswordVisibilityToggleEnabled = isPassword
         textInputEditText.inputType = inputType

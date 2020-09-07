@@ -12,7 +12,8 @@ class PageWidget(var pageTitle: String,
                  override var width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
                  override var height: Int = LinearLayout.LayoutParams.MATCH_PARENT)
     : BaseWidget(width, height) {
-    private var linearLayout: LinearLayout? = null
+    private var viewLinearLayout: LinearLayout? = null
+    private var updateLinearLayout: LinearLayout? = null
     private val pageRowWidgets: MutableList<PageRowWidget> = mutableListOf()
     private val values: MutableMap<String, Any> = mutableMapOf()
     private var listener: Listener? = null
@@ -46,29 +47,42 @@ class PageWidget(var pageTitle: String,
     }
 
     override fun createView(context: Context, isSharingRow: Boolean): LinearLayout {
-        return if (linearLayout != null) {
-            linearLayout!!
+        return if (updateLinearLayout != null) {
+            updateLinearLayout!!
         } else {
-            linearLayout = LinearLayout(context)
-            linearLayout!!.orientation = LinearLayout.VERTICAL
-            customizeLinearElement(context, linearLayout!!)
+            updateLinearLayout = LinearLayout(context)
+            updateLinearLayout!!.orientation = LinearLayout.VERTICAL
+            customizeLinearElement(context, updateLinearLayout!!)
             pageRowWidgets.forEach {
                 it.setListener(listener)
-                linearLayout!!.addView(it.createView(context, isSharingRow))
+                updateLinearLayout!!.addView(it.createView(context, isSharingRow))
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                linearLayout!!.id = View.generateViewId()
+                updateLinearLayout!!.id = View.generateViewId()
             }
-            linearLayout!!
+            updateLinearLayout!!
         }
     }
 
     override fun createUneditableView(context: Context, isSharingRow: Boolean): LinearLayout {
-        return createView(context, isSharingRow)
+        return if (viewLinearLayout != null) {
+            viewLinearLayout!!
+        } else {
+            viewLinearLayout = LinearLayout(context)
+            viewLinearLayout!!.orientation = LinearLayout.VERTICAL
+            customizeLinearElement(context, viewLinearLayout!!)
+            pageRowWidgets.forEach {
+                viewLinearLayout!!.addView(it.createUneditableView(context, isSharingRow))
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                viewLinearLayout!!.id = View.generateViewId()
+            }
+            viewLinearLayout!!
+        }
     }
 
-    fun getLinearLayout(): LinearLayout? {
-        return linearLayout
+    fun getUpdateLinearLayout(): LinearLayout? {
+        return updateLinearLayout
     }
 
     fun addPageRow(widgets: MutableList<BaseWidget>) {
@@ -86,7 +100,8 @@ class PageWidget(var pageTitle: String,
     }
 
     fun clearLayout() {
-        linearLayout = null
+        updateLinearLayout = null
+        viewLinearLayout = null
     }
 
     fun setListener(listener: Listener?) {

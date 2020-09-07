@@ -9,17 +9,22 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ubx.formslibrary.R
+import com.ubx.formslibrary.databinding.ActivitySelectListBinding
+import com.ubx.formslibrary.model.ToolbarContent
 import com.ubx.formslibrary.view.adapter.ListAdapter
 
 class SelectListActivity: AppCompatActivity() {
     private var choices: List<String> = arrayListOf()
+    private val toolbarContent = ToolbarContent()
+    private lateinit var binding: ActivitySelectListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_select_list)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_list)
         supportActionBar?.hide()
 
         setActionHandler()
@@ -30,12 +35,12 @@ class SelectListActivity: AppCompatActivity() {
      * Set onClickListener to toolbar left and right items
      */
     private fun setActionHandler() {
-        val toolbarLeftContainer = findViewById<ConstraintLayout>(R.id.cl_left)
-        toolbarLeftContainer.setOnClickListener {
+        toolbarContent.leftContent.setValue("Back")
+        toolbarContent.rightContent.visible = View.INVISIBLE
+        binding.toolbarContent = toolbarContent
+        binding.incSlToolbar.clLeft.setOnClickListener {
             returnToMain("")
         }
-        val toolbarRightContainer = findViewById<ConstraintLayout>(R.id.cl_right)
-        toolbarRightContainer.visibility = View.INVISIBLE
     }
 
     private fun setupUI() {

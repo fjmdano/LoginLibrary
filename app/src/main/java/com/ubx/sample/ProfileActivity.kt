@@ -12,11 +12,15 @@ import com.ubx.formslibrary.FormHelper
 
 
 class ProfileActivity : AppCompatActivity() {
+    private lateinit var profileFormHelper: FormHelper
+    private var personalInfoPageNumber: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         findViewById<TextView>(R.id.tv_title).text = "Settings"
         supportActionBar?.hide()
+        profileFormHelper = FormHelper(applicationContext, "ProfileForm")
 
         setButtonActions()
     }
@@ -24,106 +28,115 @@ class ProfileActivity : AppCompatActivity() {
     private fun setButtonActions() {
         val cvPersonalInformation = findViewById<CardView>(R.id.cv_personal_info)
         cvPersonalInformation.setOnClickListener {
-            createPersonalInformationForm()
+            if (personalInfoPageNumber == -1) {
+                personalInfoPageNumber = createPersonalInformationForm()
+            }
+            startPage(personalInfoPageNumber)
         }
     }
 
-    private fun createPersonalInformationForm() {
-        Log.d("PERSONAL INFO", "START")
-        val helperPersonalInformationForm = FormHelper(applicationContext, "LoginHelper")
-        helperPersonalInformationForm.addPage("Personal Information", "Back", "Submit")
+    override fun onBackPressed() {
+        startActivity(MainActivity.getIntent(applicationContext))
+        finish()
+    }
 
-        helperPersonalInformationForm.addDropdown(
+    private fun createPersonalInformationForm(): Int {
+        Log.d("PERSONAL INFO", "START")
+        val pageNumber = profileFormHelper.addPage("Personal Information", "Back", "Submit")
+
+        profileFormHelper.addDropdown(
             "Title",
             listOf("","Ms.", "Mr.", "Mrs."),
             "title",
             true)
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "First Name", false,
             InputType.TYPE_CLASS_TEXT,
             "firstname",
             true)
 
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "Middle Name", false,
             InputType.TYPE_CLASS_TEXT,
             "middlename",
             true)
 
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "Last Name", false,
             InputType.TYPE_CLASS_TEXT,
             "lastname",
             true)
 
-        helperPersonalInformationForm.addDate(
+        profileFormHelper.addDate(
             "Date of Birth",
             "birthday",
             true)
 
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "Home Address", false,
             InputType.TYPE_CLASS_TEXT,
             "homeaddress",
             true)
 
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "Contact Number", false,
             InputType.TYPE_CLASS_PHONE,
             "phone",
             true)
 
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "Occupation", false,
             InputType.TYPE_CLASS_TEXT,
             "occupation",
             true)
 
-        helperPersonalInformationForm.addList(
+        profileFormHelper.addList(
             "Nationality",
             listOf("Philippines", "America", "Korea", "China", "Japan"),
             "nationality",
             true)
 
-        helperPersonalInformationForm.addText("Type of Donor")
+        profileFormHelper.addText("Type of Donor")
 
-        helperPersonalInformationForm.addSwitch("New to SNBCV",
+        profileFormHelper.addSwitch("New to SNBCV",
             "newsnbcv",
             true)
-        helperPersonalInformationForm.addSwitch("Repeat/Retained",
+        profileFormHelper.addSwitch("Repeat/Retained",
             "isRepeatDonor",
             true)
-        helperPersonalInformationForm.addSwitch("First Time",
+        profileFormHelper.addSwitch("First Time",
             "isFirstTime",
             true)
-        helperPersonalInformationForm.addSwitch("Lapsed",
+        profileFormHelper.addSwitch("Lapsed",
             "isLapsed",
             true)
-        helperPersonalInformationForm.addText("History of Donation")
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addText("History of Donation")
+        profileFormHelper.addInput(
             "Number of Times Donated", false,
             InputType.TYPE_CLASS_PHONE,
             "timesDonated",
             true)
 
-        helperPersonalInformationForm.addDate(
+        profileFormHelper.addDate(
             "Date of Last Donation",
             "dateLastDonation",
             true)
 
-        helperPersonalInformationForm.addInput(
+        profileFormHelper.addInput(
             "Venue of Last Donation", false,
             InputType.TYPE_CLASS_TEXT,
             "venueLastDonation",
             true)
-
-        Log.d("PERSONAL INFO", "START ACTIVITY")
-        startActivity(helperPersonalInformationForm.getIntent(this))
+        return pageNumber
     }
 
-    private fun createDonorHistory() {
-        val helperDonationHistory = FormHelper(applicationContext, "LoginHelper")
 
+    private fun createDonorHistory() {
+        //val helperDonationHistory = FormHelper(applicationContext, "LoginHelper")
+    }
+
+    private fun startPage(pageNumber: Int) {
+        startActivity(profileFormHelper.getViewIntent(this, pageNumber))
     }
 
     companion object {

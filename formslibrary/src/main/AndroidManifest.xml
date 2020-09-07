@@ -15,6 +15,7 @@
         android:allowBackup="false"
         tools:replace="android:theme"
         android:theme="@style/AppTheme">
+        <activity android:name="com.ubx.formslibrary.view.activity.ViewFormActivity"/>
         <activity android:name="com.ubx.formslibrary.view.activity.UpdateFormActivity"/>
         <activity android:name="com.ubx.formslibrary.view.activity.CameraActivity"/>
         <activity android:name="com.ubx.formslibrary.view.activity.SelectListActivity"/>

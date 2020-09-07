@@ -67,6 +67,31 @@ class PageRowWidget(override var width: Int = LinearLayout.LayoutParams.MATCH_PA
         }
     }
 
+    override fun createUneditableView(context: Context, isSharingRow: Boolean): View {
+        return when {
+            widgets.isEmpty() -> {
+                LinearLayout(context)
+            }
+            widgets.size == 1 -> {
+                widgets[0].createUneditableView(context, isSharingRow)
+            }
+            else -> {
+                val innerLinearLayout = LinearLayout(context)
+                innerLinearLayout.orientation = LinearLayout.HORIZONTAL
+                innerLinearLayout.layoutParams = LinearLayout.LayoutParams(width, height)
+                widgets.forEach {
+                    innerLinearLayout.addView(it.createUneditableView(context, isSharingRow))
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    innerLinearLayout.id = View.generateViewId()
+                }
+                innerLinearLayout
+            }
+        }
+    }
+
+
     private fun createWidgetView(widget: BaseWidget, context: Context, isSharingRow: Boolean): View {
         listener?.let {
             when (widget) {
@@ -99,10 +124,6 @@ class PageRowWidget(override var width: Int = LinearLayout.LayoutParams.MATCH_PA
             }
         }
         return widget.createView(context, isSharingRow)
-    }
-
-    override fun createUneditableView(context: Context, isSharingRow: Boolean): View {
-        return createView(context, isSharingRow)
     }
 
     fun addWidget(widget: BaseWidget) {

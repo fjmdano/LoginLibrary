@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <variable
+            name="toolbarContent"
+            type="com.ubx.formslibrary.model.ToolbarContent" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -12,7 +22,8 @@
         app:elevation="0dp">
         <include
             android:id="@+id/inc_vf_toolbar"
-            layout="@layout/include_toolbar" />
+            layout="@layout/include_form_toolbar"
+            bind:content="@{toolbarContent}"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
@@ -38,3 +49,4 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

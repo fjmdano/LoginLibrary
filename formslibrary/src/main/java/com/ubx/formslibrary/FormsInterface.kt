@@ -45,7 +45,7 @@ interface FormsInterface {
      * @param leftContent either text of resource id that will be displayed at the top left
      *                  when clicked
      */
-    fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?)
+    fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?): Int
 
     /**
      * Add a row with multiple UI Elements
@@ -428,11 +428,18 @@ interface FormsInterface {
 
     /***********************[START] INTENT RELATED***************************************/
     /**
-     * Get intent for login view
+     * Get intent for update form
      *
      * @return intent
      */
     fun getIntent(activity: Activity): Intent
+
+    /**
+     * Get intent for view form
+     *
+     * @return intent
+     */
+    fun getViewIntent(activity: Activity, pageNumber: Int): Intent
     /*************************[END] INTENT RELATED***************************************/
 
     /**

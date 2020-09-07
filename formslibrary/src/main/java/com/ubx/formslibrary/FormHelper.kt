@@ -9,8 +9,9 @@ import com.ubx.formslibrary.view.widget.*
 import com.ubx.formslibrary.view.activity.UpdateFormActivity
 import com.ubx.formslibrary.helper.FormParamHelper
 import com.ubx.formslibrary.helper.FormValueHelper
+import com.ubx.formslibrary.view.activity.ViewFormActivity
 
-class FormHelper(private val context: Context, appName: String): FormsInterface {
+class FormHelper(private val context: Context, private val formFunction: String): FormsInterface {
 
     init {
         FormParamHelper.clearPages()
@@ -58,8 +59,8 @@ class FormHelper(private val context: Context, appName: String): FormsInterface 
      * @param leftContent either text of resource id that will be displayed at the top left
      *                  when clicked
      */
-    override fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
-        FormParamHelper.addPage(pageTitle, leftContent, rightContent)
+    override fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?): Int {
+        return FormParamHelper.addPage(pageTitle, leftContent, rightContent)
     }
 
     /**
@@ -477,6 +478,16 @@ class FormHelper(private val context: Context, appName: String): FormsInterface 
     override fun getIntent(activity: Activity): Intent {
         FormParamHelper.setMainActivity(activity)
         return UpdateFormActivity.getIntent(context)
+    }
+
+    /**
+     * Get intent for login view
+     *
+     * @return intent
+     */
+    override fun getViewIntent(activity: Activity, pageNumber: Int): Intent {
+        FormParamHelper.setMainActivity(activity)
+        return ViewFormActivity.getIntent(context, pageNumber)
     }
 
     /**

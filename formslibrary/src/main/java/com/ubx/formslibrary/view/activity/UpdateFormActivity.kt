@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -12,45 +11,34 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.widget.NestedScrollView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.ubx.formslibrary.model.SignInCredentials
 import com.ubx.formslibrary.view.widget.ListWidget
 import com.ubx.formslibrary.MediaChooserDialog
 import com.ubx.formslibrary.R
-import com.ubx.formslibrary.viewmodel.FormViewModel
-
+import com.ubx.formslibrary.databinding.ActivityUpdateFormBinding
+import com.ubx.formslibrary.model.*
+import com.ubx.formslibrary.viewmodel.UpdateFormViewModel
 
 class UpdateFormActivity: AppCompatActivity() {
-    private val viewModel: FormViewModel by viewModels()
+    private val viewModel: UpdateFormViewModel by viewModels()
+    private val toolbarContent = ToolbarContent()
 
-    private lateinit var parentLayout: NestedScrollView
     private var currentLinearLayout: LinearLayout? = null
-
-    private lateinit var toolbarTitle: TextView
-    private lateinit var toolbarLeftContainer: ConstraintLayout
-    private lateinit var toolbarLeftImage: ImageView
-    private lateinit var toolbarLeftText: TextView
-    private lateinit var toolbarRightContainer: ConstraintLayout
-    private lateinit var toolbarRightImage: ImageView
-    private lateinit var toolbarRightText: TextView
-    private lateinit var loadingView: RelativeLayout
+    private lateinit var binding: ActivityUpdateFormBinding
 
     private var selectedList: ListWidget? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_update_form)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_update_form)
+        binding.toolbarContent = toolbarContent
         supportActionBar?.hide()
 
-        parentLayout = findViewById(R.id.cl_uf_container)
-        loadingView = findViewById(R.id.rl_uf_loading)
         observeViewModelData()
         setActionHandler()
         viewModel.getNextPage()
@@ -136,16 +124,16 @@ class UpdateFormActivity: AppCompatActivity() {
     private fun observeViewModelData() {
         val context: Context = this
         viewModel.pageTitle.observe(this, Observer {
-            if (!this::toolbarTitle.isInitialized) {
-                toolbarTitle = findViewById(R.id.tv_title)
-            }
-            toolbarTitle.text = it
+            toolbarContent.title = it
+            binding.toolbarContent = toolbarContent
         })
         viewModel.leftContent.observe(this, Observer {
-            setLeftContent(it)
+            toolbarContent.leftContent.setValue(it)
+            binding.toolbarContent = toolbarContent
         })
         viewModel.rightContent.observe(this, Observer {
-            setRightContent(it)
+            toolbarContent.rightContent.setValue(it)
+            binding.toolbarContent = toolbarContent
         })
         viewModel.pageForLinearLayout.observe(this, Observer {
             viewModel.createLayoutPage(it, context)
@@ -185,108 +173,26 @@ class UpdateFormActivity: AppCompatActivity() {
      * Set onClickListener to toolbar left and right items
      */
     private fun setActionHandler() {
-        toolbarLeftContainer = findViewById(R.id.cl_left)
-        toolbarLeftContainer.setOnClickListener {
+        binding.incVfToolbar.clLeft.setOnClickListener {
             viewModel.getPreviousPage()
         }
-        toolbarRightContainer = findViewById<ConstraintLayout>(R.id.cl_right)
-        toolbarRightContainer.setOnClickListener {
+        binding.incVfToolbar.clRight.setOnClickListener {
             viewModel.getNextPage()
         }
-    }
-
-    /**
-     * Set Left content
-     */
-    private fun setLeftContent(content: Any?) {
-        if (!this::toolbarLeftImage.isInitialized) {
-            toolbarLeftImage = findViewById(R.id.iv_left)
-        }
-        if (!this::toolbarLeftText.isInitialized) {
-            toolbarLeftText = findViewById(R.id.tv_left)
-        }
-        setNavContent(content, toolbarLeftContainer, toolbarLeftText, toolbarLeftImage)
-    }
-
-    /**
-     * Set Right content
-     */
-    private fun setRightContent(content: Any?) {
-        if (!this::toolbarRightImage.isInitialized) {
-            toolbarRightImage = findViewById(R.id.iv_right)
-        }
-        if (!this::toolbarRightText.isInitialized) {
-            toolbarRightText = findViewById(R.id.tv_right)
-        }
-        setNavContent(content, toolbarRightContainer, toolbarRightText, toolbarRightImage)
-    }
-
-    private fun setNavContent(content: Any?, container: ConstraintLayout,
-                              textView: TextView, imageView: ImageView) {
-        var isSet = false
-        if (content != null) {
-            when (content) {
-                is String -> {
-                    container.visibility = View.VISIBLE
-                    textView.visibility = View.VISIBLE
-                    textView.text = content
-                    imageView.visibility = View.INVISIBLE
-                    isSet = true
-                }
-                is Int -> {
-                    container.visibility = View.VISIBLE
-                    imageView.visibility = View.VISIBLE
-                    imageView.setImageResource(content)
-                    textView.visibility = View.INVISIBLE
-                    isSet = true
-                }
-                is Drawable -> {
-                    container.visibility = View.VISIBLE
-                    imageView.visibility = View.VISIBLE
-                    imageView.setImageDrawable(content)
-                    textView.visibility = View.INVISIBLE
-                    isSet = true
-                }
-                else -> {
-                    //Do nothing
-                }
-            }
-        }
-        if (!isSet) {
-            container.visibility = View.INVISIBLE
-            imageView.visibility = View.INVISIBLE
-            textView.visibility = View.INVISIBLE
-        }
-    }
-
-    /**
-     * Show Toolbar
-     */
-    private fun showToolbar() {
-        val toolbar = findViewById<AppBarLayout>(R.id.inc_uf_toolbar)
-        toolbar.visibility = View.VISIBLE
-    }
-
-    /**
-     * Hide Toolbar
-     */
-    private fun hideToolbar() {
-        val toolbar = findViewById<AppBarLayout>(R.id.inc_uf_toolbar)
-        toolbar.visibility = View.VISIBLE
     }
 
     /**
      * Display Loading Animation
      */
     private fun showLoadingAnimation() {
-        loadingView.visibility = View.VISIBLE
+        binding.rlUfLoading.visibility = View.VISIBLE
     }
 
     /**
      * Hide Loading Animation
      */
     private fun hideLoadingAnimation() {
-        loadingView.visibility = View.INVISIBLE
+        binding.rlUfLoading.visibility = View.INVISIBLE
     }
 
     /**
@@ -294,10 +200,10 @@ class UpdateFormActivity: AppCompatActivity() {
      */
     private fun displayLayout(layout: LinearLayout) {
         if (currentLinearLayout != null) {
-            parentLayout.removeView(currentLinearLayout)
+            binding.clUfContainer.removeView(currentLinearLayout)
             currentLinearLayout = null
         }
-        parentLayout.addView(layout)
+        binding.clUfContainer.addView(layout)
         currentLinearLayout = layout
     }
 

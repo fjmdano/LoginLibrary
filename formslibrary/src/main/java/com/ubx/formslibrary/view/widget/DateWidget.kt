@@ -3,6 +3,7 @@ package com.ubx.formslibrary.view.widget
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -61,6 +62,7 @@ class DateWidget(val hint: String,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             textInputEditText.focusable = View.NOT_FOCUSABLE
         }
+        textInputEditText.inputType = InputType.TYPE_NULL
         textInputEditText.setOnClickListener {
             showDatePicker(context, textInputEditText)
         }

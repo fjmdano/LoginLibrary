@@ -55,10 +55,11 @@ class FormParamHelper {
          * @param leftContent can be string, image or null
          * @param rightContent can be string, image or null
          */
-        fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?) {
+        fun addPage(pageTitle: String, leftContent: Any?, rightContent: Any?): Int {
             getDataRepo().pages.add(
                 PageWidget(pageTitle, leftContent, rightContent)
             )
+            return getDataRepo().pages.lastIndex
         }
 
         /**

@@ -1,6 +1,8 @@
 package com.ubx.sample
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -9,17 +11,20 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseUser
 import com.ubx.formslibrary.FormHelper
 import com.ubx.loginlibrary.LoginHelper
+import com.ubx.sample.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginHelper: LoginHelper
     lateinit var formHelper: FormHelper
 
     val activity = this
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         val btnSettings = findViewById<ImageView>(R.id.iv_settings)
         btnSettings.setOnClickListener{
             startActivity(ProfileActivity.getIntent(this))
+            finish()
         }
         val btnSignOut = findViewById<ImageView>(R.id.iv_logout)
         btnSignOut.setOnClickListener {
@@ -282,5 +288,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MAIN"
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
     }
 }

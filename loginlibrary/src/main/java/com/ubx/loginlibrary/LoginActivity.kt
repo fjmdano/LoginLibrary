@@ -25,7 +25,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
-        loadingView = findViewById(R.id.rl_uf_loading)
+        loadingView = findViewById(R.id.rl_login_loading)
 
         observeViewModelData()
         viewModel.setupFacebook()
