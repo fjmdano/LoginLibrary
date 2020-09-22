@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.view.ContextThemeWrapper
 import com.ubx.formslibrary.R
+import com.ubx.formslibrary.helper.FormValueHelper
 import com.ubx.formslibrary.listener.ViewListener
 
 class MediaWidget(val hint: String,
@@ -24,6 +25,11 @@ class MediaWidget(val hint: String,
 
     override fun getValue(): String {
         return ""
+    }
+
+    override fun getStoredValue(): String {
+        //TODO: Point to bitmap location
+        return FormValueHelper.getString(key)
     }
 
     override fun getKeyValue(): Map<String, Bitmap> {

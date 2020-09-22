@@ -45,8 +45,7 @@ class SelectListActivity: AppCompatActivity() {
 
     private fun setupUI() {
         choices = (intent.getSerializableExtra(ARGS_CHOICES) as ArrayList<String>).toList()
-        val recyclerView = findViewById<RecyclerView>(R.id.rv_list)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.rvList.layoutManager = LinearLayoutManager(this)
         val listAdapter = ListAdapter(choices, this,
             object: ListAdapter.Listener {
                 override fun onClickRecyclerViewListElement(selected: String) {
@@ -54,8 +53,7 @@ class SelectListActivity: AppCompatActivity() {
                 }
             })
 
-        val searchInput = findViewById<EditText>(R.id.et_search)
-        searchInput.addTextChangedListener(object : TextWatcher {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(
                 s: CharSequence, start: Int,
@@ -69,7 +67,7 @@ class SelectListActivity: AppCompatActivity() {
                 listAdapter.setItemList(filteredList)
             }
         })
-        recyclerView.adapter = listAdapter
+        binding.rvList.adapter = listAdapter
     }
 
     private fun returnToMain(selected: String) {

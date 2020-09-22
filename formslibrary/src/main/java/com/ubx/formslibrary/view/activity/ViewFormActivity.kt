@@ -35,6 +35,8 @@ class ViewFormActivity: AppCompatActivity() {
 
     private fun displayForm() {
         val pageNumber = intent.extras?.get(ARGS_PAGE_NUMBER) as Int
+        print("Page Number in View Form: $pageNumber")
+        setActionHandler(pageNumber)
         viewModel.setUIPage(pageNumber)
     }
 
@@ -71,6 +73,21 @@ class ViewFormActivity: AppCompatActivity() {
         })
     }
 
+
+    /**
+     * Set onClickListener to toolbar left and right items
+     */
+    private fun setActionHandler(pageNumber: Int) {
+        val context: Context = this
+        binding.incVfToolbar.clLeft.setOnClickListener {
+            finish()
+        }
+        binding.incVfToolbar.clRight.setOnClickListener {
+            //Start Update
+            startActivity(UpdateFormActivity.getIntent(context, pageNumber))
+            finish()
+        }
+    }
 
     /**
      * Display Loading Animation

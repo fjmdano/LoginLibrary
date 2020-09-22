@@ -22,7 +22,7 @@
             android:background="@android:color/transparent"
             app:elevation="0dp">
             <include
-                android:id="@+id/inc_vf_toolbar"
+                android:id="@+id/inc_uf_toolbar"
                 layout="@layout/include_form_toolbar"
                 bind:content="@{toolbarContent}"/>
         </com.google.android.material.appbar.AppBarLayout>

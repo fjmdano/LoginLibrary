@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.formslibrary.R
+import com.ubx.formslibrary.helper.FormValueHelper
 import com.ubx.formslibrary.listener.ViewListener
 import com.ubx.formslibrary.util.DisplayUtil
 
@@ -26,6 +27,10 @@ class ListWidget(val hint: String,
 
     override fun getValue(): String {
         return value
+    }
+
+    override fun getStoredValue(): String {
+        return FormValueHelper.getString(key)
     }
 
     override fun getKeyValue(): Map<String, String> {
@@ -65,6 +70,7 @@ class ListWidget(val hint: String,
         textInputLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
         textInputLayout.endIconDrawable = context.resources.getDrawable(R.drawable.ic_triangle_down)
         textInputLayout.hint = hint + (if (isRequired) " *" else "")
+        textInputEditText.setText(getStoredValue())
         textInputLayout.addView(textInputEditText)
 
         listener?.let {
@@ -78,7 +84,7 @@ class ListWidget(val hint: String,
 
     override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
         val textInputLayout = createTextInputLayout(context, isSharingRow)
-        val textInputEditText = createFixedEditText(context, hint, value)
+        val textInputEditText = createFixedEditText(context, hint, getStoredValue())
         textInputLayout.addView(textInputEditText)
         return textInputLayout
     }

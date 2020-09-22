@@ -14,6 +14,10 @@ class GoogleLogin(override var width: Int,
         return ""
     }
 
+    override fun getStoredValue(): String {
+        return ""
+    }
+
     override fun setError(message: String?) {
         //Do nothing
     }

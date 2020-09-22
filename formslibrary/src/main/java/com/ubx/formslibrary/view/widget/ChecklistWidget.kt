@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
+import com.ubx.formslibrary.helper.FormValueHelper
 
 class ChecklistWidget(val label: String,
                       val options: List<String>,
@@ -28,6 +29,10 @@ class ChecklistWidget(val label: String,
             selectedOptions.add(options[it])
         }
         return selectedOptions
+    }
+
+    override fun getStoredValue(): List<String> {
+        return FormValueHelper.getList(key)
     }
 
     override fun getKeyValue(): Map<String, List<String>> {

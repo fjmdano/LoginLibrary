@@ -19,6 +19,10 @@ class PageRowWidget(override var width: Int = LinearLayout.LayoutParams.MATCH_PA
         TODO("Not yet implemented")
     }
 
+    override fun getStoredValue(): String {
+        return ""
+    }
+
     override fun getKeyValue(): Map<String, Any> {
         values.clear()
         widgets.forEach {

@@ -449,4 +449,11 @@ interface FormsInterface {
      * @return size in DP
      */
     fun sizeInDP(size: Int): Int
+
+    /**
+     * Set initial values (maybe coming from DB)
+     *
+     * @param values map of initial values
+     */
+    fun setInitialValues(values: Map<String, Any>)
 }

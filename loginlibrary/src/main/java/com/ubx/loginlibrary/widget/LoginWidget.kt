@@ -18,6 +18,10 @@ class LoginWidget(var appName: String,
         return ""
     }
 
+    override fun getStoredValue(): String {
+        return ""
+    }
+
     override fun setError(message: String?) {
         //Do nothing
     }

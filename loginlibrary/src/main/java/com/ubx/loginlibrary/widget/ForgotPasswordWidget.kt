@@ -68,6 +68,10 @@ class ForgotPasswordWidget(
         return ""
     }
 
+    override fun getStoredValue(): String {
+        return ""
+    }
+
     override fun setError(message: String?) {
         //Do nothing
     }

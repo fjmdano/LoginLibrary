@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.ubx.formslibrary.helper.FormValueHelper
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,6 +31,10 @@ class DateWidget(val hint: String,
             ""
         }
         return value
+    }
+
+    override fun getStoredValue(): String {
+        return FormValueHelper.getString(key)
     }
 
     override fun getKeyValue(): Map<String, String> {
@@ -58,6 +63,7 @@ class DateWidget(val hint: String,
     override fun createView(context: Context, isSharingRow: Boolean): TextInputLayout {
         textInputLayout = createTextInputLayout(context, isSharingRow)
         textInputEditText = createTextInputEditText(context)
+        textInputEditText.setText(getStoredValue())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             textInputEditText.focusable = View.NOT_FOCUSABLE
@@ -74,7 +80,7 @@ class DateWidget(val hint: String,
 
     override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
         textInputLayout = createTextInputLayout(context, isSharingRow)
-        textInputEditText = createFixedEditText(context, hint, value)
+        textInputEditText = createFixedEditText(context, hint, getStoredValue())
         textInputLayout.addView(textInputEditText)
 
         return textInputLayout

@@ -2,6 +2,7 @@ package com.ubx.formslibrary.view.widget
 
 import android.content.Context
 import android.os.Build
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -25,6 +26,7 @@ abstract class BaseWidget(open var width: Int, open var height: Int) {
     var margins: Margins? = null
 
     abstract fun getValue(): Any
+    abstract fun getStoredValue(): Any?
     abstract fun setError(message: String?)
     abstract fun createView(context: Context, isSharingRow: Boolean = false): View
     abstract fun createUneditableView(context: Context, isSharingRow: Boolean = false): View
@@ -114,11 +116,12 @@ abstract class BaseWidget(open var width: Int, open var height: Int) {
     }
 
     fun createFixedEditText(context: Context, hint: String, value: String): TextInputEditText {
-        val textInputEditText = if (style != null) {
-            TextInputEditText(ContextThemeWrapper(context, style!!), null, 0)
-        } else {
-            TextInputEditText(context)
-        }
+        val textInputEditText = TextInputEditText(
+            ContextThemeWrapper(
+                context,
+                if (style != null) style!! else R.style.EditText_DefaultAlpha
+            )
+        )
         gravity?.let {
             textInputEditText.gravity = it
         }
@@ -128,7 +131,10 @@ abstract class BaseWidget(open var width: Int, open var height: Int) {
 
         textInputEditText.hint = hint
         textInputEditText.background = null
-        textInputEditText.setText(value)
+        textInputEditText.inputType = InputType.TYPE_NULL
+        textInputEditText.setText(
+            if (value.isEmpty()) " - " else value
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             textInputEditText.id = View.generateViewId()
         }

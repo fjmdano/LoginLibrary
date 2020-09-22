@@ -501,6 +501,15 @@ class FormHelper(private val context: Context, private val formFunction: String)
     }
 
     /**
+     * Set initial values (maybe coming from DB)
+     *
+     * @param values map of initial values
+     */
+    override fun setInitialValues(values: Map<String, Any>) {
+        FormValueHelper.setValues(values)
+    }
+
+    /**
      * interface for custom onClickListener
      */
     interface CustomListener: ViewListener

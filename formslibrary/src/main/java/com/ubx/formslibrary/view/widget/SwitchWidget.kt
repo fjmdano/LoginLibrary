@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SwitchCompat
+import com.ubx.formslibrary.helper.FormValueHelper
 
 class SwitchWidget(val label: String,
                    val key: String,
@@ -29,6 +30,10 @@ class SwitchWidget(val label: String,
         return value
     }
 
+    override fun getStoredValue(): Boolean {
+        return FormValueHelper.getBoolean(key)
+    }
+
     override fun getKeyValue(): Map<String, Boolean> {
         return mapOf(key to getValue())
     }
@@ -49,7 +54,7 @@ class SwitchWidget(val label: String,
         customizeLinearElement(context, switch)
 
         switch.text = label
-        switch.isChecked = defaultCheck
+        switch.isChecked = defaultCheck or getStoredValue()
         if (textOn.isNotBlank()) {
             switch.showText = true
             switch.textOn = textOn
@@ -75,7 +80,7 @@ class SwitchWidget(val label: String,
         customizeLinearElement(context, switch)
 
         switch.text = label
-        switch.isChecked = value
+        switch.isChecked = getStoredValue()
         switch.isEnabled = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

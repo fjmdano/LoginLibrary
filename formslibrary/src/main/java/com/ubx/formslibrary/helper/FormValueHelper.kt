@@ -23,6 +23,23 @@ class FormValueHelper {
         }
 
         /**
+         * Store values in data repository
+         * @param key item key
+         * @param value item value
+         */
+        fun setValues(values: Map<String, Any>) {
+            values.forEach { (key, value) ->
+                when (value) {
+                    is String -> getDataRepo().stringValues[key] = value
+                    is Bitmap -> getDataRepo().imageValues[key] = value
+                    is Boolean -> getDataRepo().booleanValues[key] = value
+                    is List<*> -> getDataRepo().listValues[key] = value as List<String>
+                    else -> print("Unsupported data type: $key")
+                }
+            }
+        }
+
+        /**
          * Store value
          * @param key item key
          * @param value item value
@@ -105,14 +122,9 @@ class FormValueHelper {
             try {
                 val database = Firebase.database.getReference("users")
                     .child(firebaseUser.uid).child("profile")
-                getDataRepo().stringValues.forEach {
-                    if (it.key != "email" && it.key != "password") {
-                        database.child(it.key).setValue(it.value)
-                    }
-                }
-
                 val storage = Firebase.storage.getReference("users")
                     .child(firebaseUser.uid).child("profile")
+
                 getDataRepo().imageValues.forEach {
                     Log.d("FirebaseDB", "Saving $it.key")
                     val path = storage.child(it.key + ".png")
@@ -123,6 +135,16 @@ class FormValueHelper {
                         Log.d("FirebaseDB", "storeInFirebaseStorage: failure", it)
                     }.addOnSuccessListener { _ ->
                         database.child(it.key).setValue(path.path)
+                    }
+                }
+
+                getDataRepo().booleanValues.forEach {
+                    database.child(it.key).setValue(it.value)
+                }
+
+                getDataRepo().stringValues.forEach {
+                    if (it.key != "email" && it.key != "password") {
+                        database.child(it.key).setValue(it.value)
                     }
                 }
                 isOK = true

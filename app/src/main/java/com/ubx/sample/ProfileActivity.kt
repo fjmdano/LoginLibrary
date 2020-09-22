@@ -6,14 +6,18 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.ubx.formslibrary.FormHelper
+import com.ubx.sample.viewmodel.ProfileViewModel
 
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var profileFormHelper: FormHelper
     private var personalInfoPageNumber: Int = -1
+    private val viewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +30,16 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setButtonActions() {
+        val clBack = findViewById<ConstraintLayout>(R.id.cl_left)
+        clBack.setOnClickListener {
+            onBackPressed()
+        }
         val cvPersonalInformation = findViewById<CardView>(R.id.cv_personal_info)
         cvPersonalInformation.setOnClickListener {
             if (personalInfoPageNumber == -1) {
                 personalInfoPageNumber = createPersonalInformationForm()
             }
+            profileFormHelper.setInitialValues(viewModel.getStoredValues())
             startPage(personalInfoPageNumber)
         }
     }
@@ -42,7 +51,10 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun createPersonalInformationForm(): Int {
         Log.d("PERSONAL INFO", "START")
-        val pageNumber = profileFormHelper.addPage("Personal Information", "Back", "Submit")
+        val pageNumber = profileFormHelper.addPage(
+            "Personal Information",
+            "Back",
+            "Update")
 
         profileFormHelper.addDropdown(
             "Title",

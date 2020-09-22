@@ -20,6 +20,10 @@ class ButtonWidget(val text: String,
         return ""
     }
 
+    override fun getStoredValue(): String {
+        return ""
+    }
+
     override fun getKeyValue(): Map<String, String> {
         return emptyMap()
     }

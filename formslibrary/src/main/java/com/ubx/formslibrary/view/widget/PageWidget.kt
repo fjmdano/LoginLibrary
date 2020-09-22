@@ -22,6 +22,10 @@ class PageWidget(var pageTitle: String,
         TODO("Not yet implemented")
     }
 
+    override fun getStoredValue(): String {
+        return ""
+    }
+
     override fun getKeyValue(): Map<String, Any> {
         values.clear()
         pageRowWidgets.forEach {

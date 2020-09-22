@@ -32,6 +32,7 @@ class UpdateFormActivity: AppCompatActivity() {
     private lateinit var binding: ActivityUpdateFormBinding
 
     private var selectedList: ListWidget? = null
+    private var pageNumber: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,12 @@ class UpdateFormActivity: AppCompatActivity() {
 
         observeViewModelData()
         setActionHandler()
-        viewModel.getNextPage()
+        pageNumber = intent.extras?.get(ARGS_PAGE_NUMBER) as Int
+        if (pageNumber == -1) {
+            viewModel.getNextPage()
+        } else {
+            viewModel.updateOnePageOnly(pageNumber)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -155,6 +161,9 @@ class UpdateFormActivity: AppCompatActivity() {
         })
         viewModel.isSaved.observe(this, Observer {
             if (it) {
+                if (pageNumber != -1) {
+                    startActivity(ViewFormActivity.getIntent(context, pageNumber))
+                }
                 finish()
             } else {
                 showToast("Error occurred when saving data.")
@@ -173,10 +182,10 @@ class UpdateFormActivity: AppCompatActivity() {
      * Set onClickListener to toolbar left and right items
      */
     private fun setActionHandler() {
-        binding.incVfToolbar.clLeft.setOnClickListener {
+        binding.incUfToolbar.clLeft.setOnClickListener {
             viewModel.getPreviousPage()
         }
-        binding.incVfToolbar.clRight.setOnClickListener {
+        binding.incUfToolbar.clRight.setOnClickListener {
             viewModel.getNextPage()
         }
     }
@@ -304,9 +313,12 @@ class UpdateFormActivity: AppCompatActivity() {
 
         private const val ARGS_IMAGE = "image"
         private const val ARGS_SELECTED = "ARGS_SELECTED"
+        private const val ARGS_PAGE_NUMBER = "ARGS_PAGE_NUMBER"
 
-        fun getIntent(context: Context): Intent {
-            return Intent(context, Class.forName("com.ubx.formslibrary.view.activity.UpdateFormActivity"))
+        fun getIntent(context: Context, pageNumber: Int = -1): Intent {
+            val intent = Intent(context, Class.forName("com.ubx.formslibrary.view.activity.UpdateFormActivity"))
+            intent.putExtra(ARGS_PAGE_NUMBER, pageNumber)
+            return intent
         }
     }
 }

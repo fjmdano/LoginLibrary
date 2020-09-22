@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.formslibrary.R
+import com.ubx.formslibrary.helper.FormValueHelper
 import com.ubx.formslibrary.model.Margins
 import com.ubx.formslibrary.util.DisplayUtil
 import com.ubx.formslibrary.util.ValidationUtil
@@ -57,6 +58,10 @@ class InputWidget(val hint: String,
             ""
         }
         return value
+    }
+
+    override fun getStoredValue(): String {
+        return FormValueHelper.getString(key)
     }
 
     override fun getKeyValue(): Map<String, String> {
@@ -104,6 +109,7 @@ class InputWidget(val hint: String,
         @Suppress("DEPRECATION")
         textInputLayout.isPasswordVisibilityToggleEnabled = isPassword
         textInputEditText.inputType = inputType
+        textInputEditText.setText(getStoredValue())
         if (maximumLength > 0) {
             textInputEditText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maximumLength))
         }
@@ -127,7 +133,7 @@ class InputWidget(val hint: String,
 
     override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
         val textInputLayout = createTextInputLayout(context, isSharingRow)
-        val textInputEditText = createFixedEditText(context, hint, value)
+        val textInputEditText = createFixedEditText(context, hint, getStoredValue())
         textInputLayout.addView(textInputEditText)
         return textInputLayout
     }

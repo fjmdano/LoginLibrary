@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             val details = user.details
             if (details is FirebaseUser) {
+                viewModel.getFirebaseProfile(details.uid)
                 findViewById<TextView>(R.id.tv_name).text = details.displayName
             }
         }
@@ -122,7 +123,6 @@ class MainActivity : AppCompatActivity() {
     private fun showLogin() {
         startActivity(loginHelper.getIntent(this))
     }
-
 
     private fun createLoginContent() {
         loginHelper.setPadding(10, 10, 10, 10)
@@ -219,6 +219,8 @@ class MainActivity : AppCompatActivity() {
         formHelper.addNextButton("I agree to the Terms and Agreement")
 
         formHelper.addPage("Registration", null, "Next")
+        formHelper.addMedia("Camera", "selfie", false,
+                            formHelper.sizeInDP(50), formHelper.sizeInDP(50))
         formHelper.addInput(
             "E-mail", false,
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,

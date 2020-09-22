@@ -20,6 +20,7 @@ class UpdateFormViewModel: ViewModel() {
     private var pageNumber = -1
     private lateinit var pageWidget: PageWidget
     private var selectedMediaWidget: MediaWidget? = null
+    private var onePageOnly: Boolean = false
     val pageTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -78,13 +79,33 @@ class UpdateFormViewModel: ViewModel() {
             toastMessage.value = "Please verify inputs before proceeding"
             return
         }
+        print("Page number: $pageNumber")
+        print("is one page?: $onePageOnly")
 
         //Increment page number
-        if (pageNumber < FormParamHelper.getPageSize() - 1) {
-            pageNumber += 1
-        } else {
-            submit()
+        when {
+            onePageOnly -> submit()
+            pageNumber < FormParamHelper.getPageSize() - 1 -> {
+                pageNumber += 1
+                setUIPage(pageNumber)
+            }
+            else -> submit()
         }
+    }
+
+    /**
+     * Check if one page only
+     */
+    fun isOnePageOnly(): Boolean {
+        return onePageOnly
+    }
+
+    /**
+     * Update one page only (Do not display other pages)
+     */
+    fun updateOnePageOnly(pageNumber: Int) {
+        onePageOnly = true
+        this.pageNumber = pageNumber
         setUIPage(pageNumber)
     }
 

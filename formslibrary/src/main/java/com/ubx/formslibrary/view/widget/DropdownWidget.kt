@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.android.material.textfield.TextInputLayout
 import com.ubx.formslibrary.R
+import com.ubx.formslibrary.helper.FormValueHelper
 
 class DropdownWidget(val hint: String,
                      val choices: List<String>,
@@ -21,6 +22,11 @@ class DropdownWidget(val hint: String,
     private var value: String = ""
 
     override fun getValue(): String {
+        return value
+    }
+
+    override fun getStoredValue(): String {
+        value = FormValueHelper.getString(key)
         return value
     }
 
@@ -69,6 +75,7 @@ class DropdownWidget(val hint: String,
         autoTextView.setOnItemClickListener { parent, _, position, _ ->
             value = parent.getItemAtPosition(position).toString()
         }
+        autoTextView.setText(getStoredValue())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             autoTextView.id = View.generateViewId()
@@ -79,7 +86,7 @@ class DropdownWidget(val hint: String,
 
     override fun createUneditableView(context: Context, isSharingRow: Boolean): TextInputLayout {
         val textInputLayout = createTextInputLayout(context, isSharingRow)
-        val textInputEditText = createFixedEditText(context, hint, value)
+        val textInputEditText = createFixedEditText(context, hint, getStoredValue())
         textInputLayout.addView(textInputEditText)
         return textInputLayout
     }
