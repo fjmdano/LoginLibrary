@@ -30,7 +30,8 @@ class ListWidget(val hint: String,
     }
 
     override fun getStoredValue(): String {
-        return FormValueHelper.getString(key)
+        value = FormValueHelper.getString(key)
+        return value
     }
 
     override fun getKeyValue(): Map<String, String> {

@@ -126,7 +126,6 @@ class LoginParamHelper {
         ): InputWidget {
             val input = InputWidget(hint, isPassword, inputType, key, true, width, height)
             getLoginWidget()?.elements?.add(input)
-            addInputElement(input)
             return input
         }
 
@@ -201,22 +200,6 @@ class LoginParamHelper {
             getDataRepo().forgotPasswordWidget = forgotPasswordWidget
             getLoginWidget()?.elements?.add(forgotPasswordWidget)
             return forgotPasswordWidget
-        }
-
-        /**
-         * Store input elements to data array
-         */
-        private fun addInputElement(element: InputWidget) {
-            getDataRepo().inputWidgets.add(element)
-        }
-
-        /**
-         * Get stored input elements
-         *
-         * @return stored input elements
-         */
-        fun getInputElements(): MutableList<InputWidget> {
-            return getDataRepo().inputWidgets
         }
 
         /**

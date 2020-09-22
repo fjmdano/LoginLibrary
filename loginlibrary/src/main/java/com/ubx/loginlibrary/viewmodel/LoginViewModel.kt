@@ -179,20 +179,11 @@ class LoginViewModel: ViewModel() {
      */
     private fun onClickLoginButton() {
         showLoadingAnimation.value = true
-        var noError = true
-        var value: String
-        LoginParamHelper.getInputElements().forEach {
-            value = it.getValue()
-            if (value.isBlank()) {
-                it.setError(it.hint + " is required.")
-                noError = false
-            } else {
-                it.setError(null)
-                LoginValuesHelper.setValue(it.key, value)
-            }
-        }
-
+        val noError = loginParameters?.isValid() ?:false
         if (noError) {
+            loginParameters?.elements?.forEach {
+                if (it is InputWidget) LoginValuesHelper.setValue(it.key, it.getValue())
+            }
             emailCredentials.value = SignInCredentials(
                 LoginValuesHelper.getValue(KEY_EMAIL),
                 LoginValuesHelper.getValue(KEY_PASSWORD))

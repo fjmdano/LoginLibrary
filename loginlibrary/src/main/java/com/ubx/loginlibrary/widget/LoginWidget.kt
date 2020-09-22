@@ -26,6 +26,14 @@ class LoginWidget(var appName: String,
         //Do nothing
     }
 
+    override fun isValid(): Boolean {
+        var isOK = true
+        elements.forEach {
+            if (!it.isValid()) isOK = false
+        }
+        return isOK
+    }
+
     override fun createView(context: Context, isSharingRow: Boolean): View {
         linearLayout = if (style != null) {
             LinearLayout(ContextThemeWrapper(context, style!!), null, 0)
