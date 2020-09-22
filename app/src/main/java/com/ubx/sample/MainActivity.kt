@@ -205,17 +205,6 @@ class MainActivity : AppCompatActivity() {
         formHelper.addPage("Terms and Agreement", null, null)
         formHelper.addText(applicationContext.getString(R.string.terms_and_agreement))
 
-        formHelper.addSwitch("Are you healthy?",
-        "isHealthy",
-        true)
-
-        formHelper.addChecklist("Random label",
-            listOf("I have read the Terms and Agreement",
-            "Not read aww"),
-            "terms",
-            true
-        )
-
         formHelper.addNextButton("I agree to the Terms and Agreement")
 
         formHelper.addPage("Registration", null, "Next")
@@ -270,17 +259,17 @@ class MainActivity : AppCompatActivity() {
             "address",
             true)
 
-        formHelper.addPageRow(mutableListOf(
-            formHelper.addDateInRow(
-                "Date of Birth",
-                "birthday",
-                true),
-            formHelper.addDropdownInRow(
-                "Gender",
-                listOf("Female", "Male", "Non-binary"),
-                "gender",
-                true)
-        ))
+        formHelper.addDate(
+            "Date of Birth",
+            "birthday",
+            true)
+
+        formHelper.addDropdown(
+            "Gender",
+            listOf("Female", "Male", "Non-binary"),
+            "gender",
+            true)
+
         formHelper.addInput(
             "Contact Number", false,
             InputType.TYPE_CLASS_PHONE,

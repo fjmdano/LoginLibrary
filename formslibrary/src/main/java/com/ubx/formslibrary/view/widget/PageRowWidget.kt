@@ -5,7 +5,10 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.marginStart
 import com.ubx.formslibrary.listener.ViewListener
+import com.ubx.formslibrary.model.Margins
+import com.ubx.formslibrary.util.DisplayUtil
 
 class PageRowWidget(override var width: Int = LinearLayout.LayoutParams.MATCH_PARENT,
                     override var height: Int = LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -59,7 +62,10 @@ class PageRowWidget(override var width: Int = LinearLayout.LayoutParams.MATCH_PA
                 val innerLinearLayout = LinearLayout(context)
                 innerLinearLayout.orientation = LinearLayout.HORIZONTAL
                 innerLinearLayout.layoutParams = LinearLayout.LayoutParams(width, height)
-                widgets.forEach {
+                widgets.forEachIndexed { index, it ->
+                    if (index != 0) {
+                        innerLinearLayout.addView(addSpacing(context, 5))
+                    }
                     innerLinearLayout.addView(createWidgetView(it, context, true))
                 }
 
@@ -128,6 +134,14 @@ class PageRowWidget(override var width: Int = LinearLayout.LayoutParams.MATCH_PA
             }
         }
         return widget.createView(context, isSharingRow)
+    }
+
+    private fun addSpacing(context: Context, space: Int): View {
+        val view = View(context)
+        view.layoutParams = LinearLayout.LayoutParams(
+            DisplayUtil.sizeInDP(context, space),
+            LinearLayout.LayoutParams.MATCH_PARENT)
+        return view
     }
 
     fun addWidget(widget: BaseWidget) {

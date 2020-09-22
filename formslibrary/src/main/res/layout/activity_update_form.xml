@@ -27,6 +27,13 @@
                 bind:content="@{toolbarContent}"/>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/cl_uf_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
         <RelativeLayout
             android:id="@+id/rl_uf_loading"
             android:layout_width="match_parent"
@@ -40,13 +47,5 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true" />
         </RelativeLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/cl_uf_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +20,6 @@ class ListAdapter(private var items: List<String>,
             textView.text = item
             textView.setOnClickListener {
                 val text = (it as TextView).text.toString()
-                //FormValueHelper.setValue(element.key, text.toString())
-                //element.editText.setText(text)
                 listener.onClickRecyclerViewListElement(text)
             }
         }
@@ -36,11 +35,18 @@ class ListAdapter(private var items: List<String>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val style = FormParamHelper.getListStyle()
-        return if (style != null) {
-            ViewHolder(TextView(ContextThemeWrapper(context, style), null, 0))
+
+        val textView = if (style != null) {
+            TextView(ContextThemeWrapper(context, style), null, 0)
         } else {
-            ViewHolder(TextView(ContextThemeWrapper(context, R.style.DefaultRecycleViewText), null, 0))
+            TextView(ContextThemeWrapper(context, R.style.DefaultRecycleViewText), null, 0)
         }
+        textView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        return ViewHolder(textView)
     }
 
     override fun getItemCount(): Int {
